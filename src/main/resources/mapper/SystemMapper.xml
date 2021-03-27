@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dcloud.mapper.SystemMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.System">
+        <id column="id" property="id" />
+        <result column="signExp" property="signExp" />
+        <result column="signDistance" property="signDistance" />
+        <result column="enabled" property="enabled" />
+        <result column="level" property="level" />
+        <result column="from" property="from" />
+        <result column="to" property="to" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, signExp, signDistance, enabled, level, from, to
+    </sql>
+
+</mapper>

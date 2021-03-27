@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dcloud.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.User">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="nickname" property="nickname" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="sexCode" property="sexCode" />
+        <result column="phone" property="phone" />
+        <result column="email" property="email" />
+        <result column="number" property="number" />
+        <result column="createTime" property="createTime" />
+        <result column="educationCode" property="educationCode" />
+        <result column="exp" property="exp" />
+        <result column="userFace" property="userFace" />
+        <result column="enabled" property="enabled" />
+        <result column="schoolPath" property="schoolPath" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, nickname, username, password, sexCode, phone, email, number, createTime, educationCode, exp, userFace, enabled, schoolPath
+    </sql>
+
+</mapper>
