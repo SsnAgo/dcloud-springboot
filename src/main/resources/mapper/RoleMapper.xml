@@ -4,14 +4,20 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.Role">
-        <id column="id" property="id" />
-        <result column="name" property="name" />
-        <result column="nameZh" property="nameZh" />
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="nameZh" property="nameZh"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, name, nameZh
     </sql>
+    <select id="getRoles" resultType="com.example.dcloud.pojo.Role">
+        select r.id, r.name, r.nameZh
+        from t_role as r
+                     left join t_user_role as ur on r.id = ur.rid
+        where ur.uid = #{userId}
+    </select>
 
 </mapper>
