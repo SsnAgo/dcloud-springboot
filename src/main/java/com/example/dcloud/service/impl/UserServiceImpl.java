@@ -72,6 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (!user.getEnabled()){
             return RespBean.error("账号被禁用，请联系管理员");
         }
+        user.setRoles(getRoles(user.getId()));
 
         //否则更新成功  更新security登录对象
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user,null,user.getAuthorities());
@@ -96,10 +97,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public RespBean loginByPhone(String phone, String code, HttpServletRequest request) {
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("phone",phone));
+        if (null == user) return RespBean.error("该手机号未注册，请先注册");
         if (!StringUtils.hasText(code)) return RespBean.error("验证码不能为空");
         if (!user.getEnabled()){
             return RespBean.error("账号被禁用，请联系管理员");
         }
+        user.setRoles(getRoles(user.getId()));
         //否则更新成功  更新security登录对象
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user,null,user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

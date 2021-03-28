@@ -29,7 +29,7 @@ public class LoginController {
     @ApiOperation("通过手机号登录，登录之后返回token")
     @PostMapping("/loginByPhone")
     public RespBean loginByPhone(@RequestBody LoginVo loginVo, HttpServletRequest request){
-        return userService.loginByUsername(loginVo.getPhone(),loginVo.getCode(),request);
+        return userService.loginByPhone(loginVo.getPhone(),loginVo.getCode(),request);
     }
 
     @ApiOperation(value = "用户注销功能")
