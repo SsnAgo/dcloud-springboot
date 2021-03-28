@@ -42,6 +42,12 @@ public class Swagger2Config {
                 .build();
     }
 
+    /**
+     * 在Swagger2的securityContexts中通过正则表达式，设置需要使用参数的接口（或者说，是去除掉不需要使用认证参数的接口），
+     * 如下列代码所示，通过PathSelectors.regex("/hello/.*")，所有包含"hello"开头的接口不需要使用securitySchemes。
+     * 即不需要使用上文中设置的名为“Authorization”，type为“header”的认证参数。
+     * 通俗讲，就是能匹配上的就使用默认认证，就不使用header里面的Authorization认证参数
+     */
     private List<SecurityContext> securityContexts(){
         List<SecurityContext> res = new ArrayList<>();
         // 设置不需要认证就可以访问的接口
