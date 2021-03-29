@@ -4,26 +4,40 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.User">
-        <id column="id" property="id" />
-        <result column="name" property="name" />
-        <result column="nickname" property="nickname" />
-        <result column="username" property="username" />
-        <result column="password" property="password" />
-        <result column="sexCode" property="sexCode" />
-        <result column="phone" property="phone" />
-        <result column="email" property="email" />
-        <result column="number" property="number" />
-        <result column="createTime" property="createTime" />
-        <result column="educationCode" property="educationCode" />
-        <result column="exp" property="exp" />
-        <result column="userFace" property="userFace" />
-        <result column="enabled" property="enabled" />
-        <result column="schoolPath" property="schoolPath" />
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="nickname" property="nickname"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="sexCode" property="sexCode"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="number" property="number"/>
+        <result column="createTime" property="createTime"/>
+        <result column="educationCode" property="educationCode"/>
+        <result column="exp" property="exp"/>
+        <result column="userFace" property="userFace"/>
+        <result column="enabled" property="enabled"/>
+        <result column="schoolId" property="schoolId"/>
+        <result column="departmentId" property="departmentId"/>
+        <result column="majorId" property="majorId"/>
+
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, name, nickname, username, password, sexCode, phone, email, number, createTime, educationCode, exp, userFace, enabled, schoolPath
     </sql>
+
+    <resultMap id="UserInfo" type="com.example.dcloud.pojo.User" extends="BaseResultMap">
+        <association property="school" javaType="com.example.dcloud.pojo.School">
+            <id column="sid" property="id"/>
+            <result column="sname" property="name"/>
+
+        </association>
+
+
+    </resultMap>
+
 
 </mapper>

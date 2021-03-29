@@ -1,9 +1,7 @@
 package com.example.dcloud.mapper;
 
-import com.example.dcloud.pojo.User;
+import com.example.dcloud.pojo.Department;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-
-import java.util.List;
 
 /**
  * <p>
@@ -11,9 +9,8 @@ import java.util.List;
  * </p>
  *
  * @author ssn
- * @since 2021-03-27
+ * @since 2021-03-29
  */
-public interface UserMapper extends BaseMapper<User> {
-
+public interface DepartmentMapper extends BaseMapper<Department> {
 
 }

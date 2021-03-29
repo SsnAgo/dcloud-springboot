@@ -1,9 +1,19 @@
 package com.example.dcloud.controller;
 
 
+import com.example.dcloud.pojo.RespBean;
+import com.example.dcloud.pojo.User;
+import com.example.dcloud.service.IUserService;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.security.Principal;
 
 /**
  * <p>
@@ -17,4 +27,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class UserController {
 
+    @Resource
+    private IUserService userService;
+
+    @ApiOperation(value = "获取用户信息")
+    @GetMapping("/info")
+    public User userInfo(Principal principal){
+        if (null == principal){
+            return null;
+        }
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = (UsernamePasswordAuthenticationToken) principal;
+        User user = (User) usernamePasswordAuthenticationToken.getPrincipal();
+        user = userService.getUserInfo(user);
+        user.setPassword(null);
+        return user;
+
+    }
 }

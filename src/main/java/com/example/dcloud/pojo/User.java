@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.example.dcloud.config.CustomAuthorityDeserializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -72,6 +73,7 @@ public class User implements Serializable, UserDetails {
     private String number;
 
     @ApiModelProperty(value = "创建日期")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "学历编号")
@@ -90,16 +92,28 @@ public class User implements Serializable, UserDetails {
     @ApiModelProperty(value = "是否启用")
     private Boolean enabled;
 
-    @ApiModelProperty(value = "学校id拼接路径")
-    private String schoolPath;
+    @ApiModelProperty(value = "学校id")
+    private Integer schoolId;
 
-    @ApiModelProperty(value = "学校名")
-    @TableField(exist = false)
-    private String school;
+    @ApiModelProperty(value = "学院id")
+    private Integer departmentId;
 
-    @ApiModelProperty(value = "院名")
+    @ApiModelProperty(value = "专业id")
+    private Integer majorId;
+
+    @ApiModelProperty(value = "学校")
     @TableField(exist = false)
-    private String dept;
+    private School school;
+
+    @ApiModelProperty(value = "学院")
+    @TableField(exist = false)
+    private Department department;
+
+    @ApiModelProperty(value = "专业名")
+    @TableField(exist = false)
+    private Major major;
+
+
 
     @ApiModelProperty(value = "角色")
     @TableField(exist = false)
