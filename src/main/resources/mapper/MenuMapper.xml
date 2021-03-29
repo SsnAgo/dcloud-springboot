@@ -20,7 +20,14 @@
     <sql id="Base_Column_List">
         id, url, path, component, name, iconCls, keepAlive, requireAuth, parentId, enabled
     </sql>
-    <select id="getMenusWithRole" resultType="com.example.dcloud.pojo.Menu">
+    <resultMap id="MenusWithRole" type="com.example.dcloud.pojo.Menu">
+        <collection property="roles" ofType="com.example.dcloud.pojo.Role">
+            <id column="rid" property="id"/>
+            <result column="rname" property="name"/>
+            <result column="rnameZh" property="nameZh"/>
+        </collection>
+    </resultMap>
+    <select id="getMenusWithRole" resultMap="MenusWithRole">
         SELECT m.*,
                r.id     as rid,
                r.name   as rname,
@@ -33,6 +40,33 @@
         order by m.id
 
 
+    </select>
+
+    <resultMap id="AllMenus" type="com.example.dcloud.pojo.Menu" extends="BaseResultMap">
+        <id column="id1" property="id" />
+        <result column="name1" property="name"/>
+        <collection property="children" ofType="com.example.dcloud.pojo.Menu">
+            <id column="id2" property="id" />
+            <result column="name2" property="name"/>
+            <collection property="children" ofType="com.example.dcloud.pojo.Menu">
+                <id column="id3" property="id" />
+                <result column="name3" property="name"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="getAllMenus" resultMap="AllMenus">
+        SELECT m1.id as id1,
+               m1.name as name1,
+               m2.id as id2,
+               m2.name as name2,
+               m3.id as id3,
+               m3.name as name3
+        FROM t_menu m1,
+             t_menu m2,
+             t_menu m3
+        where m1.id = m2.parentId
+          and m2.id = m3.parentId
+          and m3.enabled = true
     </select>
 
 </mapper>
