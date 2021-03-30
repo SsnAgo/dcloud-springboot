@@ -1,6 +1,8 @@
 package com.example.dcloud.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.dcloud.mapper.*;
 import com.example.dcloud.pojo.*;
 import com.example.dcloud.service.IUserService;
@@ -196,7 +198,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public Major getMajor(User user) {
         Major major = majorMapper.selectById(user.getMajorId());
-        log.info("获取到用户学历为：{}", major.getName());
+        log.info("获取到用户专业：{}", major.getName());
         return major;
+    }
+
+    @Override
+    public RespPageBean getUsersByPage(Integer currentPage, Integer size, User user) {
+        Page<User> page = new Page<>(currentPage,size);
+        IPage<User> usersPage = userMapper.getUsersByPage(page,user);
+        RespPageBean respPageBean = new RespPageBean(usersPage.getTotal(),usersPage.getRecords());
+        return respPageBean;
     }
 }

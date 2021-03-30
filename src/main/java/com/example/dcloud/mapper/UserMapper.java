@@ -1,7 +1,10 @@
 package com.example.dcloud.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.dcloud.pojo.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,4 +19,11 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
 
 
+    /**
+     * 分页获取数据
+     * @param page
+     * @param user
+     * @return
+     */
+    IPage<User> getUsersByPage(Page<User> page, @Param("user") User user);
 }
