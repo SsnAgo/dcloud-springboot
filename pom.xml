@@ -140,6 +140,13 @@
             <artifactId>MyBatisX</artifactId>
             <version>0.0.5</version>
         </dependency>
+
+        <!--缺少javax.xml报错-->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.0</version>
+        </dependency>
     </dependencies>
 
     <build>
