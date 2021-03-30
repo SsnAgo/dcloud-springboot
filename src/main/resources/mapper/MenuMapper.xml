@@ -20,7 +20,7 @@
     <sql id="Base_Column_List">
         id, url, path, component, name, iconCls, keepAlive, requireAuth, parentId, enabled
     </sql>
-    <resultMap id="MenusWithRole" type="com.example.dcloud.pojo.Menu">
+    <resultMap id="MenusWithRole" type="com.example.dcloud.pojo.Menu" extends="BaseResultMap">
         <collection property="roles" ofType="com.example.dcloud.pojo.Role">
             <id column="rid" property="id"/>
             <result column="rname" property="name"/>
