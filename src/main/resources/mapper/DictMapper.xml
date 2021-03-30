@@ -4,6 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.Dict">
+    <!--@Table t_dict-->
         <id column="id" property="id" />
         <result column="tag" property="tag" />
         <result column="tagZh" property="tagZh" />

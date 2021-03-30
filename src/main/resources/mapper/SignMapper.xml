@@ -4,6 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.Sign">
+    <!--@Table t_sign-->
         <id column="id" property="id" />
         <result column="startTime" property="startTime" />
         <result column="endTime" property="endTime" />

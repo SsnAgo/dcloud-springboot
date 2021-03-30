@@ -4,6 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.SignRecord">
+    <!--@Table t_sign_record-->
         <id column="id" property="id" />
         <result column="teacherId" property="teacherId" />
         <result column="courseId" property="courseId" />

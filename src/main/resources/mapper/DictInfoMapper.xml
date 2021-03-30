@@ -4,16 +4,17 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.DictInfo">
+    <!--@Table t_dict_info-->
         <id column="id" property="id" />
         <result column="tag" property="tag" />
         <result column="content" property="content" />
-        <result column="order" property="order" />
+        <result column="sequence" property="sequence" />
         <result column="isDefault" property="isDefault" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, tag, content, order, isDefault
+        id, tag, content, sequence, isDefault
     </sql>
 
 </mapper>

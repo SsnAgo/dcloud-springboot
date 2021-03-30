@@ -4,6 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.Major">
+    <!--@Table t_major-->
         <id column="id" property="id" />
         <result column="name" property="name" />
     </resultMap>

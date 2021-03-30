@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author ssn
- * @since 2021-03-27
+ * @since 2021-03-30
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -41,13 +41,13 @@ public class System implements Serializable {
     private Boolean enabled;
 
     @ApiModelProperty(value = "出勤等级")
-    private Integer level;
+    private Integer lv;
 
     @ApiModelProperty(value = "出勤率左边界")
-    private Integer from;
+    private Integer left;
 
     @ApiModelProperty(value = "出勤率右边界")
-    private Integer to;
+    private Integer right;
 
 
 }

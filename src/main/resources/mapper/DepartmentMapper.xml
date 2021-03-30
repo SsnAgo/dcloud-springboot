@@ -4,6 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.Department">
+    <!--@Table t_department-->
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="schoolId" property="schoolId" />

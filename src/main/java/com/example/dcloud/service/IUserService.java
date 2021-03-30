@@ -47,21 +47,7 @@ public interface IUserService extends IService<User> {
      */
     User getUserByUsernameOrPhone(String usernameOrPhone);
 
-    /**
-     * 补全一些和其他表关联的信息
-     * @param user
-     * @return
-     */
-    User getCompletedUser(User user);
 
-
-
-
-    /**
-     * 获取该user的roles
-     * @return
-     */
-    List<Role> getRoles(Integer userId);
 
     /**
      * 获取用户性别
@@ -108,4 +94,11 @@ public interface IUserService extends IService<User> {
      * @return
      */
     RespPageBean getUsersByPage(Integer currentPage, Integer size, User user);
+
+    /**
+     * 获取用户角色
+     * @param user
+     * @return
+     */
+    Role getRole(User user);
 }

@@ -1,9 +1,15 @@
 package com.example.dcloud.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.example.dcloud.pojo.RespBean;
+import com.example.dcloud.pojo.Role;
+import com.example.dcloud.service.IRoleService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -16,5 +22,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/role")
 public class RoleController {
+
+
+    @Resource
+    private IRoleService roleService;
+
+    @ApiOperation("获取全部角色")
+    @GetMapping("/")
+    public List<Role> getRoles(){
+        return roleService.list();
+    }
+
+    @ApiOperation("修改角色信息")
+    @PutMapping("/")
+    public RespBean editRole(@RequestBody Role role){
+        if (roleService.updateById(role)){
+            return RespBean.success("更新角色成功");
+        }
+        return RespBean.error("更新失败");
+    }
+
 
 }

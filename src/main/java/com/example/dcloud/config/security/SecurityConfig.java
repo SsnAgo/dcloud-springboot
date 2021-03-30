@@ -43,8 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return usernameOrPhone -> {
             User user = userService.getUserByUsernameOrPhone(usernameOrPhone);
             if (null != user){
-
-                user.setRoles(userService.getRoles(user.getId()));
+                user = userService.getUserInfo(user);
                 return user;
             }
             throw new UsernameNotFoundException("输入信息有误");

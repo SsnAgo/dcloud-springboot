@@ -49,7 +49,7 @@ public class UserController {
         return user;
     }
 
-    @ApiOperation("获取所有用户(分页)")
+    @ApiOperation("获取所有用户(分页) 除了用户自己")
     @GetMapping("/")
     public RespPageBean getAllEmployees(@RequestParam(defaultValue = "1") Integer currentPage,
                                         @RequestParam(defaultValue = "10") Integer size,

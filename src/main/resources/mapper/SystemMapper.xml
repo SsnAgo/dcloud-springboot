@@ -4,18 +4,19 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.System">
+<!--    @Table t_system-->
         <id column="id" property="id" />
         <result column="signExp" property="signExp" />
         <result column="signDistance" property="signDistance" />
         <result column="enabled" property="enabled" />
-        <result column="level" property="level" />
-        <result column="from" property="from" />
-        <result column="to" property="to" />
+        <result column="lv" property="lv" />
+        <result column="left" property="left" />
+        <result column="right" property="right" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, signExp, signDistance, enabled, level, from, to
+        id, signExp, signDistance, enabled, lv, left, right
     </sql>
 
 </mapper>

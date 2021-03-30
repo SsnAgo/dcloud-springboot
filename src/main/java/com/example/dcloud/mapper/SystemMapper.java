@@ -1,6 +1,5 @@
 package com.example.dcloud.mapper;
 
-import com.example.dcloud.pojo.System;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -9,7 +8,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author ssn
- * @since 2021-03-27
+ * @since 2021-03-30
  */
 public interface SystemMapper extends BaseMapper<System> {
 

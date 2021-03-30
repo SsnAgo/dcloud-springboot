@@ -4,6 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.MenuRole">
+    <!--@Table t_menu_role-->
         <id column="id" property="id" />
         <result column="mid" property="mid" />
         <result column="rid" property="rid" />

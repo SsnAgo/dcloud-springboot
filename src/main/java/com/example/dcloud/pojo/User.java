@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -113,11 +115,13 @@ public class User implements Serializable, UserDetails {
     @TableField(exist = false)
     private Major major;
 
+    @ApiModelProperty(value = "用户角色id")
+    private Integer roleId;
 
 
     @ApiModelProperty(value = "角色")
     @TableField(exist = false)
-    private List<Role> roles;
+    private Role role;
 
 
     /**
@@ -128,10 +132,8 @@ public class User implements Serializable, UserDetails {
     @Override
     @JsonDeserialize(using = CustomAuthorityDeserializer.class)
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> collect = roles
-                .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(role.getName());
+        List<SimpleGrantedAuthority> collect = Arrays.asList(simpleGrantedAuthority);
         return collect;
     }
 

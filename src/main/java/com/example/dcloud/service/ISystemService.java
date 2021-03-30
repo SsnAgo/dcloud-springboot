@@ -1,6 +1,5 @@
 package com.example.dcloud.service;
 
-import com.example.dcloud.pojo.System;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -9,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author ssn
- * @since 2021-03-27
+ * @since 2021-03-30
  */
 public interface ISystemService extends IService<System> {
 

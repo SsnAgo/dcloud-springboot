@@ -8,6 +8,7 @@ import com.example.dcloud.pojo.*;
 import com.example.dcloud.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.dcloud.utils.JwtTokenUtil;
+import com.example.dcloud.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -89,17 +90,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     /**
-     * 如果id为空就查全部  如果id不为空就查所有
+     * 补全user属性
+     *
      * @param user
      * @return
      */
     @Override
     public User getUserInfo(User user) {
         user = user.setSex(getSex(user));
-    user = user.setEducation(getEducation(user));
-    user = user.setSchool(getSchool(user));
-    user = user.setDepartment(getDepartment(user));
-    user = user.setMajor(getMajor(user));
+        user = user.setEducation(getEducation(user));
+        user = user.setSchool(getSchool(user));
+        user = user.setDepartment(getDepartment(user));
+        user = user.setMajor(getMajor(user));
+        user = user.setRole(getRole(user));
         return user;
     }
 
@@ -114,17 +117,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public RespBean loginByPhone(String phone, String code, HttpServletRequest request) {
         //UserDetails user = userDetailsService.loadUserByUsername(phone);
-        User user  = userMapper.selectOne(new QueryWrapper<User>().eq("phone",phone));
+        User user = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
         if (null == user) return RespBean.error("该手机号未注册，请先注册");
         if (!StringUtils.hasText(code)) return RespBean.error("验证码不能为空");
         return loginSuccess(user);
     }
 
-    private RespBean loginSuccess(User user){
+    private RespBean loginSuccess(User user) {
         if (!user.isEnabled()) {
             return RespBean.error("账号被禁用，请联系管理员");
         }
-        user.setRoles(roleMapper.getRoles(user.getId()));
         user = getUserInfo(user);
         System.out.println("存入前：" + user);
         //否则更新成功  更新security登录对象
@@ -136,7 +138,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
         tokenMap.put("tokenHead", tokenHead);
-        User user2 = (User)usernamePasswordAuthenticationToken.getPrincipal();
+        User user2 = (User) usernamePasswordAuthenticationToken.getPrincipal();
         System.out.println("从usernamepasswordAu里面取user打印" + user2);
         return RespBean.success("登陆成功", tokenMap);
     }
@@ -153,17 +155,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return null;
     }
 
-    @Override
-    public User getCompletedUser(User user) {
-        //user.setSex(getSex(user)).setEducation(getEducation(user)).setSchool();
-        return null;
-    }
-
-
-    @Override
-    public List<Role> getRoles(Integer userId) {
-        return roleMapper.getRoles(userId);
-    }
 
     @Override
     public String getSex(User user) {
@@ -204,9 +195,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public RespPageBean getUsersByPage(Integer currentPage, Integer size, User user) {
-        Page<User> page = new Page<>(currentPage,size);
-        IPage<User> usersPage = userMapper.getUsersByPage(page,user);
-        RespPageBean respPageBean = new RespPageBean(usersPage.getTotal(),usersPage.getRecords());
+
+        Page<User> page = new Page<>(currentPage, size);
+        IPage<User> usersPage = userMapper.getUsersByPage(UserUtils.getCurrentUser().getId(),page, user);
+        RespPageBean respPageBean = new RespPageBean(usersPage.getTotal(), usersPage.getRecords());
         return respPageBean;
+    }
+
+    @Override
+    public Role getRole(User user) {
+        Role role = roleMapper.selectById(user.getRoleId());
+        log.info("获取到用户角色：{}", role.getName());
+        return role;
     }
 }

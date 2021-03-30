@@ -3,6 +3,7 @@
 <mapper namespace="com.example.dcloud.mapper.UserMapper">
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.User">
+        <!--@Table t_user-->
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="nickname" property="nickname"/>
@@ -20,19 +21,35 @@
         <result column="schoolId" property="schoolId"/>
         <result column="departmentId" property="departmentId"/>
         <result column="majorId" property="majorId"/>
+        <result column="roleId" property="roleId"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
+
     <sql id="Base_Column_List">
-
-    id, name, nickname, username, password, sexCode, phone, email, number, createTime, educationCode, exp, userFace, enabled, schoolId,departmentId,majorId
-
+        id,
+        name,
+        nickname,
+        username,
+        password,
+        sexCode,
+        phone,
+        email,
+        number,
+        createTime,
+        educationCode,
+        exp,
+        userFace,
+        enabled,
+        schoolId,
+        departmentId,
+        majorId,
+        roleId
     </sql>
 
     <resultMap id="UserInfo" type="com.example.dcloud.pojo.User" extends="BaseResultMap">
         <result column="sex" property="sex"/>
         <result column="education" property="education"/>
-
         <association property="school" javaType="com.example.dcloud.pojo.School">
             <id column="sid" property="id"/>
             <result column="sname" property="name"/>
@@ -47,37 +64,61 @@
             <id column="mid" property="id"/>
             <result column="mname" property="name"/>
         </association>
+        <association property="role" javaType="com.example.dcloud.pojo.Role">
+            <id column="rid" property="id"/>
+            <result column="rname" property="name"/>
+            <result column="rnameZh" property="nameZh"/>
+        </association>
     </resultMap>
-
     <select id="getUsersByPage" resultMap="UserInfo">
-            select
-            u.*,
-            dictsex.content as sex,
-            dictedu.content as education,
-            s.id as sid,
-            s.`name` as sname,
-            s.schoolCode as scode,
-            d.id as did,
-            d.`name` as dname,
-            m.id as mid,
-            m.`name` as mname
-        from
-            t_user u,
-            t_dict_info dictsex,
-            t_dict_info dictedu,
-            t_school s,
-            t_department d,
-            t_major m
-        where
-            u.sexCode = dictsex.id
-            and
-            u.educationCode = dictedu.id
-            and u.schoolId = s.id
-            and u.departmentId = d.id
-            and u.majorId = m.id
+        select u.*,
+               dictsex.content as sex,
+               dictedu.content as education,
+               s.id            as sid,
+               s.`name`        as sname,
+               s.schoolCode    as scode,
+               d.id            as did,
+               d.`name`        as dname,
+               m.id            as mid,
+               m.`name`        as mname,
+               r.id            as rid,
+               r.name          as rname,
+               r.nameZh        as rnameZh
 
-
-
-
+        from t_user u,
+             t_dict_info dictsex,
+             t_dict_info dictedu,
+             t_school s,
+             t_department d,
+             t_major m,
+             t_role r
+                where
+                u.id != #{currentUserId}
+                  and
+                u.sexCode = dictsex.id
+                  and
+                u.educationCode = dictedu.id
+                  and u.schoolId = s.id
+                  and u.departmentId = d.id
+                  and u.majorId = m.id
+                  and u.roleId = r.id
+        <if test="null != user.name and '' != user.name">
+            and u.name like concat('%', #{user.name}, '%')
+        </if>
+        <if test="null != user.schoolId and '' != user.schoolId">
+            and u.schoolId = #{user.schoolId}
+        </if>
+        <if test="null != user.departmentId and '' != user.departmentId">
+            and u.departmentId = #{user.departmentId}
+        </if>
+        <if test="null != user.majorId and '' != user.majorId">
+            and u.majorId = #{user.majorId}
+        </if>
+        <if test="null != user.majorId and '' != user.majorId">
+            and u.majorId = #{user.majorId}
+        </if>
+        <if test="null != user.roleId and '' != user.roleId">
+            and u.roleId = #{user.roleId}
+        </if>
     </select>
 </mapper>
