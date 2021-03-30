@@ -2,6 +2,7 @@ package com.example.dcloud.mapper;
 
 import com.example.dcloud.pojo.Role;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,10 +16,11 @@ import java.util.List;
  */
 public interface RoleMapper extends BaseMapper<Role> {
 
+
     /**
-     * 获取该user的roles
+     * 如果传了role就按条件  不然就显示全部
+     * @param role
      * @return
      */
-    List<Role> getRoles(Integer userId);
-
+    List<Role> getRoles(@Param("role") Role role);
 }
