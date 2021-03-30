@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.dcloud.mapper.MenuMapper">
-
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.Menu">
         <id column="id" property="id"/>
@@ -18,7 +17,9 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, url, path, component, name, iconCls, keepAlive, requireAuth, parentId, enabled
+
+                id, url, path, component, name, iconCls, keepAlive, requireAuth, parentId, enabled
+
     </sql>
     <resultMap id="MenusWithRole" type="com.example.dcloud.pojo.Menu">
         <collection property="roles" ofType="com.example.dcloud.pojo.Role">
@@ -28,45 +29,87 @@
         </collection>
     </resultMap>
     <select id="getMenusWithRole" resultMap="MenusWithRole">
-        SELECT m.*,
-               r.id     as rid,
-               r.name   as rname,
-               r.nameZh as rnameZh
-        FROM t_menu m,
-             t_menu_role mr,
-             t_role r
-        WHERE r.id = mr.rid
-          AND mr.mid = m.id
-        order by m.id
+
+                SELECT m.*,
+                       r.id     as rid,
+                       r.name   as rname,
+                       r.nameZh as rnameZh
+                FROM t_menu m,
+                     t_menu_role mr,
+                     t_role r
+                WHERE r.id = mr.rid
+                  AND mr.mid = m.id
+                order by m.id
+
 
 
     </select>
 
     <resultMap id="AllMenus" type="com.example.dcloud.pojo.Menu" extends="BaseResultMap">
-        <id column="id1" property="id" />
+        <id column="id1" property="id"/>
         <result column="name1" property="name"/>
         <collection property="children" ofType="com.example.dcloud.pojo.Menu">
-            <id column="id2" property="id" />
+            <id column="id2" property="id"/>
             <result column="name2" property="name"/>
             <collection property="children" ofType="com.example.dcloud.pojo.Menu">
-                <id column="id3" property="id" />
+                <id column="id3" property="id"/>
                 <result column="name3" property="name"/>
             </collection>
         </collection>
     </resultMap>
     <select id="getAllMenus" resultMap="AllMenus">
-        SELECT m1.id as id1,
-               m1.name as name1,
-               m2.id as id2,
-               m2.name as name2,
-               m3.id as id3,
-               m3.name as name3
-        FROM t_menu m1,
-             t_menu m2,
-             t_menu m3
-        where m1.id = m2.parentId
-          and m2.id = m3.parentId
-          and m3.enabled = true
+
+                SELECT m1.id as id1,
+                       m1.name as name1,
+                       m2.id as id2,
+                       m2.name as name2,
+                       m3.id as id3,
+                       m3.name as name3
+                FROM t_menu m1,
+                     t_menu m2,
+                     t_menu m3
+                where m1.id = m2.parentId
+                  and m2.id = m3.parentId
+                  and m3.enabled = true
+
     </select>
 
+    <resultMap id="Menus" type="com.example.dcloud.pojo.Menu" extends="BaseResultMap">
+        <collection property="children" ofType="com.example.dcloud.pojo.Menu">
+            <id column="id2" property="id"/>
+            <result column="url2" property="url"/>
+            <result column="path2" property="path"/>
+            <result column="component2" property="component"/>
+            <result column="name2" property="name"/>
+            <result column="iconCls2" property="iconCls"/>
+            <result column="keepAlive2" property="keepAlive"/>
+            <result column="requireAuth2" property="requireAuth"/>
+            <result column="parentId2" property="parentId"/>
+            <result column="enabled2" property="enabled"/>
+        </collection>
+    </resultMap>
+    <select id="getMenusByUserId" resultMap="Menus">
+
+        SELECT m1.*,
+                       m2.id          AS id2,
+                       m2.path        AS path2,
+                       m2.component   AS component2,
+                       m2.`name`      AS name2,
+                       m2.iconCls     AS iconCls2,
+                       m2.keepAlive   AS keepAlive2,
+                       m2.requireAuth AS requireAuth2,
+                       m2.parentId    AS parentId2,
+                       m2.enabled     AS enabled2
+                FROM t_menu m1,
+                     t_menu m2,
+                     t_user_role ur,
+                     t_menu_role mr
+                WHERE m1.id = m2.parentId
+                  AND m2.id = mr.mid
+                  AND mr.rid = ur.rid
+                  AND ur.uid = #{userId}
+                  AND m2.enabled = TRUE
+                order by m1.id
+
+    </select>
 </mapper>
