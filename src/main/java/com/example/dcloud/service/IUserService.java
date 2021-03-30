@@ -54,6 +54,9 @@ public interface IUserService extends IService<User> {
      */
     User getCompletedUser(User user);
 
+
+
+
     /**
      * 获取该user的roles
      * @return
@@ -97,5 +100,12 @@ public interface IUserService extends IService<User> {
     Major getMajor(User user);
 
 
-
+    /**
+     * 分页获取所有用户信息
+     * @param currentPage
+     * @param size
+     * @param user
+     * @return
+     */
+    RespPageBean getUsersByPage(Integer currentPage, Integer size, User user);
 }
