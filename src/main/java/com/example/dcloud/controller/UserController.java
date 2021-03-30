@@ -38,6 +38,8 @@ public class UserController {
         }
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = (UsernamePasswordAuthenticationToken) principal;
         User user = (User) usernamePasswordAuthenticationToken.getPrincipal();
+        user = userService.getUserInfo(user);
+        System.out.println("controller里的user : " + user);
         user.setPassword(null);
         return user;
 
