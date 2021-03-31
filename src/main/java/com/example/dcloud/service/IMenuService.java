@@ -26,4 +26,11 @@ public interface IMenuService extends IService<Menu> {
      * 获取当前用户菜单
      */
     List<Menu> getUserMenus();
+
+    /**
+     * 根据条件查询 如果为空 就查全部
+     * @param menu
+     * @return
+     */
+    List<Menu> getMenus(Menu menu);
 }

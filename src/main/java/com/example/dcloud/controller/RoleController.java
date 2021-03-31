@@ -74,6 +74,10 @@ public class RoleController {
         return menuRoleService.getMenusByRoleId(id);
     }
 
-
+    @ApiOperation("更新该角色的菜单权限")
+    @PutMapping("/menus")
+    public RespBean updateRoleMenus(Integer rid,Integer[] ids){
+        return menuRoleService.updateRoleMenus(rid,ids);
+    }
 
 }

@@ -7,17 +7,18 @@ import com.example.dcloud.pojo.User;
 import com.example.dcloud.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * <p>
@@ -32,10 +33,12 @@ import java.time.LocalDate;
 @Api(tags = "UserController")
 public class UserController {
 
+    @Value("${default.password}")
+    private String defaultPass;
     @Resource
     private IUserService userService;
 
-    @ApiOperation(value = "获取用户信息")
+    @ApiOperation(value = "获取当前用户信息")
     @GetMapping("/info")
     public User userInfo(Principal principal){
         if (null == principal){
@@ -55,8 +58,44 @@ public class UserController {
                                         @RequestParam(defaultValue = "10") Integer size,
                                         User user) {
         return userService.getUsersByPage(currentPage, size, user);
-
     }
+
+    @ApiOperation("管理员新增用户")
+    @PostMapping("/addByAdmin")
+    public RespBean adminAddUser(@RequestBody User user){
+        // 如果没设置用户名  就随便给个用户名
+        if (StringUtils.hasText(user.getUsername())){
+            user.setUsername(UUID.randomUUID().toString());
+        }
+        // 如果没设置密码，就设置默认密码
+        if (StringUtils.hasText(user.getPassword())){
+            user.setPassword(new BCryptPasswordEncoder().encode(defaultPass));
+        }else{
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        }
+
+        user.setCreateTime(LocalDateTime.now());
+        if (userService.save(user)) {
+            return RespBean.success("新增用户成功");
+        }
+        return RespBean.error("新增用户失败");
+    }
+
+
+    @ApiOperation("修改用户")
+    @PutMapping("editByAdmin")
+    public RespBean adminUpdateUser(@RequestBody User user){
+        if (userService.updateById(user)){
+            return RespBean.success("修改用户成功");
+        }
+        return RespBean.error("修改用户失败");
+    }
+
+
+
+
+
+
 
 
 }

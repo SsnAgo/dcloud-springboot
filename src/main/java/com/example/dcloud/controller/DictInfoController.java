@@ -1,9 +1,12 @@
 package com.example.dcloud.controller;
 
 
+import com.example.dcloud.service.IDictInfoService;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -16,5 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/dict-info")
 public class DictInfoController {
+    @Resource
+    private IDictInfoService dictInfoService;
+
+
 
 }

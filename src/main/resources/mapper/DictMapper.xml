@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.dcloud.mapper.DictMapper">
-
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.Dict">
-    <!--@Table t_dict-->
-        <id column="id" property="id" />
-        <result column="tag" property="tag" />
-        <result column="tagZh" property="tagZh" />
-        <result column="description" property="description" />
+        <!--@Table t_dict-->
+        <id column="id" property="id"/>
+        <result column="tag" property="tag"/>
+        <result column="tagZh" property="tagZh"/>
+        <result column="description" property="description"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, tag, tagZh, description
+        id,
+        tag,
+        tagZh,
+        description
     </sql>
-
+    <select id="listDictPage" resultMap="BaseResultMap">
+        select d.*
+        from t_dict d
+                where 1 = 1
+        <if test="null != dict.tag and '' != dict.tag">
+            and d.tag = #{dict.tag}
+        </if>
+        <if test="null != dict.tagZh and '' != dict.tagZh">
+            and d.tagZh = #{dict.tagZh}
+        </if>
+    </select>
 </mapper>

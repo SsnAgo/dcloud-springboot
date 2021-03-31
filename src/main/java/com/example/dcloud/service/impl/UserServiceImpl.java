@@ -73,18 +73,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     /**
      * 通过用户名登录
      *
-     * @param username
+     * @param usernameOrPassword
      * @param password
      * @param request
      * @return
      */
     @Override
-    public RespBean loginByUsername(String username, String password, HttpServletRequest request) {
+    public RespBean loginByPassword(String usernameOrPassword, String password, HttpServletRequest request) {
         //UserDetails user = userDetailsService.loadUserByUsername(username);
-        User user = userMapper.selectOne(new QueryWrapper<User>().eq("username", username));
+        User user = getUserByUsernameOrPhone(usernameOrPassword);
         System.out.println(passwordEncoder.matches(password, user.getPassword()));
         if (null == user || !passwordEncoder.matches(password, user.getPassword())) {
-            return RespBean.error("用户名或密码输入错误");
+            return RespBean.error("用户名/手机号或密码输入错误");
         }
         return loginSuccess(user);
     }
@@ -115,7 +115,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
      * @return
      */
     @Override
-    public RespBean loginByPhone(String phone, String code, HttpServletRequest request) {
+    public RespBean loginByCode(String phone, String code, HttpServletRequest request) {
         //UserDetails user = userDetailsService.loadUserByUsername(phone);
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
         if (null == user) return RespBean.error("该手机号未注册，请先注册");

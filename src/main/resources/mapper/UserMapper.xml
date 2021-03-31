@@ -59,7 +59,6 @@
             <id column="did" property="id"/>
             <result column="dname" property="name"/>
         </association>
-
         <association property="major" javaType="com.example.dcloud.pojo.Major">
             <id column="mid" property="id"/>
             <result column="mname" property="name"/>
@@ -71,37 +70,28 @@
         </association>
     </resultMap>
     <select id="getUsersByPage" resultMap="UserInfo">
-        select u.*,
+        SELECT u.*,
                dictsex.content as sex,
                dictedu.content as education,
-               s.id            as sid,
-               s.`name`        as sname,
+               s.id            AS sid,
+               s.`name`        AS sname,
                s.schoolCode    as scode,
                d.id            as did,
                d.`name`        as dname,
                m.id            as mid,
                m.`name`        as mname,
                r.id            as rid,
-               r.name          as rname,
+               r.`name`        as rname,
                r.nameZh        as rnameZh
+        FROM t_user u
+                     LEFT JOIN t_dict_info dictsex ON u.sexCode = dictsex.id
+                     LEFT JOIN t_dict_info dictedu ON u.educationCode = dictedu.id
+                     LEFT JOIN t_school s ON u.schoolId = s.id
+                     LEFT JOIN t_department d ON u.departmentId = d.id
+                     LEFT JOIN t_major m ON u.majorId = m.id
+                     LEFT JOIN t_role r ON u.roleId = r.id
+                WHERE u.id != #{currentUserId}
 
-        from t_user u,
-             t_dict_info dictsex,
-             t_dict_info dictedu,
-             t_school s,
-             t_department d,
-             t_major m,
-             t_role r
-                where
-                u.id != #{currentUserId}
-                  and
-                u.sexCode = dictsex.id
-                  and
-                u.educationCode = dictedu.id
-                  and u.schoolId = s.id
-                  and u.departmentId = d.id
-                  and u.majorId = m.id
-                  and u.roleId = r.id
         <if test="null != user.name and '' != user.name">
             and u.name like concat('%', #{user.name}, '%')
         </if>
@@ -120,5 +110,6 @@
         <if test="null != user.roleId and '' != user.roleId">
             and u.roleId = #{user.roleId}
         </if>
+        order by u.id
     </select>
 </mapper>

@@ -17,12 +17,12 @@ import java.util.List;
 public interface IUserService extends IService<User> {
     /**
      * 通过用户名登录
-     * @param username
+     * @param usernameOrPassword
      * @param password
      * @param request
      * @return
      */
-    RespBean loginByUsername(String username, String password,HttpServletRequest request);
+    RespBean loginByPassword(String usernameOrPassword, String password,HttpServletRequest request);
 
 
     /**
@@ -38,7 +38,7 @@ public interface IUserService extends IService<User> {
      * @param request
      * @return
      */
-    RespBean loginByPhone(String phone,String code,HttpServletRequest request);
+    RespBean loginByCode(String phone,String code,HttpServletRequest request);
 
     /**
      * 通过电话号码或者username来获取该用户

@@ -26,4 +26,12 @@ public interface MenuRoleMapper extends BaseMapper<MenuRole> {
      * @return
      */
     List<Menu> getMenusByRoleId(Integer rid);
+
+    /**
+     * 给rid赋值该拥有的菜单ids
+     * @param rid
+     * @param ids
+     * @return
+     */
+    Integer insertRecords(@Param("rid") Integer rid,@Param("mids") Integer[] ids);
 }

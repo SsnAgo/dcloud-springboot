@@ -17,16 +17,16 @@ public class LoginController {
     @Resource
     private IUserService userService;
 
-    @ApiOperation("通过username登录，登录之后返回token")
-    @PostMapping("/loginByUsername")
-    public RespBean loginByUsername(@RequestBody LoginVo loginVo, HttpServletRequest request){
-        return userService.loginByUsername(loginVo.getUsername(),loginVo.getPassword(),request);
+    @ApiOperation("通过username/phone + password登录，登录之后返回token")
+    @PostMapping("/loginByPassword")
+    public RespBean loginByPassword(@RequestBody LoginVo loginVo, HttpServletRequest request){
+        return userService.loginByPassword(loginVo.getUsernameOrPhone(),loginVo.getPassword(),request);
     }
 
-    @ApiOperation("通过手机号登录，登录之后返回token")
-    @PostMapping("/loginByPhone")
-    public RespBean loginByPhone(@RequestBody LoginVo loginVo, HttpServletRequest request){
-        return userService.loginByPhone(loginVo.getPhone(),loginVo.getCode(),request);
+    @ApiOperation("通过phone+code登录，登录之后返回token")
+    @PostMapping("/loginByCode")
+    public RespBean loginByCode(@RequestBody LoginVo loginVo, HttpServletRequest request){
+        return userService.loginByCode(loginVo.getUsernameOrPhone(),loginVo.getCode(),request);
     }
 
     @ApiOperation(value = "用户注销功能")

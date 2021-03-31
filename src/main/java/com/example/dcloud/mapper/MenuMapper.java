@@ -2,6 +2,7 @@ package com.example.dcloud.mapper;
 
 import com.example.dcloud.pojo.Menu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -26,5 +27,10 @@ public interface MenuMapper extends BaseMapper<Menu> {
     List<Menu> getMenusByUserId(Integer userId);
 
 
-
+    /**
+     * 根据条件查询menus 如果为空就查全部
+     * @param menu
+     * @return
+     */
+    List<Menu> getMenus(@Param("menu") Menu menu);
 }

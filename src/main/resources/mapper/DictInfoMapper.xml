@@ -1,20 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.dcloud.mapper.DictInfoMapper">
-
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.DictInfo">
-    <!--@Table t_dict_info-->
-        <id column="id" property="id" />
-        <result column="tag" property="tag" />
-        <result column="content" property="content" />
-        <result column="sequence" property="sequence" />
-        <result column="isDefault" property="isDefault" />
+        <!--@Table t_dict_info-->
+        <id column="id" property="id"/>
+        <result column="tag" property="tag"/>
+        <result column="content" property="content"/>
+        <result column="sequence" property="sequence"/>
+        <result column="isDefault" property="isDefault"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, tag, content, sequence, isDefault
+        id,
+        tag,
+        content,
+        sequence,
+        isDefault
     </sql>
-
+    <insert id="insertDictInfo" parameterType="java.util.List">
+        insert into t_dict_info(tag, content, sequence, isDefault)  values
+        <foreach collection="dictInfoList" item="info" separator=",">
+            (#{tag}, #{info.content}, #{info.sequence}, #{info.isDefault})
+        </foreach>
+    </insert>
+    <update id="updateDictInfo">
+        <foreach collection="dictInfoList" item="item" open="" separator=";" close="">
+            update t_dict_info set content=#{item.content},sequence=#{item.sequence},isDefault=#{item.isDefault}
+               where tag=#{tag}
+</foreach>
+    </update>
 </mapper>

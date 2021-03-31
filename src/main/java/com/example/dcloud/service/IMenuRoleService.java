@@ -3,6 +3,7 @@ package com.example.dcloud.service;
 import com.example.dcloud.pojo.Menu;
 import com.example.dcloud.pojo.MenuRole;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.dcloud.pojo.RespBean;
 
 import java.util.List;
 
@@ -22,4 +23,11 @@ public interface IMenuRoleService extends IService<MenuRole> {
      * @return
      */
     List<Menu> getMenusByRoleId(Integer rid);
+
+    /**
+     * 更新角色菜单
+     * @param ids
+     * @return
+     */
+    RespBean updateRoleMenus(Integer rid,Integer[] ids);
 }
