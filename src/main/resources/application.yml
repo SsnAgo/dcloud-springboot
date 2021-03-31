@@ -6,7 +6,7 @@ spring:
   # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://118.178.70.125:3306/dcloud?useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://118.178.70.125:3306/dcloud?useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT&allowPublicKeyRetrieval=true&allowMultiQueries=true
     username: test_rds
     password: rds_980427
     hikari:

@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.dcloud.pojo.Dict;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.dcloud.pojo.DictInfo;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -23,4 +26,12 @@ public interface DictMapper extends BaseMapper<Dict> {
      * @return
      */
     IPage<Dict> listDictPage(Page<Dict> page, @Param("dict") Dict dict);
+
+    /**
+     * 添加字典及其字典项
+     * @param dict
+     * @param dictInfoList
+     * @return
+     */
+    boolean insertDictAndDictInfo(@Param("dict") Dict dict,@Param("dictInfoList") List<DictInfo> dictInfoList);
 }

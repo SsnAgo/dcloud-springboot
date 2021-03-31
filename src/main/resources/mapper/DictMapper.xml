@@ -28,4 +28,13 @@
             and d.tagZh = #{dict.tagZh}
         </if>
     </select>
+    <insert id="insertDictAndDictInfo">
+        insert into t_dict(tag, tagZh, description)
+        values (#{dict.tag}, #{dict.tagZh}, #{dict.description});
+                insert into t_dict_info(tag, content, sequence, isDefault)
+                VALUES
+        <foreach collection="dictInfoList" item="item" separator=",">
+            (#{dict.tag},#{item.content},#{item.sequence},#{item.isDefault})
+        </foreach>
+    </insert>
 </mapper>

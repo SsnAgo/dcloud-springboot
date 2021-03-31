@@ -92,13 +92,9 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         // 如果字典信息插入不成功，就直接return
         Dict dict = dictVo.getDict();
         List<DictInfo> dictInfoList = dictVo.getDictInfoList();
-        Dict exits = dictMapper.selectOne(new QueryWrapper<Dict>().eq("tagZh", dict.getTagZh()).eq("tag", dict.getTag()));
+        // 判断是否已存在
+        Dict exits = dictMapper.selectOne(new QueryWrapper<Dict>().eq("tagZh", dict.getTagZh()).or().eq("tag", dict.getTag()));
         if (exits!=null) return RespBean.error("添加字典失败，中英文标识不能重复");
-        if (dictMapper.insert(dict) != 1) {
-            return RespBean.error("添加字典失败");
-        }
-        System.out.println("执行到新增语句后面了");
-        //如果字典新增成功了  就新增字典信息
         // 判断排序是否正确  默认值是否唯一
         Set<Integer> set = new HashSet<>();
         Integer defaultCount = 0;
@@ -116,8 +112,8 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         if (defaultCount > 1){
             return RespBean.error("默认值只能唯一");
         }
-        // 数据正确  那就去添加
-        if (dictInfoMapper.insertDictInfo(dict.getTag(),dictInfoList)){
+
+        if (dictMapper.insertDictAndDictInfo(dict,dictInfoList)) {
             return RespBean.success("添加字典成功");
         }
         return RespBean.success("添加字典失败");
