@@ -2,8 +2,11 @@ package com.example.dcloud.mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
+import com.example.dcloud.pojo.Menu;
 import com.example.dcloud.pojo.MenuRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +20,10 @@ public interface MenuRoleMapper extends BaseMapper<MenuRole> {
     List<MenuRole> getAllByRid(@Param("rid")Integer rid);
 
 
+    /**
+     * 根据rid获取菜单
+     * @param rid
+     * @return
+     */
+    List<Menu> getMenusByRoleId(Integer rid);
 }

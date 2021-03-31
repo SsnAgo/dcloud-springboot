@@ -1,10 +1,14 @@
 package com.example.dcloud.service.impl;
 
+import com.example.dcloud.pojo.Menu;
 import com.example.dcloud.pojo.MenuRole;
 import com.example.dcloud.mapper.MenuRoleMapper;
 import com.example.dcloud.service.IMenuRoleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +21,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class MenuRoleServiceImpl extends ServiceImpl<MenuRoleMapper, MenuRole> implements IMenuRoleService {
 
+    @Resource
+    private MenuRoleMapper menuRoleMapper;
+
+    @Override
+    public List<Menu> getMenusByRoleId(Integer rid) {
+        return menuRoleMapper.getMenusByRoleId(rid);
+    }
 }

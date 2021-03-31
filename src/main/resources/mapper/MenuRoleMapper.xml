@@ -21,4 +21,12 @@
         where rid=#{rid}
     </select>
 
+    <select id="getMenusByRoleId" resultType="com.example.dcloud.pojo.Menu">
+        select m.*
+        from t_menu_role mr,
+            t_menu m
+            where mr.rid = #{rid} and mr.mid = m.id
+        order by m.id
+    </select>
+
 </mapper>
