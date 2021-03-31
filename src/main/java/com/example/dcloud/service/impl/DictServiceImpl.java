@@ -97,7 +97,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         if (dictMapper.insert(dict) != 1) {
             return RespBean.error("添加字典失败");
         }
-
+        System.out.println("执行到新增语句后面了");
         //如果字典新增成功了  就新增字典信息
         // 判断排序是否正确  默认值是否唯一
         Set<Integer> set = new HashSet<>();
@@ -118,7 +118,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         }
         // 数据正确  那就去添加
         if (dictInfoMapper.insertDictInfo(dict.getTag(),dictInfoList)){
-            return RespBean.error("添加字典成功");
+            return RespBean.success("添加字典成功");
         }
         return RespBean.success("添加字典失败");
     }
