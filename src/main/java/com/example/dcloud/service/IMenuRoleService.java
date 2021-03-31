@@ -1,7 +1,10 @@
 package com.example.dcloud.service;
 
+import com.example.dcloud.pojo.Menu;
 import com.example.dcloud.pojo.MenuRole;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IMenuRoleService extends IService<MenuRole> {
 
+    /**
+     * 根据角色id获取该角色的菜单
+     * @param rid
+     * @return
+     */
+    List<Menu> getMenusByRoleId(Integer rid);
 }

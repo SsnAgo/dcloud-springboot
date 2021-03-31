@@ -1,8 +1,10 @@
 package com.example.dcloud.controller;
 
 
+import com.example.dcloud.pojo.Menu;
 import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.Role;
+import com.example.dcloud.service.IMenuRoleService;
 import com.example.dcloud.service.IRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,6 +25,8 @@ import java.util.List;
 @RequestMapping("/role")
 public class RoleController {
 
+    @Resource
+    private IMenuRoleService menuRoleService;
 
     @Resource
     private IRoleService roleService;
@@ -63,6 +67,13 @@ public class RoleController {
         }
         return RespBean.error("删除角色失败");
     }
+
+    @ApiOperation("获取该角色的菜单（权限）")
+    @GetMapping("/menus/{id}")
+    public List<Menu> getMenusByRoleId(@PathVariable Integer id){
+        return menuRoleService.getMenusByRoleId(id);
+    }
+
 
 
 }
