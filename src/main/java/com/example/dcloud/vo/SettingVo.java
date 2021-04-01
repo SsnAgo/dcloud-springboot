@@ -14,13 +14,11 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "系统设置System对象",description = "")
+@ApiModel(value = "系统设置Setting的聚合对象",description = "")
 public class SettingVo {
-
 
     @ApiModelProperty(value = "签到设置对象")
     private SettingSign settingSign;
-
 
     @ApiModelProperty(value = "出勤等级设置列表")
     private List<SettingLevel> settingLevelList;

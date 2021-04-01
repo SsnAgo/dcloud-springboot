@@ -35,10 +35,10 @@ public class SettingLevel implements Serializable {
     private Integer lv;
 
     @ApiModelProperty(value = "出勤率左边界")
-    private Integer left;
+    private Integer leftBorder;
 
     @ApiModelProperty(value = "出勤率右边界")
-    private Integer right;
+    private Integer rightBorder;
 
     @ApiModelProperty(value = "是否启用")
     private Boolean enabled;
