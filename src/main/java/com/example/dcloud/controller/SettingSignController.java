@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  *
  * @author ssn
- * @since 2021-03-30
+ * @since 2021-04-01
  */
 @RestController
-@RequestMapping("/system")
-public class SystemController {
+@RequestMapping("/setting-sign")
+public class SettingSignController {
 
 }

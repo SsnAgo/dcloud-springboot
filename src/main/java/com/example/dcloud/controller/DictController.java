@@ -47,4 +47,5 @@ public class DictController {
         return dictService.updateDict(dictVo);
     }
 
+
 }

@@ -1,5 +1,6 @@
 package com.example.dcloud.service;
 
+import com.example.dcloud.pojo.SettingLevel;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -8,8 +9,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author ssn
- * @since 2021-03-30
+ * @since 2021-04-01
  */
-public interface ISystemService extends IService<System> {
+public interface ISettingLevelService extends IService<SettingLevel> {
 
 }

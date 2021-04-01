@@ -2,12 +2,9 @@ package com.example.dcloud.service;
 
 import com.example.dcloud.pojo.Dict;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.dcloud.pojo.DictInfo;
 import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.RespPageBean;
 import com.example.dcloud.vo.DictVo;
-
-import java.util.List;
 
 /**
  * <p>
@@ -43,4 +40,6 @@ public interface IDictService extends IService<Dict> {
      * @return
      */
     RespBean updateDict(DictVo dictVo);
+
+
 }

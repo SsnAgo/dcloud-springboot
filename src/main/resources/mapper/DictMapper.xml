@@ -34,7 +34,23 @@
                 insert into t_dict_info(tag, content, sequence, isDefault)
                 VALUES
         <foreach collection="dictInfoList" item="item" separator=",">
-            (#{dict.tag},#{item.content},#{item.sequence},#{item.isDefault})
+            (#{dict.tag}, #{item.content}, #{item.sequence}, #{item.isDefault})
         </foreach>
     </insert>
+    <update id="updateDictAndDictInfo">
+        <!--    更新字典dict表-->
+        update t_dict
+        set tagZh=#{dict.tagZh}
+        where tag = #{dict.tag};
+        <!--        删除原来tag对应的dictInfo-->
+        delete
+        from t_dict_info
+        where tag = #{dict.tag};
+        <!--        开始在dictInfo里面插入新的记录-->
+        insert into t_dict_info(tag, content, sequence, isDefault)
+                VALUES
+        <foreach collection="dictInfoList" item="item" separator=",">
+            (#{dict.tag}, #{item.content}, #{item.sequence}, #{item.isDefault})
+        </foreach>
+    </update>
 </mapper>

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2021-03-29
  */
 @RestController
-@RequestMapping("/department-major")
+@RequestMapping("/department/major")
 public class DepartmentMajorController {
 
 }

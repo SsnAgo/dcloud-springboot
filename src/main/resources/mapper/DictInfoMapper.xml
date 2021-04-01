@@ -19,7 +19,7 @@
         sequence,
         isDefault
     </sql>
-    <insert id="insertDictInfo" parameterType="java.util.List">
+    <insert id="insertDictInfo">
         insert into t_dict_info(tag, content, sequence, isDefault)  values
         <foreach collection="dictInfoList" item="info" separator=",">
             (#{tag}, #{info.content}, #{info.sequence}, #{info.isDefault})

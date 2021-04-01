@@ -84,5 +84,8 @@ jwt:
   # JWT 负载中拿到开头
   tokenHead: Bearer
 
+
 default:
   password: 1234567
+  signExp: 2
+  signDistance: 0

@@ -16,19 +16,4 @@ import java.util.List;
  */
 public interface DictInfoMapper extends BaseMapper<DictInfo> {
 
-    /**
-     *
-     * @param tag
-     * @param dictInfoList
-     * @return
-     */
-    boolean insertDictInfo(@Param("tag") String tag,@Param("dictInfoList") List<DictInfo> dictInfoList);
-
-    /**
-     * 更新字典项
-     * @param tag
-     * @param dictInfoList
-     * @return
-     */
-    boolean updateDictInfo(@Param("tag")String tag,@Param("dictInfoList") List<DictInfo> dictInfoList);
 }
