@@ -1,7 +1,10 @@
 package com.example.dcloud.service;
 
+import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.School;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,23 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISchoolService extends IService<School> {
 
+    /**
+     * 获取所有学校及其学院信息
+     * @return
+     */
+    List<School> getSchools();
+
+    /**
+     * 新增一个学校
+     * @param school
+     * @return
+     */
+    RespBean addSchool(School school);
+
+    /**
+     * 根据id删除学校
+     * @param sid
+     * @return
+     */
+    RespBean deleteSchool(Integer sid);
 }

@@ -1,9 +1,12 @@
 package com.example.dcloud.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.List;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -34,20 +37,16 @@ public class School implements Serializable {
     @ApiModelProperty(value = "学校名称")
     private String name;
 
-    @ApiModelProperty(value = "父学校id")
-    private Integer parentId;
-
-    @ApiModelProperty(value = "路径")
-    private String schoolPath;
-
-    @ApiModelProperty(value = "是否父学校")
-    private Boolean isParent;
 
     @ApiModelProperty(value = "是否启用")
     private Boolean enabled;
 
     @ApiModelProperty(value = "学校编号")
     private String schoolCode;
+
+    @ApiModelProperty("学校下面的学院")
+    @TableField(exist = false)
+    private List<Department> departments;
 
 
 }
