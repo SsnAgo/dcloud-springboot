@@ -34,7 +34,7 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
             return RespBean.error("同一个学校下面不能有重名的学院");
         }
         if (departmentMapper.insert(department) == 1){
-            return RespBean.success("新增学院成功");
+            return RespBean.success("新增学院成功",department);
         }
         return RespBean.error("新增学院失败");
     }
@@ -46,7 +46,7 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
             return RespBean.error("同一个学校下面不能有重名的学院");
         }
         if (departmentMapper.insert(department) == 1){
-            return RespBean.success("修改学院成功");
+            return RespBean.success("修改学院成功",department);
         }
         return RespBean.error("修改学院失败");
     }

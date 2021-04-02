@@ -50,5 +50,5 @@ public class SchoolController {
     public RespBean updateSchool(@RequestBody School school){
         return schoolService.updateSchool(school);
     }
-
+    
 }
