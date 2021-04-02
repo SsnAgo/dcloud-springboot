@@ -2,6 +2,7 @@ package com.example.dcloud.service;
 
 import com.example.dcloud.pojo.Department;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.dcloud.pojo.RespBean;
 
 /**
  * <p>
@@ -13,4 +14,17 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IDepartmentService extends IService<Department> {
 
+    /**
+     * 新增学院
+     * @param department
+     * @return
+     */
+    RespBean addDepartment(Department department);
+
+    /**
+     * 修改学院
+     * @param department
+     * @return
+     */
+    RespBean updateDepartment(Department department);
 }
