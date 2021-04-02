@@ -5,6 +5,7 @@ import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.RespPageBean;
 import com.example.dcloud.pojo.User;
 import com.example.dcloud.service.IUserService;
+import com.example.dcloud.utils.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,11 +65,11 @@ public class UserController {
     @PostMapping("/addByAdmin")
     public RespBean adminAddUser(@RequestBody User user){
         // 如果没设置用户名  就随便给个用户名
-        if (StringUtils.hasText(user.getUsername())){
-            user.setUsername(UUID.randomUUID().toString());
+        if (!StringUtils.hasText(user.getUsername())){
+            user.setUsername(UserUtils.generateUsername());
         }
         // 如果没设置密码，就设置默认密码
-        if (StringUtils.hasText(user.getPassword())){
+        if (!StringUtils.hasText(user.getPassword())){
             user.setPassword(new BCryptPasswordEncoder().encode(defaultPass));
         }else{
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
