@@ -91,6 +91,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- commons-pool2 对象池依赖 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+
         <!-- swagger2 依赖 -->
         <dependency>
             <groupId>io.springfox</groupId>
