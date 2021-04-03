@@ -82,7 +82,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public RespBean loginByPassword(String usernameOrPassword, String password, HttpServletRequest request) {
         //UserDetails user = userDetailsService.loadUserByUsername(username);
         User user = getUserByUsernameOrPhone(usernameOrPassword);
-        System.out.println(passwordEncoder.matches(password, user.getPassword()));
         if (null == user || !passwordEncoder.matches(password, user.getPassword())) {
             return RespBean.error("用户名/手机号或密码输入错误");
         }
@@ -197,7 +196,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public RespPageBean getUsersByPage(Integer currentPage, Integer size, User user) {
 
         Page<User> page = new Page<>(currentPage, size);
-        IPage<User> usersPage = userMapper.getUsersByPage(UserUtils.getCurrentUser().getId(),page, user);
+        IPage<User> usersPage = userMapper.getUsersByPage(UserUtils.getCurrentUser().getId(), page, user);
         RespPageBean respPageBean = new RespPageBean(usersPage.getTotal(), usersPage.getRecords());
         return respPageBean;
     }
