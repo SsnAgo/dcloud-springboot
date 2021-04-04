@@ -2,6 +2,7 @@ package com.example.dcloud.controller;
 
 
 import com.example.dcloud.pojo.Course;
+import com.example.dcloud.pojo.RespPageBean;
 import com.example.dcloud.service.ICourseService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,7 @@ public class CourseController {
 
     @ApiOperation("获取所有课程（分页）")
     @GetMapping("/")
-    public List<Course> getCourses(@RequestParam(defaultValue = "1") Integer currentPage,
+    public RespPageBean getCourses(@RequestParam(defaultValue = "1") Integer currentPage,
                                    @RequestParam(defaultValue = "10") Integer size,
                                    Course course) {
         return courseService.getCourses(currentPage,size,course);

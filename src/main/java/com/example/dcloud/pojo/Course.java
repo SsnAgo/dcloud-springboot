@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -14,7 +16,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author ssn
@@ -24,7 +26,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("t_course")
-@ApiModel(value="Course对象", description="")
+@ApiModel(value = "Course对象", description = "")
 public class Course implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -74,6 +76,7 @@ public class Course implements Serializable {
 
     @ApiModelProperty(value = "学校id")
     private Integer schoolId;
+
     @ApiModelProperty(value = "学校名")
     @TableField(exist = false)
     private String schoolName;
