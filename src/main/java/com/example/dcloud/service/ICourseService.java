@@ -3,6 +3,8 @@ package com.example.dcloud.service;
 import com.example.dcloud.pojo.Course;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -13,4 +15,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICourseService extends IService<Course> {
 
+    /**
+     * 分页获取所有课程列表（course为空则搜素全部，否则按条件搜搜
+     * @param currentPage
+     * @param size
+     * @param course
+     * @return
+     */
+    List<Course> getCourses(Integer currentPage, Integer size, Course course);
 }

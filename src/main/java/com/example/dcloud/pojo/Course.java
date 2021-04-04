@@ -1,5 +1,6 @@
 package com.example.dcloud.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -37,6 +38,9 @@ public class Course implements Serializable {
 
     @ApiModelProperty(value = "类别编号，对应字典，必修选修")
     private Integer typeCode;
+    @ApiModelProperty(value = "类别名")
+    @TableField(exist = false)
+    private String type;
 
     @ApiModelProperty(value = "班课号")
     private String courseCode;
@@ -55,6 +59,9 @@ public class Course implements Serializable {
 
     @ApiModelProperty(value = "创建者id")
     private Integer createrId;
+    @ApiModelProperty(value = "创建者信息")
+    @TableField(exist = false)
+    private User creater;
 
     @ApiModelProperty(value = "学习要求")
     private String learnRequire;
@@ -67,6 +74,9 @@ public class Course implements Serializable {
 
     @ApiModelProperty(value = "学校id")
     private Integer schoolId;
+    @ApiModelProperty(value = "学校名")
+    @TableField(exist = false)
+    private String schoolName;
 
     @ApiModelProperty(value = "是否学校课表班课")
     private Integer flag;

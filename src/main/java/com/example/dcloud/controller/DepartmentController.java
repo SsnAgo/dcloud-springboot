@@ -42,4 +42,13 @@ public class DepartmentController {
         return departmentService.updateDepartment(department);
     }
 
+    @ApiOperation("删除学院")
+    @DeleteMapping("/{id}")
+    public RespBean deleteDepartment(@PathVariable Integer id){
+        if (departmentService.removeById(id)) {
+            return RespBean.success("删除学院成功");
+        }
+        return RespBean.error("删除学院失败");
+    }
+
 }
