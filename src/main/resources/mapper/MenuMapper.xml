@@ -93,6 +93,7 @@
     <select id="getMenusByUserId" resultMap="Menus">
         SELECT m1.*,
                m2.id          AS id2,
+               m2.url AS url2,
                m2.path        AS path2,
                m2.component   AS component2,
                m2.`name`      AS name2,

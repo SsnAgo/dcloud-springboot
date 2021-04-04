@@ -62,7 +62,7 @@
                      left join t_role r on r.id = u.roleId
                 where 1 = 1
         <if test="null != course.name and '' != course.name">
-            and c.name = #{course.name}
+            and c.name like concat('%',#{course.name},'%')
         </if>
         <if test="null != course.courseCode and '' != course.typeCode">
             and c.courseCode = #{course.courseCode}
