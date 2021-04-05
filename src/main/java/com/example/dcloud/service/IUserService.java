@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * <p>
@@ -111,4 +110,14 @@ public interface IUserService extends IService<User> {
      * @return
      */
     RespBean updateUserFace(String url, Integer id, Authentication authentication);
+
+    /**
+     * 用户修改密码
+     *
+     * @param id
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    RespBean changePassword(Integer id, String oldPassword, String newPassword);
 }

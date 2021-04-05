@@ -115,6 +115,12 @@ public class UserController {
         return userService.updateUserFace(url,id,authentication);
     }
 
+    @ApiOperation("修改密码")
+    @PostMapping("/changepwd")
+    public RespBean changePassword(@RequestParam Integer id,@RequestParam String oldPassword,@RequestParam String newPassword){
+        return userService.changePassword(id,oldPassword,newPassword);
+    }
+
 
 
 

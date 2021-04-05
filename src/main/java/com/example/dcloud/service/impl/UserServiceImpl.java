@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.System;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -221,5 +220,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return RespBean.success("更新头像成功", url);
         }
         return RespBean.error("更新头像失败");
+    }
+
+    @Override
+    @Transactional
+    public RespBean changePassword(Integer id, String oldPassword, String newPassword) {
+        User user = userMapper.selectById(id);
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        if (!bCryptPasswordEncoder.matches(oldPassword,user.getPassword())){
+            return RespBean.error("当前密码输入不正确，请重新输入");
+        }
+        //验证通过了就修改密码
+        user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        if (userMapper.updateById(user) == 1) {
+            return RespBean.success("修改密码成功");
+        }
+        return RespBean.error("修改密码失败");
     }
 }
