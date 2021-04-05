@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 @RestController
-@RequestMapping("/setting")
+@RequestMapping("/setting/manage")
 public class SettingController {
 
     @Resource

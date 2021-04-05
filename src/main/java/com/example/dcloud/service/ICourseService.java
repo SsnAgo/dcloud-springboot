@@ -2,7 +2,10 @@ package com.example.dcloud.service;
 
 import com.example.dcloud.pojo.Course;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.RespPageBean;
+
+import java.util.List;
 
 /**
  * <p>
@@ -22,4 +25,11 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     RespPageBean getCourses(Integer currentPage, Integer size, Course course);
+
+    /**
+     * 批量删除班课
+     * @param list
+     * @return
+     */
+    RespBean deleteCourses(List list);
 }

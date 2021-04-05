@@ -22,7 +22,7 @@ import java.util.List;
  * @since 2021-03-27
  */
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/role/manage")
 public class RoleController {
 
     @Resource

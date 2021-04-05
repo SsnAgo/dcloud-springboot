@@ -12,6 +12,7 @@ import com.example.dcloud.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -206,5 +207,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         Role role = roleMapper.selectById(user.getRoleId());
         log.info("获取到用户角色：{}", role.getName());
         return role;
+    }
+
+    @Override
+    @Transactional
+    public RespBean updateUserFace(String url, Integer id, Authentication authentication) {
+        User user = userMapper.selectById(id);
+        user.setUserFace(url);
+        if (userMapper.updateById(user) == 1) {
+            User principal = (User) authentication.getPrincipal();
+            principal.setUserFace(url);
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, authentication.getAuthorities()));
+            return RespBean.success("更新头像成功", url);
+        }
+        return RespBean.error("更新头像失败");
     }
 }

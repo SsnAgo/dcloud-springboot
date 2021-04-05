@@ -21,7 +21,7 @@ import java.util.List;
  * @since 2021-03-27
  */
 @RestController
-@RequestMapping("/school")
+@RequestMapping("/school/manage")
 public class SchoolController {
 
     @Resource

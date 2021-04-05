@@ -24,7 +24,7 @@ import java.util.List;
  * @since 2021-03-27
  */
 @RestController
-@RequestMapping("/dict/info")
+@RequestMapping("/dict/manage/info")
 public class DictInfoController {
     @Resource
     private IDictInfoService dictInfoService;

@@ -20,7 +20,7 @@ import java.util.List;
  * @since 2021-03-27
  */
 @RestController
-@RequestMapping("/dict")
+@RequestMapping("/dict/")
 public class DictController {
 
     @Resource
@@ -28,7 +28,7 @@ public class DictController {
 
 
     @ApiOperation("列出字典列表，传参就是按条件查询，不传就是查全部")
-    @GetMapping("/")
+    @GetMapping("/manage")
     public RespPageBean listDict(@RequestParam(defaultValue = "1") Integer currentPage,
                                  @RequestParam(defaultValue = "10")Integer size,
                                  Dict dict){
@@ -36,13 +36,13 @@ public class DictController {
     }
 
     @ApiOperation("新增字典及其字典信息")
-    @PostMapping("/")
+    @PostMapping("/manage")
     public RespBean addDict(@RequestBody DictVo dictVo){
         return dictService.addDict(dictVo);
     }
 
     @ApiOperation("修改某个字典及其字典项信息")
-    @PutMapping("/")
+    @PutMapping("/manage")
     public RespBean updateDict(@RequestBody DictVo dictVo){
         return dictService.updateDict(dictVo);
     }
