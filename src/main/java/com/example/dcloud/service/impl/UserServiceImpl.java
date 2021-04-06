@@ -122,6 +122,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
         if (null == user) return RespBean.error("该手机号未注册，请先注册");
         if (!StringUtils.hasText(code)) return RespBean.error("验证码不能为空");
+        String captcha = (String) request.getSession().getAttribute("captcha");
+        if (!captcha.equals(code)){
+            return RespBean.error("验证码输入错误");
+        }
         if (user.getRoleId() != 1 && user.getRoleId() != 2){
             return RespBean.error("没有进入管理系统的权限");
         }
@@ -160,6 +164,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
         if (null == user) return RespBean.error("该手机号未注册，请先注册");
         if (!StringUtils.hasText(code)) return RespBean.error("验证码不能为空");
+        String captcha = (String) request.getSession().getAttribute("captcha");
+        if (!captcha.equals(code)){
+            return RespBean.error("验证码输入错误");
+        }
         if (user.getRoleId() != 2 && user.getRoleId() != 3){
             return RespBean.error("没有进入管理系统的权限");
         }

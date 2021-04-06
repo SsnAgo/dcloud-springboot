@@ -3,6 +3,7 @@ package com.example.dcloud.controller;
 
 import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.service.IUserService;
+import com.example.dcloud.utils.CaptchaUtils;
 import com.example.dcloud.vo.LoginVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,6 +45,14 @@ public class LoginController {
     @PostMapping("/logout")
     public RespBean logout(){
         return RespBean.success("注销成功");
+    }
+
+    @ApiOperation("获取验证码")
+    @GetMapping("/captcha")
+    public RespBean getCaptcha(HttpServletRequest request){
+        String captcha = CaptchaUtils.generatorCaptcha();
+        request.getSession().setAttribute("captcha",captcha);
+        return RespBean.success("发送验证码成功  " + captcha);
     }
 
 
