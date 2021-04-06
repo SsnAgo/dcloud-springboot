@@ -9,6 +9,7 @@ import com.example.dcloud.pojo.User;
 import com.example.dcloud.service.ICourseService;
 import com.example.dcloud.utils.CourseUtils;
 import com.example.dcloud.utils.UserUtils;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/course")
+@Api(tags = "CourseController")
 public class CourseController {
 
     @Resource
@@ -58,13 +60,13 @@ public class CourseController {
         if (courseService.updateById(course)){
             return RespBean.success("修改班课成功",course);
         }
-        return RespBean.error("更新班课失败");
+        return RespBean.error("修改班课失败");
     }
 
 
 
     @ApiOperation("删除一个班课")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/manage/{id}")
     public RespBean deleteCourse(@PathVariable Integer cid){
         if (courseService.removeById(cid)) {
             return RespBean.success("删除班课成功");
@@ -80,16 +82,15 @@ public class CourseController {
     }
 
     @ApiOperation("教师获取他创建的班课")
-    @GetMapping("/teacher")
+    @GetMapping("/mobile/teacher")
     public List<Course> getTeacherCourse(){
         User teacher = UserUtils.getCurrentUser();
         return courseService.list(new QueryWrapper<Course>().eq("createrId",teacher.getId()));
     }
 
     @ApiOperation("教师创建班课")
-    @PostMapping("/teacher")
+    @PostMapping("/mobile/teacher")
     public RespBean teacherAddCourse(@RequestBody Course course){
-
         return courseService.teacherAddCourse(course);
     }
 

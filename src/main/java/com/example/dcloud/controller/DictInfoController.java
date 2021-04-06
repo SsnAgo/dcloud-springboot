@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.dcloud.pojo.Dict;
 import com.example.dcloud.pojo.DictInfo;
 import com.example.dcloud.service.IDictInfoService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import java.util.List;
  * @since 2021-03-27
  */
 @RestController
+@Api(tags = "DictInfoController")
 @RequestMapping("/dict/manage/info")
 public class DictInfoController {
     @Resource

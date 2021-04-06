@@ -6,6 +6,7 @@ import com.example.dcloud.pojo.Course;
 import com.example.dcloud.mapper.CourseMapper;
 import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.RespPageBean;
+import com.example.dcloud.pojo.User;
 import com.example.dcloud.service.ICourseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.dcloud.utils.CourseUtils;
@@ -50,9 +51,13 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Override
     public RespBean teacherAddCourse(Course course) {
+        User currentUser = UserUtils.getCurrentUser();
+        if (currentUser.getRoleId() != 2) {
+            return RespBean.error("没有创建班课的权限");
+        }
         course.setCreateTime(LocalDateTime.now());
         course.setCourseCode(CourseUtils.generatorCourseNumber());
-        course.setCreaterId(UserUtils.getCurrentUser().getId());
+        course.setCreaterId(currentUser.getId());
         if (courseMapper.insert(course) == 1){
             return RespBean.success("创建班课成功",course);
         }

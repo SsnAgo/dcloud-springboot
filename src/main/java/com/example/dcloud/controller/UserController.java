@@ -106,9 +106,8 @@ public class UserController {
         return RespBean.error("更新失败");
     }
 
-
     @ApiOperation("更新用户头像")
-    @PostMapping("/userfase")
+    @PostMapping("/userface")
     public RespBean updateAdminUserFace(MultipartFile file, Integer id, Authentication authentication){
         String[] fileResult = FastDFSUtils.uploadFile(file);
         String url = FastDFSUtils.getTrackerUrl() + fileResult[0] + "/" + fileResult[1];

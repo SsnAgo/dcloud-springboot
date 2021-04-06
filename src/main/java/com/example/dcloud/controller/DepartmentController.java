@@ -19,6 +19,7 @@ import javax.annotation.Resource;
  * @since 2021-03-29
  */
 @RestController
+@Api(tags = "DepartmentController")
 @RequestMapping("/school/manage/department")
 public class DepartmentController {
     @Resource

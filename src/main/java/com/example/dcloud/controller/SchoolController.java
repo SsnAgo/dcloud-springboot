@@ -4,6 +4,7 @@ package com.example.dcloud.controller;
 import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.School;
 import com.example.dcloud.service.ISchoolService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.ibatis.annotations.Delete;
@@ -21,6 +22,7 @@ import java.util.List;
  * @since 2021-03-27
  */
 @RestController
+@Api(tags = "SchoolController")
 @RequestMapping("/school/manage")
 public class SchoolController {
 

@@ -8,6 +8,7 @@ import com.example.dcloud.pojo.SettingSign;
 import com.example.dcloud.service.ISettingLevelService;
 import com.example.dcloud.service.ISettingSignService;
 import com.example.dcloud.vo.SettingVo;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 @RestController
+@Api(tags = "SettingController")
 @RequestMapping("/setting/manage")
 public class SettingController {
 

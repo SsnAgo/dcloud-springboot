@@ -24,6 +24,7 @@ import java.util.List;
  * @since 2021-03-27
  */
 @RestController
+@Api(tags = "MenuController")
 @RequestMapping("/menu/manage")
 public class MenuController {
 

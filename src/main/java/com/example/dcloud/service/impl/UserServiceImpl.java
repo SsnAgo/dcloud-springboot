@@ -71,19 +71,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
 
     /**
-     * 通过用户名登录
+     * 管理端通过用户名登录
      *
-     * @param usernameOrPassword
+     * @param usernameOrPhone
      * @param password
      * @param request
      * @return
      */
     @Override
-    public RespBean loginByPassword(String usernameOrPassword, String password, HttpServletRequest request) {
+    public RespBean manageLoginByPassword(String usernameOrPhone, String password, HttpServletRequest request) {
         //UserDetails user = userDetailsService.loadUserByUsername(username);
-        User user = getUserByUsernameOrPhone(usernameOrPassword);
+        User user = getUserByUsernameOrPhone(usernameOrPhone);
         if (null == user || !passwordEncoder.matches(password, user.getPassword())) {
             return RespBean.error("用户名/手机号或密码输入错误");
+        }
+        if (user.getRoleId() != 1 && user.getRoleId() != 2){
+            return RespBean.error("没有进入管理系统的权限");
         }
         return loginSuccess(user);
     }
@@ -106,7 +109,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     /**
-     * 通过用手机号登录
+     * 管理端通过用手机号登录
      *
      * @param phone
      * @param code
@@ -114,11 +117,52 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
      * @return
      */
     @Override
-    public RespBean loginByCode(String phone, String code, HttpServletRequest request) {
+    public RespBean manageLoginByCode(String phone, String code, HttpServletRequest request) {
         //UserDetails user = userDetailsService.loadUserByUsername(phone);
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
         if (null == user) return RespBean.error("该手机号未注册，请先注册");
         if (!StringUtils.hasText(code)) return RespBean.error("验证码不能为空");
+        if (user.getRoleId() != 1 && user.getRoleId() != 2){
+            return RespBean.error("没有进入管理系统的权限");
+        }
+        return loginSuccess(user);
+    }
+
+    /**
+     * 手机端通过手机号/账号 + 密码登录
+     * @param usernameOrPhone
+     * @param password
+     * @param request
+     * @return
+     */
+    @Override
+    public RespBean mobileLoginByPassword(String usernameOrPhone, String password, HttpServletRequest request) {
+        User user = getUserByUsernameOrPhone(usernameOrPhone);
+        if (null == user || !passwordEncoder.matches(password, user.getPassword())) {
+            return RespBean.error("用户名/手机号或密码输入错误");
+        }
+        if (user.getRoleId() != 2 && user.getRoleId() != 3){
+            return RespBean.error("手机端仅允许教师/学生登录");
+        }
+        return loginSuccess(user);
+    }
+
+    /**
+     * 手机端通过手机号验证码登录
+     * @param phone
+     * @param code
+     * @param request
+     * @return
+     */
+    @Override
+    public RespBean mobileLoginByCode(String phone, String code, HttpServletRequest request) {
+        //UserDetails user = userDetailsService.loadUserByUsername(phone);
+        User user = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
+        if (null == user) return RespBean.error("该手机号未注册，请先注册");
+        if (!StringUtils.hasText(code)) return RespBean.error("验证码不能为空");
+        if (user.getRoleId() != 2 && user.getRoleId() != 3){
+            return RespBean.error("没有进入管理系统的权限");
+        }
         return loginSuccess(user);
     }
 
@@ -153,6 +197,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (userByPhone != null) return userByPhone;
         return null;
     }
+
+
 
 
     @Override

@@ -16,14 +16,13 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface IUserService extends IService<User> {
     /**
-     * 通过用户名登录
-     * @param usernameOrPassword
+     * 管理端通过用户名或手机号登录
+     * @param usernameOrPhone
      * @param password
      * @param request
      * @return
      */
-    RespBean loginByPassword(String usernameOrPassword, String password,HttpServletRequest request);
-
+    RespBean manageLoginByPassword(String usernameOrPhone, String password,HttpServletRequest request);
 
     /**
      * 补全user信息
@@ -32,13 +31,13 @@ public interface IUserService extends IService<User> {
      */
     User getUserInfo(User user);
     /**
-     * 登录接口
+     * 管理端通过验证码登录
      * @param phone
      * @param code
      * @param request
      * @return
      */
-    RespBean loginByCode(String phone,String code,HttpServletRequest request);
+    RespBean manageLoginByCode(String phone,String code,HttpServletRequest request);
 
     /**
      * 通过电话号码或者username来获取该用户
@@ -46,6 +45,24 @@ public interface IUserService extends IService<User> {
      * @return
      */
     User getUserByUsernameOrPhone(String usernameOrPhone);
+
+    /**
+     * 手机端通过账号密码登录
+     * @param usernameOrPhone
+     * @param password
+     * @param request
+     * @return
+     */
+    RespBean mobileLoginByPassword(String usernameOrPhone, String password, HttpServletRequest request);
+
+    /**
+     * 手机端通过验证码登录
+     * @param phone
+     * @param code
+     * @param request
+     * @return
+     */
+    RespBean mobileLoginByCode(String phone, String code, HttpServletRequest request);
 
 
 
@@ -120,4 +137,6 @@ public interface IUserService extends IService<User> {
      * @return
      */
     RespBean changePassword(Integer id, String oldPassword, String newPassword);
+
+
 }

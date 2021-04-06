@@ -5,6 +5,7 @@ import com.example.dcloud.mapper.DictMapper;
 import com.example.dcloud.pojo.*;
 import com.example.dcloud.service.IDictService;
 import com.example.dcloud.vo.DictVo;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ import java.util.List;
  * @since 2021-03-27
  */
 @RestController
+@Api(tags = "DictController")
 @RequestMapping("/dict/")
 public class DictController {
 

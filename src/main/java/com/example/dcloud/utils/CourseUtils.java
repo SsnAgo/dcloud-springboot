@@ -8,4 +8,7 @@ public class CourseUtils {
         Date date = new Date();
         return String.valueOf(date.getTime());
     }
+//    public static String generatorPrCode(){
+//
+//    }
 }
