@@ -1,9 +1,11 @@
 package com.example.dcloud.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.dcloud.pojo.Course;
 import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.RespPageBean;
+import com.example.dcloud.pojo.User;
 import com.example.dcloud.service.ICourseService;
 import com.example.dcloud.utils.CourseUtils;
 import com.example.dcloud.utils.UserUtils;
@@ -76,6 +78,21 @@ public class CourseController {
     public RespBean deleteCourses(@RequestParam("ids") List list){
         return courseService.deleteCourses(list);
     }
+
+    @ApiOperation("教师获取他创建的班课")
+    @GetMapping("/teacher")
+    public List<Course> getTeacherCourse(){
+        User teacher = UserUtils.getCurrentUser();
+        return courseService.list(new QueryWrapper<Course>().eq("createrId",teacher.getId()));
+    }
+
+    @ApiOperation("教师创建班课")
+    @PostMapping("/teacher")
+    public RespBean teacherAddCourse(@RequestBody Course course){
+
+        return courseService.teacherAddCourse(course);
+    }
+
 
 
 

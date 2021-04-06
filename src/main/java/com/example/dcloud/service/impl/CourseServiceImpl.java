@@ -8,10 +8,13 @@ import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.RespPageBean;
 import com.example.dcloud.service.ICourseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.dcloud.utils.CourseUtils;
+import com.example.dcloud.utils.UserUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -43,5 +46,16 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             return RespBean.success("批量删除成功");
         }
         return RespBean.error("批量删除失败");
+    }
+
+    @Override
+    public RespBean teacherAddCourse(Course course) {
+        course.setCreateTime(LocalDateTime.now());
+        course.setCourseCode(CourseUtils.generatorCourseNumber());
+        course.setCreaterId(UserUtils.getCurrentUser().getId());
+        if (courseMapper.insert(course) == 1){
+            return RespBean.success("创建班课成功",course);
+        }
+        return RespBean.error("创建班课失败");
     }
 }

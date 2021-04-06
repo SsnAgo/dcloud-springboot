@@ -8,6 +8,8 @@
         <result column="name" property="name"/>
         <result column="typeCode" property="typeCode"/>
         <result column="courseCode" property="courseCode"/>
+        <result column="className" property="className"/>
+        <result column="prcode" property="prcode"/>
         <result column="description" property="description"/>
         <result column="picture" property="picture"/>
         <result column="term" property="term"/>
@@ -27,6 +29,8 @@
         name,
         typeCode,
         courseCode,
+        className,
+        prcode,
         description,
         picture,
         term,

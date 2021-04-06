@@ -47,11 +47,17 @@ public class Course implements Serializable {
     @ApiModelProperty(value = "班课号")
     private String courseCode;
 
+    @ApiModelProperty(value = "班级名称")
+    private String className;
+
     @ApiModelProperty(value = "班课描述")
     private String description;
 
     @ApiModelProperty(value = "班课封面")
     private String picture;
+
+    @ApiModelProperty
+    private String prcode;
 
     @ApiModelProperty(value = "开课学期")
     private String term;
@@ -86,6 +92,8 @@ public class Course implements Serializable {
 
     @ApiModelProperty(value = "是否可用")
     private Boolean enabled;
+
+
 
 
 }

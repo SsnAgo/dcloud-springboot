@@ -32,4 +32,11 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     RespBean deleteCourses(List list);
+
+    /**
+     * 教师添加班课
+     * @param course
+     * @return
+     */
+    RespBean teacherAddCourse(Course course);
 }
