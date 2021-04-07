@@ -7,6 +7,7 @@ import com.example.dcloud.mapper.*;
 import com.example.dcloud.pojo.*;
 import com.example.dcloud.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.dcloud.utils.CaptchaUtils;
 import com.example.dcloud.utils.JwtTokenUtil;
 import com.example.dcloud.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -122,10 +123,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
         if (null == user) return RespBean.error("该手机号未注册，请先注册");
         if (!StringUtils.hasText(code)) return RespBean.error("验证码不能为空");
-        String captcha = (String) request.getSession().getAttribute("captcha");
-        if (!captcha.equals(code)){
-            return RespBean.error("验证码输入错误");
-        }
+//        String captcha = (String) request.getSession().getAttribute("captcha");
+//        if (null == captcha){
+//            return RespBean.error("请先获取验证码");
+//        }
+//        if (!code.equals(captcha)){
+//            return RespBean.error("验证码输入错误");
+//        }
         if (user.getRoleId() != 1 && user.getRoleId() != 2){
             return RespBean.error("没有进入管理系统的权限");
         }
@@ -164,10 +168,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
         if (null == user) return RespBean.error("该手机号未注册，请先注册");
         if (!StringUtils.hasText(code)) return RespBean.error("验证码不能为空");
-        String captcha = (String) request.getSession().getAttribute("captcha");
-        if (!captcha.equals(code)){
-            return RespBean.error("验证码输入错误");
-        }
+//        String captcha = (String) request.getSession().getAttribute("captcha");
+//        if (null == captcha){
+//            return RespBean.error("请先获取验证码");
+//        }
+//        if (!code.equals(captcha)){
+//            return RespBean.error("验证码输入错误");
+//        }
         if (user.getRoleId() != 2 && user.getRoleId() != 3){
             return RespBean.error("没有进入管理系统的权限");
         }
@@ -290,5 +297,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return RespBean.success("修改密码成功");
         }
         return RespBean.error("修改密码失败");
+    }
+
+    @Override
+    @Transactional
+    public RespBean getLoginCaptcha(String phone, HttpServletRequest request) {
+        // 登录的话，先认证手机号是否存在
+        User exist = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
+        if (null == exist){
+            return RespBean.error("该手机号未注册，请先注册");
+        }
+        if (!exist.getEnabled()){
+            return RespBean.error("该账号已被禁用，请联系管理员");
+        }
+        // 手机号可用，前往获取验证码
+        String captcha = CaptchaUtils.generatorCaptcha();
+        request.getSession().setAttribute("captcha",captcha);
+        return RespBean.success("发送验证码成功  " + captcha);
+    }
+
+    @Override
+    @Transactional
+    public RespBean getRegisterCaptcha(String phone, HttpServletRequest request) {
+        // 注册的话，先认证手机号是否 不存在
+        User exist = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
+        if (null != exist){
+            return RespBean.error("该手机号已注册，请去登录");
+        }
+        // 手机号可用，前往获取验证码
+        String captcha = CaptchaUtils.generatorCaptcha();
+        request.getSession().setAttribute("captcha",captcha);
+        return RespBean.success("发送验证码成功  " + captcha);
     }
 }

@@ -139,4 +139,19 @@ public interface IUserService extends IService<User> {
     RespBean changePassword(Integer id, String oldPassword, String newPassword);
 
 
+    /**
+     * 登录时获取验证码，首先验证手机号存在
+     * @param phone
+     * @param request
+     * @return
+     */
+    RespBean getLoginCaptcha(String phone, HttpServletRequest request);
+
+    /**
+     * 注册时获取验证码，首先验证手机号不存在
+     * @param phone
+     * @param request
+     * @return
+     */
+    RespBean getRegisterCaptcha(String phone, HttpServletRequest request);
 }

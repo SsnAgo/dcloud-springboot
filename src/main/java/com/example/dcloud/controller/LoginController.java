@@ -30,13 +30,13 @@ public class LoginController {
         return userService.manageLoginByCode(loginVo.getUsernameOrPhone(),loginVo.getCode(),request);
     }
 
-    @ApiOperation("管理系统通过username/phone + password登录，登录之后返回token")
+    @ApiOperation("移动端通过username/phone + password登录，登录之后返回token")
     @PostMapping("/mobile/loginByPassword")
     public RespBean mobileLoginByPassword(@RequestBody LoginVo loginVo, HttpServletRequest request){
         return userService.mobileLoginByPassword(loginVo.getUsernameOrPhone(),loginVo.getPassword(),request);
     }
 
-    @ApiOperation("管理系统通过phone+code登录，登录之后返回token")
+    @ApiOperation("移动端通过phone+code登录，登录之后返回token")
     @PostMapping("/mobile/loginByCode")
     public RespBean mobileLoginByCode(@RequestBody LoginVo loginVo, HttpServletRequest request){
         return userService.mobileLoginByCode(loginVo.getUsernameOrPhone(),loginVo.getCode(),request);
@@ -47,12 +47,16 @@ public class LoginController {
         return RespBean.success("注销成功");
     }
 
-    @ApiOperation("获取验证码")
-    @GetMapping("/captcha")
-    public RespBean getCaptcha(HttpServletRequest request){
-        String captcha = CaptchaUtils.generatorCaptcha();
-        request.getSession().setAttribute("captcha",captcha);
-        return RespBean.success("发送验证码成功  " + captcha);
+    @ApiOperation("获取登录验证码")
+    @GetMapping("/loginCaptcha")
+    public RespBean getLoginCaptcha(@RequestParam("phone")String phone, HttpServletRequest request){
+        return userService.getLoginCaptcha(phone,request);
+    }
+
+    @ApiOperation("获取注册验证码")
+    @GetMapping("/registerCaptcha")
+    public RespBean getRegisterCaptcha(@RequestParam("phone")String phone, HttpServletRequest request){
+        return userService.getRegisterCaptcha(phone,request);
     }
 
 
