@@ -48,9 +48,11 @@ public class CourseController {
     @ApiOperation("在管理系统新增班课")
     @PostMapping("/manage")
     public RespBean manageAddCourse(@RequestBody Course course){
-        course.setCourseCode(CourseUtils.generatorCourseNumber());
+        String code = CourseUtils.generatorCourseCode();
+        course.setCourseCode(code);
         course.setCreateTime(LocalDateTime.now());
         course.setCreaterId(UserUtils.getCurrentUser().getId());
+        course.setPrcode("https://api.pwmqr.com/qrcode/create/?url="+code);
         if (courseService.save(course)){
             return RespBean.success("新增班课成功",course);
         }
@@ -107,6 +109,16 @@ public class CourseController {
                                          @ApiParam("按条件查询可传") Course course){
         User student = UserUtils.getCurrentUser();
         return courseService.getStudentCourse(student.getId(),currentPage,size,course);
+    }
+
+    @ApiOperation("学生根据班课号加入课堂")
+    @PostMapping("/mobile/student")
+    public RespBean studentAddCourse(@RequestParam("code") String code){
+        User user = UserUtils.getCurrentUser();
+        if (user.getRoleId() != 3) {
+            return RespBean.error("请使用学生端加入班课");
+        }
+        return courseService.studentAddCourse(user.getId(),code);
     }
 
 

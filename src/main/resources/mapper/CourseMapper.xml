@@ -80,6 +80,7 @@
         <result column="cname" property="name"/>
         <result column="tname" property="teacherName"/>
         <result column="cterm" property="term"/>
+        <result column="clzname" property="className"/>
         <result column="cpic" property="picture"/>
         <result column="ccode" property="courseCode"/>
     </resultMap>
@@ -88,6 +89,7 @@
                c.name       as cname,
                u.name       as tname,
                c.term       as cterm,
+               c.className as clzname,
                c.picture as cpic,
                c.courseCode as ccode
         from t_course_student cs

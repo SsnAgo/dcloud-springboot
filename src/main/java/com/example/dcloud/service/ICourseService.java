@@ -60,4 +60,12 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     RespPageBean getTeacherCourse(Integer id, Integer currentPage, Integer size, Course course);
+
+    /**
+     * 学生根据班课号加入班级
+     * @param sid
+     * @param code
+     * @return
+     */
+    RespBean studentAddCourse(Integer sid, String code);
 }

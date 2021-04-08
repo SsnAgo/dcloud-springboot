@@ -1,13 +1,11 @@
 package com.example.dcloud.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.dcloud.mapper.CourseStudentMapper;
-import com.example.dcloud.pojo.Course;
+import com.example.dcloud.pojo.*;
 import com.example.dcloud.mapper.CourseMapper;
-import com.example.dcloud.pojo.RespBean;
-import com.example.dcloud.pojo.RespPageBean;
-import com.example.dcloud.pojo.User;
 import com.example.dcloud.service.ICourseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.dcloud.utils.CourseUtils;
@@ -59,7 +57,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             return RespBean.error("没有创建班课的权限");
         }
         course.setCreateTime(LocalDateTime.now());
-        course.setCourseCode(CourseUtils.generatorCourseNumber());
+        course.setCourseCode(CourseUtils.generatorCourseCode());
         course.setCreaterId(currentUser.getId());
         if (courseMapper.insert(course) == 1){
             return RespBean.success("创建班课成功",course);
@@ -81,5 +79,28 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         IPage<Course> iPage = courseMapper.getTeacherCourse(tid,page,course);
         RespPageBean pageBean = new RespPageBean(iPage.getTotal(),iPage.getRecords());
         return pageBean;
+    }
+
+    @Override
+    @Transactional
+    public RespBean studentAddCourse(Integer sid, String code) {
+        // 验证班课存在且可用
+        Course exist = courseMapper.selectOne(new QueryWrapper<Course>().eq("courseCode", code).eq("enabled", true));
+        if (null == exist) {
+            return RespBean.error("该班课不存在");
+        }
+        // 如果存在，则检查该学生有没有这个课了 有的就不加了
+        Integer res = courseStudentMapper.selectCount(new QueryWrapper<CourseStudent>().eq("cid", exist.getId()));
+        if (res > 0 ){
+            return RespBean.error("您已加入该班课");
+        }
+        // 如果不存在  那么就可以加入班课
+        CourseStudent courseStudent = new CourseStudent();
+        courseStudent.setCid(exist.getId());
+        courseStudent.setSid(sid);
+        if (courseStudentMapper.insert(courseStudent) == 1) {
+            return RespBean.success("新增班课成功");
+        }
+        return RespBean.error("新增班课失败");
     }
 }
