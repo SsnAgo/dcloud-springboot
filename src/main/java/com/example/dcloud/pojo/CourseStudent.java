@@ -38,6 +38,10 @@ public class CourseStudent implements Serializable {
     @ApiModelProperty(value = "学生id")
     private Integer sid;
 
+    @ApiModelProperty(value = "学生对象")
+    @TableField(exist = false)
+    private User student;
+
     @ApiModelProperty(value = "班课经验值")
     private Integer exp;
 

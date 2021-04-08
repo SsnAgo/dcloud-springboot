@@ -3,6 +3,7 @@ package com.example.dcloud.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.dcloud.dto.CourseMemberDto;
 import com.example.dcloud.mapper.CourseStudentMapper;
 import com.example.dcloud.pojo.*;
 import com.example.dcloud.mapper.CourseMapper;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.lang.System;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -103,4 +105,16 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         }
         return RespBean.error("新增班课失败");
     }
+
+    @Override
+    public RespPageBean courseMember(Integer id, Integer currentPage, Integer size, String search, String sortBy) {
+        Page<CourseMemberDto> page = new Page<>(currentPage,size);
+        IPage<CourseMemberDto> iPage = courseMapper.courseMember(id,page,search,sortBy);
+        System.out.println("执行到这里了");
+        RespPageBean respPageBean = new RespPageBean(iPage.getTotal(),iPage.getRecords());
+        System.out.println("这里挂了");
+        return respPageBean;
+    }
+
+
 }

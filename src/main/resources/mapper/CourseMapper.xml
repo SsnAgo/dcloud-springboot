@@ -89,8 +89,8 @@
                c.name       as cname,
                u.name       as tname,
                c.term       as cterm,
-               c.className as clzname,
-               c.picture as cpic,
+               c.className  as clzname,
+               c.picture    as cpic,
                c.courseCode as ccode
         from t_course_student cs
                      left join t_course c on cs.cid = c.id
@@ -117,19 +117,56 @@
     <select id="getTeacherCourse" resultMap="SimpleTeacherCourseInfo">
         select c.name       as cname,
                c.id         as cid,
-               u.name as tname,
+               u.name       as tname,
                c.courseCode as ccode,
                c.className  as clzname,
-               c.picture as cpic,
+               c.picture    as cpic,
                c.term       as cterm
-                from t_course c
-                left join t_user u on c.createrId = u.id
+        from t_course c
+                     left join t_user u on c.createrId = u.id
                 where c.createrId = #{tid}
         <if test="null != course.name and '' != course.name">
             and c.name like concat('%', #{course.name}, '%')
         </if>
         <if test="null != course.courseCode and '' != course.courseCode">
             and c.courseCode like concat('%', #{course.courseCode}, '%')
+        </if>
+    </select>
+    <resultMap id="CourseMemberInfo" type="com.example.dcloud.dto.CourseMemberDto" extends="BaseResultMap">
+        <id column="csid" property="id"/>
+        <result column="cid" property="cid"/>
+        <result column="uid" property="uid"/>
+        <result column="uname" property="uname"/>
+        <result column="unumber" property="unumber"/>
+        <result column="uexp" property="exp"/>
+        <result column="uface" property="uface"/>
+
+
+
+    </resultMap>
+    <select id="courseMember" resultMap="CourseMemberInfo">
+        select cs.id      as csid,
+               cs.cid     as cid,
+               cs.exp     as uexp,
+               u.id       as uid,
+               u.name     as uname,
+               u.number   as unumber,
+               u.userFace as uface
+        from t_course_student cs
+                     left join t_user u on cs.sid = u.id
+                where cs.cid = #{cid}
+        <if test="search != null and search != ''">
+            and (u.name like concat('%', #{search}, '%') or u.number like concat('%', #{search}, '%'))
+        </if>
+        <if test="sortBy != null and sortBy != ''">
+            <choose>
+                <when test="sortBy.equals('exp')">
+                    order by cs.exp
+                </when>
+                <otherwise>
+                    order by u.number
+                </otherwise>
+            </choose>
         </if>
     </select>
 </mapper>

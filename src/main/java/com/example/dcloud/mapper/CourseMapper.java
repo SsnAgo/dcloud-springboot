@@ -2,8 +2,10 @@ package com.example.dcloud.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.dcloud.dto.CourseMemberDto;
 import com.example.dcloud.pojo.Course;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.dcloud.pojo.CourseStudent;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -35,4 +37,14 @@ public interface CourseMapper extends BaseMapper<Course> {
     IPage<Course> getStudentCourse(@Param("sid") Integer sid, Page<Course> page,@Param("course") Course course);
 
     IPage<Course> getTeacherCourse(@Param("tid")Integer tid, Page<Course> page,@Param("course") Course course);
+
+    /**
+     * 分页 按条件查询并排序 该班级的成员
+     * @param id
+     * @param page
+     * @param search
+     * @param sortBy
+     * @return
+     */
+    IPage<CourseMemberDto> courseMember(@Param("cid") Integer id, Page<CourseMemberDto> page, @Param("search") String search, @Param("sortBy") String sortBy);
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -96,9 +97,12 @@ public class CourseController {
         return courseService.getTeacherCourse(teacher.getId(),currentPage,size,course);
     }
 
-    @ApiOperation("教师创建班课")
+    @ApiOperation("教师创建班课 如果是学生点 会返回无创建班课权利")
     @PostMapping("/mobile/teacher")
     public RespBean teacherAddCourse(@RequestBody Course course){
+        if (UserUtils.getCurrentUser().getRoleId() != 2){
+            return RespBean.error("无创建班课权利");
+        }
         return courseService.teacherAddCourse(course);
     }
 
@@ -121,7 +125,16 @@ public class CourseController {
         return courseService.studentAddCourse(user.getId(),code);
     }
 
-
+    @ApiOperation("教师查看班级成员")
+    @GetMapping("/mobile/member")
+    public RespPageBean courseMember(
+            @RequestParam(required = true) Integer id,
+            @RequestParam(defaultValue = "1") Integer currentPage,
+                                     @RequestParam(defaultValue = "10") Integer size,
+                                     @ApiParam("按学号或姓名模糊查询 可不传") String search,
+                                     @ApiParam("按经验值或学号排序 exp or num")@RequestParam(defaultValue = "number") String sortBy){
+        return courseService.courseMember(id,currentPage,size,search,sortBy);
+    }
 
 
 
