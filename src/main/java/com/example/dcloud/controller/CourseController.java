@@ -7,10 +7,12 @@ import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.RespPageBean;
 import com.example.dcloud.pojo.User;
 import com.example.dcloud.service.ICourseService;
+import com.example.dcloud.service.ICourseStudentService;
 import com.example.dcloud.utils.CourseUtils;
 import com.example.dcloud.utils.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -32,6 +34,8 @@ public class CourseController {
 
     @Resource
     private ICourseService courseService;
+    @Resource
+    private ICourseStudentService courseStudentService;
 
     @ApiOperation("获取所有课程（分页）")
     @GetMapping("/manage")
@@ -83,15 +87,26 @@ public class CourseController {
 
     @ApiOperation("教师获取他创建的班课")
     @GetMapping("/mobile/teacher")
-    public List<Course> getTeacherCourse(){
+    public RespPageBean getTeacherCourse(@RequestParam(defaultValue = "1") Integer currentPage,
+                                         @RequestParam(defaultValue = "10") Integer size,
+                                         @ApiParam("按条件查询可传") Course course){
         User teacher = UserUtils.getCurrentUser();
-        return courseService.list(new QueryWrapper<Course>().eq("createrId",teacher.getId()));
+        return courseService.getTeacherCourse(teacher.getId(),currentPage,size,course);
     }
 
     @ApiOperation("教师创建班课")
     @PostMapping("/mobile/teacher")
     public RespBean teacherAddCourse(@RequestBody Course course){
         return courseService.teacherAddCourse(course);
+    }
+
+    @ApiOperation("学生获取所加入的所有班级列表（分页）")
+    @GetMapping("/mobile/student")
+    public RespPageBean getStudentCourse(@RequestParam(defaultValue = "1") Integer currentPage,
+                                         @RequestParam(defaultValue = "10") Integer size,
+                                         @ApiParam("按条件查询可传") Course course){
+        User student = UserUtils.getCurrentUser();
+        return courseService.getStudentCourse(student.getId(),currentPage,size,course);
     }
 
 

@@ -17,8 +17,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -92,6 +94,7 @@ public class User implements Serializable, UserDetails {
     private String userFace;
 
     @ApiModelProperty(value = "是否启用")
+    @Getter(value = AccessLevel.NONE)
     private Boolean enabled;
 
     @ApiModelProperty(value = "学校id")

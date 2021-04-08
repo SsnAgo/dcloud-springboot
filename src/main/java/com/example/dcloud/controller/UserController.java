@@ -108,10 +108,11 @@ public class UserController {
 
     @ApiOperation("更新用户头像")
     @PostMapping("/userface")
-    public RespBean updateAdminUserFace(MultipartFile file, Integer id, Authentication authentication){
+    public RespBean updateAdminUserFace(MultipartFile file, Authentication authentication){
+        User user = UserUtils.getCurrentUser();
         String[] fileResult = FastDFSUtils.uploadFile(file);
         String url = FastDFSUtils.getTrackerUrl() + fileResult[0] + "/" + fileResult[1];
-        return userService.updateUserFace(url,id,authentication);
+        return userService.updateUserFace(url,user.getId(),authentication);
     }
 
     @ApiOperation("修改密码")

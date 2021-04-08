@@ -39,4 +39,25 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     RespBean teacherAddCourse(Course course);
+
+    /**
+     * 分页获取学生加入班课列表
+     *
+     * @param sid
+     * @param currentPage
+     * @param size
+     * @param course
+     * @return
+     */
+    RespPageBean getStudentCourse(Integer sid, Integer currentPage, Integer size, Course course);
+
+    /**
+     * 教师分页获取他创建的班课，也可按条件查询
+     * @param id
+     * @param currentPage
+     * @param size
+     * @param course
+     * @return
+     */
+    RespPageBean getTeacherCourse(Integer id, Integer currentPage, Integer size, Course course);
 }

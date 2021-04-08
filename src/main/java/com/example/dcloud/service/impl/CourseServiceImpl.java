@@ -2,6 +2,7 @@ package com.example.dcloud.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.dcloud.mapper.CourseStudentMapper;
 import com.example.dcloud.pojo.Course;
 import com.example.dcloud.mapper.CourseMapper;
 import com.example.dcloud.pojo.RespBean;
@@ -31,6 +32,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Resource
     private CourseMapper courseMapper;
+    @Resource
+    private CourseStudentMapper courseStudentMapper;
     @Override
     public RespPageBean getCourses(Integer currentPage, Integer size, Course course) {
         Page<Course> page = new Page<>(currentPage,size);
@@ -62,5 +65,21 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             return RespBean.success("创建班课成功",course);
         }
         return RespBean.error("创建班课失败");
+    }
+
+    @Override
+    public RespPageBean getStudentCourse(Integer sid, Integer currentPage, Integer size, Course course) {
+        Page<Course> page = new Page<>(currentPage,size);
+        IPage<Course> iPage = courseMapper.getStudentCourse(sid,page,course);
+        RespPageBean pageBean = new RespPageBean(iPage.getTotal(),iPage.getRecords());
+        return pageBean;
+    }
+
+    @Override
+    public RespPageBean getTeacherCourse(Integer tid, Integer currentPage, Integer size, Course course) {
+        Page<Course> page = new Page<>(currentPage,size);
+        IPage<Course> iPage = courseMapper.getTeacherCourse(tid,page,course);
+        RespPageBean pageBean = new RespPageBean(iPage.getTotal(),iPage.getRecords());
+        return pageBean;
     }
 }

@@ -25,7 +25,7 @@ import java.util.List;
  */
 @RestController
 @Api(tags = "MenuController")
-@RequestMapping("/menu/manage")
+@RequestMapping("/menu")
 public class MenuController {
 
     @Resource
@@ -38,13 +38,13 @@ public class MenuController {
     }
 
     @ApiOperation("管理员获取所有菜单列表")
-    @GetMapping("/")
+    @GetMapping("/manage/")
     public List<Menu> getMenus(Menu menu){
         return menuService.getMenus(menu);
     }
 
     @ApiOperation("管理员修改菜单")
-    @PutMapping("/")
+    @PutMapping("/manage/")
     public RespBean updateMenu(Menu menu){
         if (menuService.updateById(menu)){
             return RespBean.success("修改菜单成功");

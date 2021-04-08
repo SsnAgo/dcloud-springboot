@@ -67,6 +67,7 @@ public class Course implements Serializable {
 
     @ApiModelProperty(value = "创建者id")
     private Integer createrId;
+
     @ApiModelProperty(value = "创建者信息")
     @TableField(exist = false)
     private User creater;
@@ -89,6 +90,15 @@ public class Course implements Serializable {
 
     @ApiModelProperty(value = "是否学校课表班课")
     private Integer flag;
+    @ApiModelProperty("班级名称")
+    @TableField(exist = false)
+    private String courseName;
+
+
+    @ApiModelProperty("教师姓名")
+    @TableField(exist = false)
+    private String teacherName;
+
 
     @ApiModelProperty(value = "是否可用")
     private Boolean enabled;

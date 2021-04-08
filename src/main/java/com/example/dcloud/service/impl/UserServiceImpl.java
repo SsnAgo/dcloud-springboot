@@ -307,7 +307,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (null == exist){
             return RespBean.error("该手机号未注册，请先注册");
         }
-        if (!exist.getEnabled()){
+        if (!exist.isEnabled()){
             return RespBean.error("该账号已被禁用，请联系管理员");
         }
         // 手机号可用，前往获取验证码

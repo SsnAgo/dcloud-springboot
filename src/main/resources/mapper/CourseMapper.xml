@@ -66,13 +66,68 @@
                      left join t_role r on r.id = u.roleId
                 where 1 = 1
         <if test="null != course.name and '' != course.name">
-            and c.name like concat('%',#{course.name},'%')
+            and c.name like concat('%', #{course.name}, '%')
         </if>
         <if test="null != course.courseCode and '' != course.typeCode">
             and c.courseCode = #{course.courseCode}
         </if>
         <if test="null != course.schoolId and '' != course.schoolId">
             and c.schoolId = #{course.schoolId}
+        </if>
+    </select>
+    <resultMap id="SimpleStudentCourseInfo" type="com.example.dcloud.pojo.Course" extends="BaseResultMap">
+        <id column="cid" property="id"/>
+        <result column="cname" property="name"/>
+        <result column="tname" property="teacherName"/>
+        <result column="cterm" property="term"/>
+        <result column="cpic" property="picture"/>
+        <result column="ccode" property="courseCode"/>
+    </resultMap>
+    <select id="getStudentCourse" resultMap="SimpleStudentCourseInfo">
+        select cs.cid       as cid,
+               c.name       as cname,
+               u.name       as tname,
+               c.term       as cterm,
+               c.picture as cpic,
+               c.courseCode as ccode
+        from t_course_student cs
+                     left join t_course c on cs.cid = c.id
+                     left join t_dict_info di on di.id = c.typeCode
+                     left join t_user u on c.createrId = u.id
+                where cs.sid = #{sid}
+        <if test="null != course.name and '' != course.name">
+            and c.name like concat('%', #{course.name}, '%')
+        </if>
+        <if test="null != course.courseCode and '' != course.courseCode">
+            and c.courseCode like concat('%', #{course.courseCode}, '%')
+        </if>
+    </select>
+
+    <resultMap id="SimpleTeacherCourseInfo" type="com.example.dcloud.pojo.Course" extends="BaseResultMap">
+        <id column="cname" property="name"/>
+        <result column="cid" property="id"/>
+        <result column="tname" property="teacherName"/>
+        <result column="ccode" property="courseCode"/>
+        <result column="cpic" property="picture"/>
+        <result column="clzname" property="className"/>
+        <result column="cterm" property="term"/>
+    </resultMap>
+    <select id="getTeacherCourse" resultMap="SimpleTeacherCourseInfo">
+        select c.name       as cname,
+               c.id         as cid,
+               u.name as tname,
+               c.courseCode as ccode,
+               c.className  as clzname,
+               c.picture as cpic,
+               c.term       as cterm
+                from t_course c
+                left join t_user u on c.createrId = u.id
+                where c.createrId = #{tid}
+        <if test="null != course.name and '' != course.name">
+            and c.name like concat('%', #{course.name}, '%')
+        </if>
+        <if test="null != course.courseCode and '' != course.courseCode">
+            and c.courseCode like concat('%', #{course.courseCode}, '%')
         </if>
     </select>
 </mapper>

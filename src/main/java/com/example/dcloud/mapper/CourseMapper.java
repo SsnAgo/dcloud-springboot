@@ -24,4 +24,15 @@ public interface CourseMapper extends BaseMapper<Course> {
      */
     IPage<Course> getCourses(Page<Course> page,@Param("course") Course course);
 
+    /**
+     * 分页按条件查询学生的班课
+     *
+     * @param sid
+     * @param page
+     * @param course
+     * @return
+     */
+    IPage<Course> getStudentCourse(@Param("sid") Integer sid, Page<Course> page,@Param("course") Course course);
+
+    IPage<Course> getTeacherCourse(@Param("tid")Integer tid, Page<Course> page,@Param("course") Course course);
 }
