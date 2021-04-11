@@ -98,6 +98,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         if (null == exist) {
             return RespBean.error("该班课不存在");
         }
+        if (!exist.getAllowIn()){
+            return RespBean.error("该班课不允许加入，请联系老师");
+        }
         // 如果存在，则检查该学生有没有这个课了 有的就不加了
         Integer res = courseStudentMapper.selectCount(new QueryWrapper<CourseStudent>().eq("cid", exist.getId()));
         if (res > 0 ){
@@ -121,6 +124,17 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         RespPageBean respPageBean = new RespPageBean(iPage.getTotal(),iPage.getRecords());
         System.out.println("这里挂了");
         return respPageBean;
+    }
+
+    @Override
+    @Transactional
+    public RespBean getCourseInfo(Integer id) {
+        Course exist = courseMapper.selectById(id);
+        if ( null == exist) {
+            return RespBean.error("该班课不存在");
+        }
+        Course course = courseMapper.getCourseInfo(id);
+        return RespBean.success("",course);
     }
 
 

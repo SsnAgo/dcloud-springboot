@@ -80,4 +80,11 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     RespPageBean courseMember(Integer id, Integer currentPage, Integer size, String search, String sortBy);
+
+    /**
+     * 根据id获取班课详情
+     * @param id
+     * @return
+     */
+    RespBean getCourseInfo(Integer id);
 }

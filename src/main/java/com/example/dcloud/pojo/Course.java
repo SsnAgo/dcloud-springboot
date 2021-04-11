@@ -95,6 +95,9 @@ public class Course implements Serializable {
     @TableField(exist = false)
     private String teacherName;
 
+    @ApiModelProperty("允许加入")
+    private Boolean allowIn;
+
 
     @ApiModelProperty(value = "是否可用")
     private Boolean enabled;

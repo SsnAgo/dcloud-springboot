@@ -16,5 +16,4 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DepartmentMajorServiceImpl extends ServiceImpl<DepartmentMajorMapper, DepartmentMajor> implements IDepartmentMajorService {
-
 }
