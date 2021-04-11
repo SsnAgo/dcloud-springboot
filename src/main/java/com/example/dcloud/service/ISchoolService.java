@@ -1,5 +1,6 @@
 package com.example.dcloud.service;
 
+import com.example.dcloud.pojo.Department;
 import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.School;
 import com.baomidou.mybatisplus.extension.service.IService;

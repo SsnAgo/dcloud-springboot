@@ -20,7 +20,7 @@ public class LoginController {
 
     @ApiOperation("管理系统通过username/phone + password登录，登录之后返回token")
     @PostMapping("/manage/loginByPassword")
-    public RespBean manageloginByPassword(@RequestBody LoginVo loginVo, HttpServletRequest request){
+    public RespBean manageLoginByPassword(@RequestBody LoginVo loginVo, HttpServletRequest request){
         return userService.manageLoginByPassword(loginVo.getUsernameOrPhone(),loginVo.getPassword(),request);
     }
 

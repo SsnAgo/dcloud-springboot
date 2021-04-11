@@ -43,5 +43,9 @@ public class DictInfo implements Serializable {
     @ApiModelProperty(value = "是否默认显示")
     private Boolean isDefault;
 
+    @ApiModelProperty(value = "是否可用")
+    private Boolean enabled;
+
+
 
 }

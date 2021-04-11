@@ -39,6 +39,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         Page<Course> page = new Page<>(currentPage,size);
         IPage<Course> coursePage = courseMapper.getCourses(page,course);
         RespPageBean res = new RespPageBean(coursePage.getTotal(),coursePage.getRecords());
+        System.out.println("这里已经封装了");
         return res;
     }
 
@@ -58,11 +59,17 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         if (currentUser.getRoleId() != 2) {
             return RespBean.error("没有创建班课的权限");
         }
+        String code = CourseUtils.generatorCourseCode();
         course.setCreateTime(LocalDateTime.now());
-        course.setCourseCode(CourseUtils.generatorCourseCode());
+        course.setCourseCode(code);
         course.setCreaterId(currentUser.getId());
+        //https://api.pwmqr.com/qrcode/create/?url=https://www.pwmqr.com
+        course.setPrcode(CourseUtils.PR_PREFIX + code);
+        if (course.getPicture() == null || "".equals(course.getPicture())){
+            course.setPicture(CourseUtils.generatorCourseImage());
+        }
         if (courseMapper.insert(course) == 1){
-            return RespBean.success("创建班课成功",course);
+            return RespBean.success("创建班课成功",courseMapper.selectById(course.getId()));
         }
         return RespBean.error("创建班课失败");
     }

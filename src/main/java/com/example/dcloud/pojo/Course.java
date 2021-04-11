@@ -90,10 +90,6 @@ public class Course implements Serializable {
 
     @ApiModelProperty(value = "是否学校课表班课")
     private Integer flag;
-    @ApiModelProperty("班级名称")
-    @TableField(exist = false)
-    private String courseName;
-
 
     @ApiModelProperty("教师姓名")
     @TableField(exist = false)

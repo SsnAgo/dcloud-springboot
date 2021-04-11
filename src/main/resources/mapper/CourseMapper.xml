@@ -49,7 +49,10 @@
         <association property="creater" javaType="com.example.dcloud.pojo.User">
             <id column="uid" property="id"/>
             <result column="uname" property="name"/>
-            <result column="rnamezh" property="role.name"/>
+            <result column="uen" property="enabled"/>
+            <result column="rid" property="role.id"/>
+            <result column="rname" property="role.name"/>
+            <result column="rnamezh" property="role.nameZh"/>
         </association>
     </resultMap>
     <select id="getCourses" resultMap="CourseInfo">
@@ -57,7 +60,10 @@
                di.content as type,
                u.id       as uid,
                u.name     as uname,
+               r.id as rid,
+               r.name as rname,
                r.nameZh   as rnamezh,
+               u.enabled as uen,
                s.name     as sname
         from t_course c
                      left join t_dict_info di on c.typeCode = di.id
@@ -65,14 +71,19 @@
                      left join t_school s on c.schoolId = s.id
                      left join t_role r on r.id = u.roleId
                 where 1 = 1
-        <if test="null != course.name and '' != course.name">
-            and c.name like concat('%', #{course.name}, '%')
-        </if>
-        <if test="null != course.courseCode and '' != course.typeCode">
-            and c.courseCode = #{course.courseCode}
-        </if>
-        <if test="null != course.schoolId and '' != course.schoolId">
-            and c.schoolId = #{course.schoolId}
+        <if test="course != null">
+            <if test="null != course.name and '' != course.name">
+                and c.name like concat('%', #{course.name}, '%')
+            </if>
+            <if test="null != course.courseCode and '' != course.courseCode">
+                and c.courseCode = #{course.courseCode}
+            </if>
+            <if test="null != course.typeCode and '' != course.typeCode">
+                and c.typeCode = #{course.typeCode}
+            </if>
+            <if test="null != course.schoolId and '' != course.schoolId">
+                and c.schoolId = #{course.schoolId}
+            </if>
         </if>
     </select>
     <resultMap id="SimpleStudentCourseInfo" type="com.example.dcloud.pojo.Course" extends="BaseResultMap">
@@ -140,9 +151,6 @@
         <result column="unumber" property="unumber"/>
         <result column="uexp" property="exp"/>
         <result column="uface" property="uface"/>
-
-
-
     </resultMap>
     <select id="courseMember" resultMap="CourseMemberInfo">
         select cs.id      as csid,

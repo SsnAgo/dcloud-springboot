@@ -2,9 +2,6 @@ package com.example.dcloud.mapper;
 
 import com.example.dcloud.pojo.DictInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 /**
  * <p>
@@ -16,4 +13,10 @@ import java.util.List;
  */
 public interface DictInfoMapper extends BaseMapper<DictInfo> {
 
+    /**
+     * 删除tag对应的dictinfo
+     * @param tag
+     * @return
+     */
+    Integer deleteDictInfo(String tag);
 }

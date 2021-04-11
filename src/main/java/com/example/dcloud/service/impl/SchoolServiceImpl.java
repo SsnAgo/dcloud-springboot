@@ -92,4 +92,5 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         }
         return RespBean.error("修改学校信息失败");
     }
+
 }

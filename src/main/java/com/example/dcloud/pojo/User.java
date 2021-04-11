@@ -6,14 +6,14 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.example.dcloud.config.CustomAuthorityDeserializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -69,6 +69,8 @@ public class User implements Serializable, UserDetails {
 
     @ApiModelProperty(value = "用户邮箱")
     private String email;
+    @ApiModelProperty(value = "用户生日")
+    private String birthday;
 
     @ApiModelProperty(value = "学号or教工号or管理员工号")
     private String number;
@@ -91,8 +93,9 @@ public class User implements Serializable, UserDetails {
     private String userFace;
 
     @ApiModelProperty(value = "是否启用")
-    @Getter(value = AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private Boolean enabled;
+
 
     @ApiModelProperty(value = "学校id")
     private Integer schoolId;
@@ -118,11 +121,9 @@ public class User implements Serializable, UserDetails {
     @ApiModelProperty(value = "用户角色id")
     private Integer roleId;
 
-
     @ApiModelProperty(value = "角色")
     @TableField(exist = false)
     private Role role;
-
 
     /**
      * 由于这一部分不是对象的字段，因此这个authorities不会被解析成json 因此需要一个自定义的CustomAuthorityDeserializer来自定义一下反序列化

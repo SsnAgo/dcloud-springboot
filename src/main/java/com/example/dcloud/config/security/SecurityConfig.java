@@ -60,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/loginCaptcha",
                 "/registerCaptcha",
                 "/logout",
+                "/common/**",
                 "/css/**",
                 "/js/**",
                 "/webjars/**",

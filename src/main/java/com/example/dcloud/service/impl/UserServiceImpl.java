@@ -10,11 +10,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.dcloud.utils.CaptchaUtils;
 import com.example.dcloud.utils.JwtTokenUtil;
 import com.example.dcloud.utils.UserUtils;
+import com.example.dcloud.vo.ChangePasswordVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -119,20 +121,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
      */
     @Override
     public RespBean manageLoginByCode(String phone, String code, HttpServletRequest request) {
-        //UserDetails user = userDetailsService.loadUserByUsername(phone);
+//        UserDetails user = userDetailsService.loadUserByUsername(phone);
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
+        System.out.println("user信息为"+user);
         if (null == user) return RespBean.error("该手机号未注册，请先注册");
         if (!StringUtils.hasText(code)) return RespBean.error("验证码不能为空");
-//        String captcha = (String) request.getSession().getAttribute("captcha");
-//        if (null == captcha){
-//            return RespBean.error("请先获取验证码");
+//        if (user.getRoleId() != 1 && user.getRoleId() != 2){
+//            return RespBean.error("没有进入管理系统的权限");
 //        }
-//        if (!code.equals(captcha)){
-//            return RespBean.error("验证码输入错误");
-//        }
-        if (user.getRoleId() != 1 && user.getRoleId() != 2){
-            return RespBean.error("没有进入管理系统的权限");
-        }
         return loginSuccess(user);
     }
 
@@ -168,13 +164,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
         if (null == user) return RespBean.error("该手机号未注册，请先注册");
         if (!StringUtils.hasText(code)) return RespBean.error("验证码不能为空");
-//        String captcha = (String) request.getSession().getAttribute("captcha");
-//        if (null == captcha){
-//            return RespBean.error("请先获取验证码");
-//        }
-//        if (!code.equals(captcha)){
-//            return RespBean.error("验证码输入错误");
-//        }
         if (user.getRoleId() != 2 && user.getRoleId() != 3){
             return RespBean.error("没有进入管理系统的权限");
         }
@@ -220,7 +209,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public String getSex(User user) {
         // 根据user的sexCode来获取性别内容
         System.out.println(user.getSexCode());
-        String sex = dictInfoMapper.selectById(user.getSexCode()).getContent();
+        DictInfo sexinfo = dictInfoMapper.selectById(user.getSexCode());
+        if (sexinfo == null) return "";
+        String sex = sexinfo.getContent();
         log.info("获取到用户性别为：{}", sex);
         return sex;
     }
@@ -228,20 +219,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public String getEducation(User user) {
         // 根据user的educationCode来获取性别内容
-        String education = dictInfoMapper.selectById(user.getEducationCode()).getContent();
+        DictInfo eduinfo = dictInfoMapper.selectById(user.getEducationCode());
+        if (eduinfo == null) return "";
+        String education = eduinfo.getContent();
         log.info("获取到用户学历为：{}", education);
         return education;
     }
 
     @Override
     public School getSchool(User user) {
-
         return schoolMapper.selectById(user.getSchoolId());
     }
 
     @Override
     public Department getDepartment(User user) {
-
         return departmentMapper.selectById(user.getDepartmentId());
     }
 
@@ -249,7 +240,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public Major getMajor(User user) {
         Major major = majorMapper.selectById(user.getMajorId());
-        log.info("获取到用户专业：{}", major.getName());
+        log.info("获取到用户专业：{}", major);
         return major;
     }
 
@@ -265,19 +256,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public Role getRole(User user) {
         Role role = roleMapper.selectById(user.getRoleId());
-        log.info("获取到用户角色：{}", role.getName());
+        log.info("获取到用户角色：{}", role);
         return role;
     }
 
     @Override
     @Transactional
-    public RespBean updateUserFace(String url, Integer id, Authentication authentication) {
-        User user = userMapper.selectById(id);
+    public RespBean updateUserFace(String url,User user) {
         user.setUserFace(url);
         if (userMapper.updateById(user) == 1) {
-            User principal = (User) authentication.getPrincipal();
-            principal.setUserFace(url);
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, authentication.getAuthorities()));
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
             return RespBean.success("更新头像成功", url);
         }
         return RespBean.error("更新头像失败");
@@ -285,14 +273,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     @Transactional
-    public RespBean changePassword(Integer id, String oldPassword, String newPassword) {
-        User user = userMapper.selectById(id);
+    public RespBean changePassword(ChangePasswordVo vo) {
+        User user = userMapper.selectById(vo.getId());
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        if (!bCryptPasswordEncoder.matches(oldPassword,user.getPassword())){
+        if (!bCryptPasswordEncoder.matches(vo.getOldPassword(),user.getPassword())){
             return RespBean.error("当前密码输入不正确，请重新输入");
         }
         //验证通过了就修改密码
-        user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        user.setPassword(bCryptPasswordEncoder.encode(vo.getNewPassword()));
         if (userMapper.updateById(user) == 1) {
             return RespBean.success("修改密码成功");
         }

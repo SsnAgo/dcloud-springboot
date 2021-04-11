@@ -2,6 +2,7 @@ package com.example.dcloud.service;
 
 import com.example.dcloud.pojo.*;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.dcloud.vo.ChangePasswordVo;
 import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpServletRequest;
@@ -122,21 +123,18 @@ public interface IUserService extends IService<User> {
     /**
      * 更新用户头像
      * @param url
-     * @param id
-     * @param authentication
+     * @param user
      * @return
      */
-    RespBean updateUserFace(String url, Integer id, Authentication authentication);
+    RespBean updateUserFace(String url,User user);
 
     /**
      * 用户修改密码
      *
-     * @param id
-     * @param oldPassword
-     * @param newPassword
+     * @param changePasswordVo
      * @return
      */
-    RespBean changePassword(Integer id, String oldPassword, String newPassword);
+    RespBean changePassword(ChangePasswordVo changePasswordVo);
 
 
     /**

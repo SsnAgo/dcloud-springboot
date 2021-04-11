@@ -42,4 +42,10 @@ public interface IDictService extends IService<Dict> {
     RespBean updateDict(DictVo dictVo);
 
 
+    /**
+     * 删除一个字典及其字典项
+     * @param id
+     * @return
+     */
+    RespBean deleteDict(Integer id);
 }

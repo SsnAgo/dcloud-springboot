@@ -1,6 +1,7 @@
 package com.example.dcloud.controller;
 
 
+import com.example.dcloud.pojo.Department;
 import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.School;
 import com.example.dcloud.service.ISchoolService;
@@ -23,26 +24,26 @@ import java.util.List;
  */
 @RestController
 @Api(tags = "SchoolController")
-@RequestMapping("/school/manage")
+@RequestMapping("/school")
 public class SchoolController {
 
     @Resource
     private ISchoolService schoolService;
 
     @ApiOperation("获取所有学校及其分院(树状结构)")
-    @GetMapping("/tree")
-    public List<School> getSchools() {
+    @GetMapping("/manage/tree")
+    public List<School> getSchoolAndDepts() {
         return schoolService.getSchools();
     }
 
     @ApiOperation("新增学校")
-    @PostMapping("/")
+    @PostMapping("/manage/")
     public RespBean addSchool(@RequestBody School school) {
         return schoolService.addSchool(school);
     }
 
     @ApiOperation("删除学校")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/manage/{id}")
     public RespBean deleteSchool(@PathVariable @ApiParam("学校id") Integer sid) {
         return schoolService.deleteSchool(sid);
     }
@@ -52,5 +53,14 @@ public class SchoolController {
     public RespBean updateSchool(@RequestBody School school){
         return schoolService.updateSchool(school);
     }
+
+//    @ApiOperation("获取所有学校信息")
+//    @GetMapping("/")
+//    public List<School> getSchools(){
+//        return schoolService.list();
+//    }
+
+
+
     
 }

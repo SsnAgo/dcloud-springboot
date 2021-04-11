@@ -9,6 +9,7 @@
         <result column="content" property="content"/>
         <result column="sequence" property="sequence"/>
         <result column="isDefault" property="isDefault"/>
+        <result column="enabled" property="enabled"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -17,7 +18,8 @@
         tag,
         content,
         sequence,
-        isDefault
+        isDefault,
+        enabled
     </sql>
     <insert id="insertDictInfo">
         insert into t_dict_info(tag, content, sequence, isDefault)  values
@@ -27,8 +29,16 @@
     </insert>
     <update id="updateDictInfo">
         <foreach collection="dictInfoList" item="item" open="" separator=";" close="">
-            update t_dict_info set content=#{item.content},sequence=#{item.sequence},isDefault=#{item.isDefault}
-               where tag=#{tag}
-</foreach>
+            update t_dict_info
+            set content=#{item.content},
+                sequence=#{item.sequence},
+                isDefault=#{item.isDefault}
+            where tag = #{tag}
+        </foreach>
     </update>
+    <delete id="deleteDictInfo">
+        delete
+        from t_dict_info
+        where tag = #{tag}
+    </delete>
 </mapper>

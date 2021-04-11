@@ -7,6 +7,7 @@ import com.example.dcloud.service.IDictService;
 import com.example.dcloud.vo.DictVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -30,7 +31,7 @@ public class DictController {
 
 
     @ApiOperation("列出字典列表，传参就是按条件查询，不传就是查全部")
-    @GetMapping("/manage")
+    @GetMapping("/manage/")
     public RespPageBean listDict(@RequestParam(defaultValue = "1") Integer currentPage,
                                  @RequestParam(defaultValue = "10")Integer size,
                                  Dict dict){
@@ -38,16 +39,31 @@ public class DictController {
     }
 
     @ApiOperation("新增字典及其字典信息")
-    @PostMapping("/manage")
+    @PostMapping("/manage/")
     public RespBean addDict(@RequestBody DictVo dictVo){
         return dictService.addDict(dictVo);
     }
 
     @ApiOperation("修改某个字典及其字典项信息")
-    @PutMapping("/manage")
+    @PutMapping("/manage/")
     public RespBean updateDict(@RequestBody DictVo dictVo){
+
         return dictService.updateDict(dictVo);
     }
+
+    @ApiOperation("删除某个字典及其字典项")
+    @DeleteMapping("/manage/{id}")
+    public RespBean deleteDict(@ApiParam("字典id")@PathVariable Integer id){
+        return dictService.deleteDict(id);
+    }
+
+    @ApiOperation("根据id批量删除字典")
+    @DeleteMapping("/manage/")
+    public RespBean deleteDicts(List<Integer> list){
+//        dictService.deleteDicts(list);
+return null;
+    }
+
 
 
 }

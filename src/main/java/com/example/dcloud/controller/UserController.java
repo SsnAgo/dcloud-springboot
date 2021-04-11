@@ -7,6 +7,7 @@ import com.example.dcloud.pojo.User;
 import com.example.dcloud.service.IUserService;
 import com.example.dcloud.utils.FastDFSUtils;
 import com.example.dcloud.utils.UserUtils;
+import com.example.dcloud.vo.ChangePasswordVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,22 +44,10 @@ public class UserController {
     @Resource
     private IUserService userService;
 
-    @ApiOperation(value = "获取当前用户信息")
-    @GetMapping("/info")
-    public User userInfo(Principal principal){
-        if (null == principal){
-            return null;
-        }
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = (UsernamePasswordAuthenticationToken) principal;
-        User user = (User) usernamePasswordAuthenticationToken.getPrincipal();
-        user = userService.getUserInfo(user);
-        System.out.println("controller里的user : " + user);
-        user.setPassword(null);
-        return user;
-    }
+
 
     @ApiOperation("获取所有用户(分页) 除了用户自己")
-    @GetMapping("/manage")
+    @GetMapping("/manage/")
     public RespPageBean getAllEmployees(@RequestParam(defaultValue = "1") Integer currentPage,
                                         @RequestParam(defaultValue = "10") Integer size,
                                         User user) {
@@ -96,30 +85,7 @@ public class UserController {
         return RespBean.error("修改用户失败");
     }
 
-    @ApiOperation("修改个人信息")
-    @PutMapping("/editSelfInfo")
-    public RespBean updateSelf(@RequestBody User user, Authentication authentication){
-        if (userService.updateById(user)){
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user,null,authentication.getAuthorities()));
-            return RespBean.success("更新成功",user);
-        }
-        return RespBean.error("更新失败");
-    }
 
-    @ApiOperation("更新用户头像")
-    @PostMapping("/userface")
-    public RespBean updateAdminUserFace(MultipartFile file, Authentication authentication){
-        User user = UserUtils.getCurrentUser();
-        String[] fileResult = FastDFSUtils.uploadFile(file);
-        String url = FastDFSUtils.getTrackerUrl() + fileResult[0] + "/" + fileResult[1];
-        return userService.updateUserFace(url,user.getId(),authentication);
-    }
-
-    @ApiOperation("修改密码")
-    @PostMapping("/changepwd")
-    public RespBean changePassword(@RequestParam Integer id,@RequestParam String oldPassword,@RequestParam String newPassword){
-        return userService.changePassword(id,oldPassword,newPassword);
-    }
 
 
 

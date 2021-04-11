@@ -39,30 +39,30 @@ public class CourseController {
     private ICourseStudentService courseStudentService;
 
     @ApiOperation("获取所有课程（分页）")
-    @GetMapping("/manage")
+    @GetMapping("/manage/")
     public RespPageBean getCourses(@RequestParam(defaultValue = "1") Integer currentPage,
                                    @RequestParam(defaultValue = "10") Integer size,
-                                   Course course) {
+                                    Course course) {
         return courseService.getCourses(currentPage,size,course);
     }
 
     @ApiOperation("在管理系统新增班课")
-    @PostMapping("/manage")
+    @PostMapping("/manage/")
     public RespBean manageAddCourse(@RequestBody Course course){
         String code = CourseUtils.generatorCourseCode();
         course.setCourseCode(code);
         course.setCreateTime(LocalDateTime.now());
         course.setCreaterId(UserUtils.getCurrentUser().getId());
-        course.setPrcode("https://api.pwmqr.com/qrcode/create/?url="+code);
+        course.setPrcode(CourseUtils.PR_PREFIX+code);
         if (courseService.save(course)){
-            return RespBean.success("新增班课成功",course);
+            return RespBean.success("新增班课成功",courseService.getById(course.getId()));
         }
         return RespBean.error("新增班课失败");
     }
 
 
     @ApiOperation("在管理系统修改班课")
-    @PutMapping("/manage")
+    @PutMapping("/manage/")
     public RespBean manageUpdateCourse(@RequestBody Course course){
         if (courseService.updateById(course)){
             return RespBean.success("修改班课成功",course);
@@ -83,7 +83,7 @@ public class CourseController {
 
 
     @ApiOperation("批量删除班课")
-    @DeleteMapping("/manage")
+    @DeleteMapping("/manage/")
     public RespBean deleteCourses(@RequestParam("ids") List list){
         return courseService.deleteCourses(list);
     }
