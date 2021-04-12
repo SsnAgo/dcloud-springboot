@@ -47,7 +47,6 @@ public class DictController {
     @ApiOperation("修改某个字典及其字典项信息")
     @PutMapping("/manage/")
     public RespBean updateDict(@RequestBody DictVo dictVo){
-
         return dictService.updateDict(dictVo);
     }
 
@@ -56,14 +55,5 @@ public class DictController {
     public RespBean deleteDict(@ApiParam("字典id")@PathVariable Integer id){
         return dictService.deleteDict(id);
     }
-
-    @ApiOperation("根据id批量删除字典")
-    @DeleteMapping("/manage/")
-    public RespBean deleteDicts(List<Integer> list){
-//        dictService.deleteDicts(list);
-return null;
-    }
-
-
 
 }

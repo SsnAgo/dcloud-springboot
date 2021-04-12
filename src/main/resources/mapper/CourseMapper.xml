@@ -110,11 +110,11 @@
                      left join t_dict_info di on di.id = c.typeCode
                      left join t_user u on c.createrId = u.id
                 where cs.sid = #{sid}
-        <if test="null != course.name and '' != course.name">
-            and c.name like concat('%', #{course.name}, '%')
-        </if>
-        <if test="null != course.courseCode and '' != course.courseCode">
-            and c.courseCode like concat('%', #{course.courseCode}, '%')
+        <if test="null != search and '' != search">
+            and (c.name like concat('%', #{search}, '%') or
+            c.courseCode like concat('%', #{search}, '%') or
+            u.name like concat('%', #{search}, '%') or
+            c.className like concat('%', #{search}, '%'))
         </if>
     </select>
 
@@ -138,12 +138,13 @@
         from t_course c
                      left join t_user u on c.createrId = u.id
                 where c.createrId = #{tid}
-        <if test="null != course.name and '' != course.name">
-            and c.name like concat('%', #{course.name}, '%')
+        <if test="null != search and '' != search">
+            and (c.name like concat('%', #{search}, '%') or
+            c.courseCode like concat('%', #{search}, '%') or
+            c.className like concat('%', #{search}, '%'))
         </if>
-        <if test="null != course.courseCode and '' != course.courseCode">
-            and c.courseCode like concat('%', #{course.courseCode}, '%')
-        </if>
+
+
     </select>
     <resultMap id="CourseMemberInfo" type="com.example.dcloud.dto.CourseMemberDto" extends="BaseResultMap">
         <id column="csid" property="id"/>

@@ -75,17 +75,17 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     }
 
     @Override
-    public RespPageBean getStudentCourse(Integer sid, Integer currentPage, Integer size, Course course) {
+    public RespPageBean getStudentCourse(Integer sid, Integer currentPage, Integer size, String search) {
         Page<Course> page = new Page<>(currentPage,size);
-        IPage<Course> iPage = courseMapper.getStudentCourse(sid,page,course);
+        IPage<Course> iPage = courseMapper.getStudentCourse(sid,page,search);
         RespPageBean pageBean = new RespPageBean(iPage.getTotal(),iPage.getRecords());
         return pageBean;
     }
 
     @Override
-    public RespPageBean getTeacherCourse(Integer tid, Integer currentPage, Integer size, Course course) {
+    public RespPageBean getTeacherCourse(Integer tid, Integer currentPage, Integer size, String search) {
         Page<Course> page = new Page<>(currentPage,size);
-        IPage<Course> iPage = courseMapper.getTeacherCourse(tid,page,course);
+        IPage<Course> iPage = courseMapper.getTeacherCourse(tid,page,search);
         RespPageBean pageBean = new RespPageBean(iPage.getTotal(),iPage.getRecords());
         return pageBean;
     }
