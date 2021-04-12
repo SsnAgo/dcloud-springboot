@@ -93,9 +93,9 @@ public class CourseController {
     @GetMapping("/mobile/teacher")
     public RespPageBean getTeacherCourse(@RequestParam(defaultValue = "1") Integer currentPage,
                                          @RequestParam(defaultValue = "10") Integer size,
-                                         @ApiParam("按条件查询可传") Course course){
+                                         String search){
         User teacher = UserUtils.getCurrentUser();
-        return courseService.getTeacherCourse(teacher.getId(),currentPage,size,course);
+        return courseService.getTeacherCourse(teacher.getId(),currentPage,size,search);
     }
 
     @ApiOperation("教师创建班课 如果是学生点 会返回无创建班课权利")
@@ -111,9 +111,9 @@ public class CourseController {
     @GetMapping("/mobile/student")
     public RespPageBean getStudentCourse(@RequestParam(defaultValue = "1") Integer currentPage,
                                          @RequestParam(defaultValue = "10") Integer size,
-                                         @ApiParam("按条件查询可传") Course course){
+                                         String search){
         User student = UserUtils.getCurrentUser();
-        return courseService.getStudentCourse(student.getId(),currentPage,size,course);
+        return courseService.getStudentCourse(student.getId(),currentPage,size,search);
     }
 
     @ApiOperation("学生根据班课号加入课堂")

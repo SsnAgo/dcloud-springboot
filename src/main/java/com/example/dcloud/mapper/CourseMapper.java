@@ -31,12 +31,12 @@ public interface CourseMapper extends BaseMapper<Course> {
      *
      * @param sid
      * @param page
-     * @param course
+     * @param search
      * @return
      */
-    IPage<Course> getStudentCourse(@Param("sid") Integer sid, Page<Course> page,@Param("course") Course course);
+    IPage<Course> getStudentCourse(@Param("sid") Integer sid, Page<Course> page,@Param("search") String search);
 
-    IPage<Course> getTeacherCourse(@Param("tid")Integer tid, Page<Course> page,@Param("course") Course course);
+    IPage<Course> getTeacherCourse(@Param("tid")Integer tid, Page<Course> page,@Param("search") String search);
 
     /**
      * 分页 按条件查询并排序 该班级的成员

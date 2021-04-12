@@ -12,7 +12,7 @@ public class CourseUtils {
             "http://116.62.152.144:7777/group1/M00/00/00/dD6YkGByilyAWJbEAAAJFcHyt_U366.png",
             "http://116.62.152.144:7777/group1/M00/00/00/dD6YkGByipmAaqhEAAAJis5Vxq4365.png",
             "http://116.62.152.144:7777/group1/M00/00/00/dD6YkGByiqeAClfKAAAJZkWQxpg333.png",
-            "http://116.62.152.144:7777/group1/M00/00/00/dD6YkGByiraAdXv6AAAJ_flf46E823.png," +
+            "http://116.62.152.144:7777/group1/M00/00/00/dD6YkGByiraAdXv6AAAJ_flf46E823.png",
             "http://116.62.152.144:7777/group1/M00/00/00/dD6YkGByisGAQ1_hAAAI6bnBfQ0485.png",
             "http://116.62.152.144:7777/group1/M00/00/00/dD6YkGByjg-AUitqAAAJ8hPR4V4250.png",
             "http://116.62.152.144:7777/group1/M00/00/00/dD6YkGByjhqASVCVAAAJfITf8ew227.png",
@@ -27,7 +27,7 @@ public class CourseUtils {
 
     public static String generatorCourseImage() {
         Random random = new Random();
-        return images[random.nextInt(11)];
+        return images[random.nextInt(10)];
     }
 
 }

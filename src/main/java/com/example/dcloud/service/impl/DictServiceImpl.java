@@ -95,7 +95,6 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         System.out.println("数据正确");
         // 数据正确  那就去更新
 
-
         // 更新逻辑要修改
 
         // 先去数据库查询原来的数据字典信息
@@ -107,6 +106,9 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
             }
             // 没有id 如果内容和之前不一样说明是新增的  如果内容和之前一样 那么不新增  去修改
             else{
+//                boolean isUpdate;
+                int size = origin.size();
+                int count = 0;
                 // 判断该i的content在不在原来里面出现
                 for (DictInfo o : origin) {
                     // 如果没id 但是内容一样的 可以认为是修改 将这个id赋予它 并修改
@@ -114,10 +116,14 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
                         i.setId(o.getId());
                         dictInfoMapper.updateById(i);
                     }else{
-                        // 没id且内容不一样，可以看做是新增
-                        dictInfoMapper.insert(i);
+                        count ++;
                     }
                 }
+                // 遍历完了都没有找到content相等的 就表示这个是新增的
+                if (count == size){
+                    dictInfoMapper.insert(i);
+                }
+
             }
         }
         // 遍历原来的表  如果原来的表里的id在现在的没有就表示删除了
@@ -135,7 +141,6 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
                 dictInfoMapper.deleteById(o.getId());
             }
         }
-
         return RespBean.success("更新成功");
     }
 
