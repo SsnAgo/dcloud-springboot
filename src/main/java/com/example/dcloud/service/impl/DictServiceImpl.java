@@ -100,19 +100,28 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
 
         // 先去数据库查询原来的数据字典信息
         List<DictInfo> origin = dictInfoMapper.selectList(new QueryWrapper<DictInfo>().eq("tag", dict.getTag()));
-        List<DictInfo> updates = new ArrayList<>();
         for (DictInfo i : dictInfoList) {
             // 有id说明是更改的
             if (i.getId() != null) {
                 dictInfoMapper.updateById(i);
             }
-            // 没有id说明是新增的
-            else {
-                dictInfoMapper.insert(i);
+            // 没有id 如果内容和之前不一样说明是新增的  如果内容和之前一样 那么不新增  去修改
+            else{
+                // 判断该i的content在不在原来里面出现
+                for (DictInfo o : origin) {
+                    // 如果没id 但是内容一样的 可以认为是修改 将这个id赋予它 并修改
+                    if (o.getContent().equals(i.getContent())){
+                        i.setId(o.getId());
+                        dictInfoMapper.updateById(i);
+                    }else{
+                        // 没id且内容不一样，可以看做是新增
+                        dictInfoMapper.insert(i);
+                    }
+                }
             }
         }
         // 遍历原来的表  如果原来的表里的id在现在的没有就表示删除了
-        int size = origin.size();
+        int size = dictInfoList.size();
         for (DictInfo o : origin) {
             int count = 0;
             for (DictInfo curr : dictInfoList) {

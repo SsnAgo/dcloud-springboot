@@ -47,4 +47,11 @@ public interface CourseMapper extends BaseMapper<Course> {
      * @return
      */
     IPage<CourseMemberDto> courseMember(@Param("cid") Integer id, Page<CourseMemberDto> page, @Param("search") String search, @Param("sortBy") String sortBy);
+
+    /**
+     * 根据id获取课程
+     * @param id
+     * @return
+     */
+    Course getCourseInfo(@Param("id") Integer id);
 }

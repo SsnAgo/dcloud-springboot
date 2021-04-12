@@ -21,6 +21,7 @@
         <result column="schoolId" property="schoolId"/>
         <result column="flag" property="flag"/>
         <result column="enabled" property="enabled"/>
+        <result column="allowIn" property="allowIn"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -41,7 +42,8 @@
         examSchedule,
         schoolId,
         flag,
-        enabled
+        enabled,
+        allowIn
     </sql>
     <resultMap id="CourseInfo" type="com.example.dcloud.pojo.Course" extends="BaseResultMap">
         <result column="type" property="type"/>
@@ -60,10 +62,10 @@
                di.content as type,
                u.id       as uid,
                u.name     as uname,
-               r.id as rid,
-               r.name as rname,
+               r.id       as rid,
+               r.name     as rname,
                r.nameZh   as rnamezh,
-               u.enabled as uen,
+               u.enabled  as uen,
                s.name     as sname
         from t_course c
                      left join t_dict_info di on c.typeCode = di.id
@@ -176,5 +178,23 @@
                 </otherwise>
             </choose>
         </if>
+    </select>
+
+    <select id="getCourseInfo" resultMap="CourseInfo">
+        select c.*,
+               di.content as type,
+               u.id       as uid,
+               u.name     as uname,
+               r.id       as rid,
+               r.name     as rname,
+               r.nameZh   as rnamezh,
+               u.enabled  as uen,
+               s.name     as sname
+        from t_course c
+                     left join t_dict_info di on c.typeCode = di.id
+                     left join t_user u on c.createrId = u.id
+                     left join t_school s on c.schoolId = s.id
+                     left join t_role r on r.id = u.roleId
+                where c.id = #{id}
     </select>
 </mapper>

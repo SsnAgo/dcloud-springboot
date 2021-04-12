@@ -11,6 +11,7 @@ import com.example.dcloud.service.ICourseStudentService;
 import com.example.dcloud.utils.CourseUtils;
 import com.example.dcloud.utils.UserUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
@@ -135,6 +136,15 @@ public class CourseController {
                                      @ApiParam("按经验值或学号排序 exp or num")@RequestParam(defaultValue = "number") String sortBy){
         return courseService.courseMember(id,currentPage,size,search,sortBy);
     }
+
+    @ApiOperation("根据id查看班课详情")
+    @GetMapping("/manage/{id}")
+    public RespBean getCourseInfo(@PathVariable Integer id){
+        return courseService.getCourseInfo(id);
+    }
+
+
+
 
 
 

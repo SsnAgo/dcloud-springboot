@@ -39,7 +39,7 @@ public class Sign implements Serializable {
     private LocalDateTime endTime;
 
     @ApiModelProperty(value = "签到位置")
-    private String local;
+    private Double local;
 
     @ApiModelProperty(value = "是否可用")
     private Boolean enabled;

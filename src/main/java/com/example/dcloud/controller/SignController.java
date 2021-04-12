@@ -1,14 +1,31 @@
 package com.example.dcloud.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.dcloud.pojo.RespBean;
+import com.example.dcloud.pojo.SettingSign;
+import com.example.dcloud.pojo.Sign;
+import com.example.dcloud.service.ISettingSignService;
+import com.example.dcloud.service.ISignRecordService;
+import com.example.dcloud.service.ISignService;
+import com.example.dcloud.utils.SignUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.springframework.cglib.core.Local;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author ssn
@@ -18,5 +35,93 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "SignController")
 @RequestMapping("/sign")
 public class SignController {
+
+    @Resource
+    private ISignService signService;
+    @Resource
+    private ISignRecordService signRecordService;
+    @Resource
+    private ISettingSignService settingSignService;
+
+    @ApiOperation("创建一个无限制签到")
+    @PostMapping("/nolimit")
+    public RespBean startNoLimitSign(@RequestParam("id") @ApiParam("传入班课id") Integer cid) {
+        if (!canCreate(cid)) {
+            return RespBean.error("签到还在进行中，清勿重复发起");
+        }
+        Sign sign = new Sign();
+        sign.setStartTime(LocalDateTime.now()).setEndTime(null).setLocal(null).setEnabled(true).setCourseId(cid).setCode(null).setType(SignUtils.NO_LIMIT);
+        signService.save(sign);
+        return RespBean.success("创建签到成功");
+    }
+
+    @ApiOperation("创建一个一分钟限时签到")
+    @PostMapping("/oneminute")
+    public RespBean startOneMinuteSign(@RequestParam("id") @ApiParam("传入班课id") Integer cid) {
+        if (!canCreate(cid)) {
+            return RespBean.error("签到还在进行中，清勿重复发起");
+        }
+        Sign sign = new Sign();
+        sign.setStartTime(LocalDateTime.now()).setEndTime(LocalDateTime.now().plusMinutes(1)).setLocal(null).setEnabled(true).setCourseId(cid).setCode(null).setType(SignUtils.ONE_MINUTE);
+        signService.save(sign);
+        return RespBean.success("创建签到成功");
+    }
+
+    @ApiOperation("创建一个手势签到")
+    @PostMapping("/hand")
+    public RespBean startHandSign(@RequestParam("id") @ApiParam("传入班课id") Integer cid,@RequestParam("sequence")@ApiParam("手势数字序列") String sequence) {
+        if (!canCreate(cid)) {
+            return RespBean.error("签到还在进行中，清勿重复发起");
+        }
+        Sign sign = new Sign();
+        sign.setStartTime(LocalDateTime.now()).setEndTime(null).setLocal(null).setEnabled(true).setCourseId(cid).setCode(null).setType(SignUtils.HAND);
+        signService.save(sign);
+        return RespBean.success("创建签到成功");
+    }
+
+    @ApiOperation("创建一个位置签到")
+    @PostMapping("/location")
+    public RespBean startHandSign(@RequestParam("id") @ApiParam("传入班课id") Integer cid) {
+        if (!canCreate(cid)) {
+            return RespBean.error("签到还在进行中，清勿重复发起");
+        }
+        Sign sign = new Sign();
+        sign.setStartTime(LocalDateTime.now()).setEndTime(null).setLocal(settingSignService.getById(1).getSignDistance()).setEnabled(true).setCourseId(cid).setCode(null).setType(SignUtils.LOCATION);
+        signService.save(sign);
+        return RespBean.success("创建签到成功");
+    }
+
+
+
+
+    public Boolean canCreate(Integer cid) {
+        // 查出该班课已经有的正在进行的签到
+        Sign exist = signService.getOne(new QueryWrapper<Sign>().eq("courseId", cid).eq("enabled", true));
+        // 如果存在可用的，说明要么正在可用  要么还没被检测出来过期  现在检测一下过期
+        if (null != exist) {
+            // 如果已经过期 将这个enabled置为null
+            // 如果是由endtime的 就是有限时的 就检查有无过期
+            if (exist.getEndTime() != null) {
+                if (LocalDateTime.now().isAfter(exist.getEndTime())) {
+                    exist.setEnabled(false);
+                    signService.updateById(exist);
+                    return true;
+                } else {
+                    // 存在且没过期
+                    return false;
+                }
+            }
+            // 如果是无限时的 且存在 那就不能创建
+            else {
+                return false;
+            }
+
+        }
+        // 不存在可用的就可以创建 返回 true
+        else {
+            return true;
+        }
+    }
+
 
 }
