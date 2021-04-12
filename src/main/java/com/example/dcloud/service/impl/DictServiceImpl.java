@@ -54,6 +54,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         if (null == exits) {
             return RespBean.error("要修改的字典不存在");
         }
+
         // 要修改的该tag存在，就判断中文标识是否存在 先查当前要改的字典在数据库中对应的中文标识
         String currentTagZh = dictMapper.selectOne(new QueryWrapper<Dict>().eq("tag", dict.getTag())).getTagZh();
         // 如果当前的不和目前的相同 那么要去判断有没有存在  有则不能改
@@ -66,6 +67,12 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         }
         System.out.println("开始更新字典项了");
         // 接下来更新字典项
+        // 判断要更新的有没有值 没有就表示要删掉
+        if (dictInfoList.size() == 0){
+            dictInfoMapper.deleteDictInfo(dict.getTag());
+            return  RespBean.success("更新成功");
+        }
+
         // 判断排序是否正确  默认值是否唯一 以及内容是否不重复
         Set<Integer> sequenceSet = new HashSet<>();
         Set<String> contentSet = new HashSet<>();
@@ -131,7 +138,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         for (DictInfo o : origin) {
             int count = 0;
             for (DictInfo curr : dictInfoList) {
-                if (curr.getId() != null && o.getId() != curr.getId()){
+                if (curr.getId() != null && !o.getId().equals(curr.getId())){
                     count ++;
                 }
             }
