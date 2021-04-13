@@ -13,6 +13,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * <p>
  * 
@@ -35,6 +37,7 @@ public class School implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "学校名称")
+    @NotEmpty(message = "学校名称不能为空")
     private String name;
 
 

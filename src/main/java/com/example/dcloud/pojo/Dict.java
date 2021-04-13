@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * <p>
  * 
@@ -32,9 +34,11 @@ public class Dict implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "分类英文标识")
+    @NotEmpty(message = "英文标识不能为空")
     private String tag;
 
     @ApiModelProperty(value = "分类中文标识")
+    @NotEmpty(message = "中文标识不能为空")
     private String tagZh;
 
     @ApiModelProperty(value = "分类描述")
