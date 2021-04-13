@@ -7,6 +7,7 @@ import com.example.dcloud.service.*;
 import com.example.dcloud.utils.FastDFSUtils;
 import com.example.dcloud.utils.UserUtils;
 import com.example.dcloud.vo.ChangePasswordVo;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/common")
+@Api(tags = "CommonController")
 public class CommonController {
 
     @Resource

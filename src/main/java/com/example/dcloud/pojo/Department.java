@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * <p>
  * 
@@ -32,6 +34,7 @@ public class Department implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "学院名称")
+    @NotEmpty(message = "学院名称不能为空")
     private String name;
 
     @ApiModelProperty(value = "属于哪个学校")

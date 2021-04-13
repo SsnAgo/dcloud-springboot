@@ -23,6 +23,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 /**
  * <p>
  * 
@@ -45,12 +49,14 @@ public class User implements Serializable, UserDetails {
     private Integer id;
 
     @ApiModelProperty(value = "姓名")
+    @NotEmpty(message = "姓名不能为空")
     private String name;
 
     @ApiModelProperty(value = "昵称")
     private String nickname;
 
     @ApiModelProperty(value = "登录用户名")
+    @NotEmpty(message = "用户名不能为空")
     private String username;
 
     @ApiModelProperty(value = "登录密码")
