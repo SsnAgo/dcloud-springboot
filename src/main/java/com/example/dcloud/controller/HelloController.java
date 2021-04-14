@@ -1,6 +1,9 @@
 package com.example.dcloud.controller;
 
 
+import com.example.dcloud.anotation.ManageAllow;
+import com.example.dcloud.anotation.StudentAllow;
+import com.example.dcloud.anotation.TeacherAllow;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,11 +19,13 @@ public class HelloController {
         return "admin";
     }
 
+    @ManageAllow
     @GetMapping("/teacher")
     public String teacher(){
         return "teacher";
     }
 
+    @StudentAllow
     @GetMapping("/student")
     public String student(){
         return "student";

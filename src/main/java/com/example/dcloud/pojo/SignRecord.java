@@ -32,14 +32,17 @@ public class SignRecord implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    @ApiModelProperty(value = "教师id")
-    private Integer teacherId;
-
     @ApiModelProperty(value = "课程Id")
     private Integer courseId;
 
     @ApiModelProperty(value = "学生id")
     private Integer studentId;
+
+    @ApiModelProperty(value = "签到id")
+    private Integer signId;
+
+    @ApiModelProperty(value = "本次签到获得的经验值")
+    private Integer addExp;
 
     @ApiModelProperty(value = "签到时间")
     private LocalDateTime signTime;

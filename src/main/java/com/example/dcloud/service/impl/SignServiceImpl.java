@@ -43,11 +43,12 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
             return RespBean.error("签到已结束，请联系教师");
         }
         // 执行签到成功的数据库相关更新操作
-        signSuccess(cid,sid);
+        signSuccess(cid,sid,exist.getId());
         return RespBean.success("签到成功");
     }
 
     @Override
+    @Transactional
     public RespBean oneMinuteSign(Integer cid, Integer sid) {
         Sign exist = signMapper.selectOne(new QueryWrapper<Sign>().eq("courseId", cid).eq("enabled", true));
         if (exist == null) {
@@ -56,16 +57,19 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         // 如果还可用，那么进行日期检查
         if (exist.getEndTime() != null && exist.getType()== SignUtils.ONE_MINUTE){
             if (LocalDateTime.now().isAfter(exist.getEndTime())){
+                exist.setEnabled(false);
+                signMapper.updateById(exist);
                 return RespBean.error("签到已结束，请联系教师");
             }else{
-                signSuccess(cid,sid);
+                signSuccess(cid,sid, exist.getId());
                 return RespBean.success("签到成功");
             }
         }
-        return RespBean.error("未知错误");
+        return RespBean.error("发生错误，该签到类型不是一分钟限时签到");
     }
 
     @Override
+    @Transactional
     public RespBean handSign(Integer cid, Integer sid, String sequence) {
         Sign exist = signMapper.selectOne(new QueryWrapper<Sign>().eq("courseId", cid).eq("enabled", true));
         if (exist == null) {
@@ -76,14 +80,15 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
             if (!exist.getCode().equals(sequence)){
                 return RespBean.error("手势错误，请重试");
             }else{
-                signSuccess(cid,sid);
+                signSuccess(cid,sid, exist.getId());
                 return RespBean.success("签到成功");
             }
         }
-        return RespBean.error("未知错误");
+        return RespBean.error("发生错误，该签到类型不是手势签到");
     }
 
     @Override
+    @Transactional
     public RespBean closeSign(Integer cid) {
         Sign exist = signMapper.selectOne(new QueryWrapper<Sign>().eq("courseId", cid).eq("enabled", true));
         if (exist == null) {
@@ -91,19 +96,22 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         }
         // 关闭签到
         exist.setEnabled(false);
+        exist.setEndTime(LocalDateTime.now());
         signMapper.updateById(exist);
         return RespBean.success("关闭签到成功",exist);
     }
 
 
-    public void signSuccess(Integer cid,Integer sid){
+    public void signSuccess(Integer cid, Integer sid, Integer signId){
         // 执行签到成功的各个更新操作  存入到signrecoreds里面 同时获取系统经验值，根据系统经验值增加经验， 更新学生在该班课的经验值 更新学生的总经验值
         SignRecord record = new SignRecord();
-        record.setCourseId(cid).setSignTime(LocalDateTime.now()).setStudentId(sid);
-        // 新增一条签到记录
-        signRecordMapper.insert(record);
-        // 获取系统经验值，更新该学生在该班级的经验
+        record.setCourseId(cid).setSignTime(LocalDateTime.now()).setStudentId(sid).setSignId(signId);
+        // 获取系统设置的签到经验值
         Integer exp = settingSignMapper.selectById(1).getSignExp();
+        // 新增一条签到记录
+        record.setAddExp(exp);
+        signRecordMapper.insert(record);
+        //更新该学生在该班级的经验
         CourseStudent courseStudent = courseStudentMapper.selectOne(new QueryWrapper<CourseStudent>().eq("sid", sid).eq("cid", cid));
         courseStudent.setExp(courseStudent.getExp() + exp);
         courseStudentMapper.updateById(courseStudent);
@@ -112,11 +120,4 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         student.setExp(student.getExp() + exp);
         userMapper.updateById(student);
     }
-
-
-
-
-
-
-
 }
