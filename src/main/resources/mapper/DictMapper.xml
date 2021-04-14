@@ -21,11 +21,8 @@
         select d.*
         from t_dict d
                 where 1 = 1
-        <if test="null != dict.tag and '' != dict.tag">
-            and d.tag like concat('%', #{dict.tag}, '%')
-        </if>
-        <if test="null != dict.tagZh and '' != dict.tagZh">
-            and d.tagZh like concat('%', #{dict.tagZh}, '%')
+        <if test="null != search and '' != search">
+            and (d.tag like concat('%', #{search}, '%') or d.tagZh like concat('%', #{search}, '%'))
         </if>
     </select>
     <insert id="insertDictAndDictInfo">

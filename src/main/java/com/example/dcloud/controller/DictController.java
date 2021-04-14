@@ -34,8 +34,8 @@ public class DictController {
     @GetMapping("/manage/")
     public RespPageBean listDict(@RequestParam(defaultValue = "1") Integer currentPage,
                                  @RequestParam(defaultValue = "10")Integer size,
-                                 Dict dict){
-        return dictService.listDict(currentPage,size,dict);
+                                 String search){
+        return dictService.listDict(currentPage,size,search);
     }
 
     @ApiOperation("新增字典及其字典信息")

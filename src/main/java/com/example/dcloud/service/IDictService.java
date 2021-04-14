@@ -21,10 +21,10 @@ public interface IDictService extends IService<Dict> {
      *
      * @param currentPage
      * @param size
-     * @param dict
+     * @param search
      * @return
      */
-    RespPageBean listDict(Integer currentPage, Integer size, Dict dict);
+    RespPageBean listDict(Integer currentPage, Integer size, String search);
 
 
     /**

@@ -24,10 +24,10 @@ public interface DictMapper extends BaseMapper<Dict> {
     /**
      * 按条件查询分页  没有则查全部
      * @param page
-     * @param dict
+     * @param search
      * @return
      */
-    IPage<Dict> listDictPage(Page<Dict> page, @Param("dict") Dict dict);
+    IPage<Dict> listDictPage(Page<Dict> page, @Param("search") String search);
 
     /**
      * 添加字典及其字典项
