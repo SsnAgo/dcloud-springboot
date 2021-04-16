@@ -22,8 +22,8 @@ public interface UserMapper extends BaseMapper<User> {
      *
      * @param currentUserId
      * @param page
-     * @param user
+     * @param search
      * @return
      */
-    IPage<User> getUsersByPage(@Param("currentUserId") Integer currentUserId, Page<User> page, @Param("user") User user);
+    IPage<User> getUsersByPage(@Param("currentUserId") Integer currentUserId, Page<User> page, @Param("search") String search);
 }

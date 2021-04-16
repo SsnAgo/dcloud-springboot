@@ -14,9 +14,7 @@ import com.example.dcloud.vo.ChangePasswordVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -245,10 +243,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public RespPageBean getUsersByPage(Integer currentPage, Integer size, User user) {
+    public RespPageBean getUsersByPage(Integer currentPage, Integer size, String search) {
 
         Page<User> page = new Page<>(currentPage, size);
-        IPage<User> usersPage = userMapper.getUsersByPage(UserUtils.getCurrentUser().getId(), page, user);
+        IPage<User> usersPage = userMapper.getUsersByPage(UserUtils.getCurrentUser().getId(), page, search);
         RespPageBean respPageBean = new RespPageBean(usersPage.getTotal(), usersPage.getRecords());
         return respPageBean;
     }

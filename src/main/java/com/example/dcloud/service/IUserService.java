@@ -3,7 +3,6 @@ package com.example.dcloud.service;
 import com.example.dcloud.pojo.*;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.dcloud.vo.ChangePasswordVo;
-import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -108,10 +107,10 @@ public interface IUserService extends IService<User> {
      * 分页获取所有用户信息
      * @param currentPage
      * @param size
-     * @param user
+     * @param search
      * @return
      */
-    RespPageBean getUsersByPage(Integer currentPage, Integer size, User user);
+    RespPageBean getUsersByPage(Integer currentPage, Integer size, String search);
 
     /**
      * 获取用户角色
