@@ -9,8 +9,10 @@ import com.example.dcloud.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.dcloud.utils.CaptchaUtils;
 import com.example.dcloud.utils.JwtTokenUtil;
+import com.example.dcloud.utils.SmsUtils;
 import com.example.dcloud.utils.UserUtils;
 import com.example.dcloud.vo.ChangePasswordVo;
+import com.tencentcloudapi.sms.v20190711.models.SendSmsResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -67,8 +69,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Resource
     private DictInfoMapper dictInfoMapper;
 
+    @Resource
+    private SmsUtils smsUtils;
+
     @Value("${jwt.tokenHead}")
     private String tokenHead;
+
 
 
     /**
@@ -124,9 +130,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         System.out.println("user信息为"+user);
         if (null == user) return RespBean.error("该手机号未注册，请先注册");
         if (!StringUtils.hasText(code)) return RespBean.error("验证码不能为空");
-//        if (user.getRoleId() != 1 && user.getRoleId() != 2){
-//            return RespBean.error("没有进入管理系统的权限");
-//        }
+        Integer res = smsUtils.validateCode(phone, code);
+        if (res == SmsUtils.NO_PHONE){
+            return RespBean.error("该手机号还未获取验证码");
+        }
+        if (res == SmsUtils.CODE_ERROR){
+            return RespBean.error("验证码输入错误");
+        }
         return loginSuccess(user);
     }
 
@@ -164,6 +174,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (!StringUtils.hasText(code)) return RespBean.error("验证码不能为空");
         if (user.getRoleId() != 2 && user.getRoleId() != 3){
             return RespBean.error("没有进入管理系统的权限");
+        }
+        Integer res = smsUtils.validateCode(phone, code);
+        if (res == SmsUtils.NO_PHONE){
+            return RespBean.error("该手机号还未获取验证码");
+        }
+        if (res == SmsUtils.CODE_ERROR){
+            return RespBean.error("验证码输入错误");
         }
         return loginSuccess(user);
     }
@@ -297,9 +314,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return RespBean.error("该账号已被禁用，请联系管理员");
         }
         // 手机号可用，前往获取验证码
-        String captcha = CaptchaUtils.generatorCaptcha();
-        request.getSession().setAttribute("captcha",captcha);
-        return RespBean.success("发送验证码成功  " + captcha);
+        SendSmsResponse resp = smsUtils.SendSms(phone);
+        if (resp == null) {
+            return RespBean.error("发送验证码遇到错误，请重试");
+        }
+        if (!resp.getSendStatusSet()[0].getCode().equals("Ok")){
+            return RespBean.error("发送验证码遇到错误，请重试");
+        }
+        return RespBean.success("发送验证码成功");
     }
 
     @Override
@@ -311,8 +333,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return RespBean.error("该手机号已注册，请去登录");
         }
         // 手机号可用，前往获取验证码
-        String captcha = CaptchaUtils.generatorCaptcha();
-        request.getSession().setAttribute("captcha",captcha);
-        return RespBean.success("发送验证码成功  " + captcha);
+        SendSmsResponse resp = smsUtils.SendSms(phone);
+        if (resp == null) {
+            return RespBean.error("发送验证码遇到错误，请重试");
+        }
+        if (!resp.getSendStatusSet()[0].getCode().equals("Ok")){
+            return RespBean.error("发送验证码遇到错误，请重试");
+        }
+        return RespBean.success("发送验证码成功");
     }
 }
