@@ -182,6 +182,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (res == SmsUtils.CODE_ERROR){
             return RespBean.error("验证码输入错误");
         }
+        System.out.println(res);
         return loginSuccess(user);
     }
 

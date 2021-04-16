@@ -18,19 +18,19 @@ import java.util.Random;
 public class SmsUtils {
 
     @Value("${sms.secretId}")
-    private static String SECRET_ID;
+    private String SECRET_ID;
     @Value("${sms.secretKey}")
-    private static String SECRET_KEY;
+    private String SECRET_KEY;
     @Value("${sms.endPoint}")
-    private static String END_POINT;
+    private String END_POINT;
     @Value("${sms.templateId}")
-    private static String TEMPLATE_ID;
+    private  String TEMPLATE_ID;
     @Value("${sms.sign}")
-    private static String SIGN;
+    private  String SIGN;
     @Value("${sms.smsSdkAppid}")
-    private static String SMS_SDK_APP_ID;
+    private  String SMS_SDK_APP_ID;
     @Value("${sms.timeLimit}")
-    private static String TIME_LIMIT;
+    private  String TIME_LIMIT;
 
     public static Integer NO_PHONE = 0;
     public static Integer CODE_ERROR = 1;
@@ -38,10 +38,12 @@ public class SmsUtils {
 
 
     @Resource
-    private static RedisTemplate redisTemplate;
+    private RedisTemplate redisTemplate;
 
+    private HashOperations hashOperations;
 
     public SendSmsResponse SendSms(String phone) {
+        SendSmsResponse resp = null;
         try {
 
             // 设置秘钥id 和秘钥key
@@ -76,17 +78,15 @@ public class SmsUtils {
             // 设置appid
             req.setSmsSdkAppid(SMS_SDK_APP_ID);
 
-
-            HashOperations hashOperations = redisTemplate.opsForHash();
+            hashOperations = redisTemplate.opsForHash();
             hashOperations.put("sms",phone,code);
 
-            SendSmsResponse resp = client.SendSms(req);
+            resp = client.SendSms(req);
             System.out.println(SendSmsResponse.toJsonString(resp));
-            return resp;
         } catch (TencentCloudSDKException e) {
             System.out.println(e.toString());
         }
-        return null;
+        return resp;
     }
 
 
@@ -102,13 +102,15 @@ public class SmsUtils {
 
     public Integer validateCode(String phone, String code){
         phone = "+86" + phone;
-        HashOperations hashOperations = redisTemplate.opsForHash();
+        hashOperations = redisTemplate.opsForHash();
         if (!hashOperations.entries("sms").containsKey(phone)){
             return NO_PHONE;
         }
         if (hashOperations.entries("sms").get(phone).equals(code)){
             // 对的上 那就将这个phone给移除了
-            hashOperations.entries("sms").remove(phone);
+            System.out.println("验证正确");
+            hashOperations.delete("sms",phone);
+
             return CODE_CORRECT;
         }else{
             return CODE_ERROR;
