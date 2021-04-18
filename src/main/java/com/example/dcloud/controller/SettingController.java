@@ -7,7 +7,7 @@ import com.example.dcloud.pojo.SettingLevel;
 import com.example.dcloud.pojo.SettingSign;
 import com.example.dcloud.service.ISettingLevelService;
 import com.example.dcloud.service.ISettingSignService;
-import com.example.dcloud.vo.SettingVo;
+import com.example.dcloud.dto.SettingVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;

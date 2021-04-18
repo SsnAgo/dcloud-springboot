@@ -146,7 +146,7 @@
 
 
     </select>
-    <resultMap id="CourseMemberInfo" type="com.example.dcloud.dto.CourseMemberDto" extends="BaseResultMap">
+    <resultMap id="CourseMemberInfo" type="com.example.dcloud.vo.CourseMemberVo" extends="BaseResultMap">
         <id column="csid" property="id"/>
         <result column="cid" property="cid"/>
         <result column="uid" property="uid"/>

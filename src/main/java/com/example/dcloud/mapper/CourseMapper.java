@@ -2,10 +2,9 @@ package com.example.dcloud.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.dcloud.dto.CourseMemberDto;
+import com.example.dcloud.vo.CourseMemberVo;
 import com.example.dcloud.pojo.Course;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.dcloud.pojo.CourseStudent;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -46,7 +45,7 @@ public interface CourseMapper extends BaseMapper<Course> {
      * @param sortBy
      * @return
      */
-    IPage<CourseMemberDto> courseMember(@Param("cid") Integer id, Page<CourseMemberDto> page, @Param("search") String search, @Param("sortBy") String sortBy);
+    IPage<CourseMemberVo> courseMember(@Param("cid") Integer id, Page<CourseMemberVo> page, @Param("search") String search, @Param("sortBy") String sortBy);
 
     /**
      * 根据id获取课程

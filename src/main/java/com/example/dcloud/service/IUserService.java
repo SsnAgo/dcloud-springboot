@@ -2,7 +2,8 @@ package com.example.dcloud.service;
 
 import com.example.dcloud.pojo.*;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.dcloud.vo.ChangePasswordVo;
+import com.example.dcloud.dto.ChangePasswordDto;
+import com.example.dcloud.dto.RegisterDto;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -130,25 +131,30 @@ public interface IUserService extends IService<User> {
     /**
      * 用户修改密码
      *
-     * @param changePasswordVo
+     * @param changePasswordDto
      * @return
      */
-    RespBean changePassword(ChangePasswordVo changePasswordVo);
+    RespBean changePassword(ChangePasswordDto changePasswordDto);
 
 
     /**
      * 登录时获取验证码，首先验证手机号存在
      * @param phone
-     * @param request
      * @return
      */
-    RespBean getLoginCaptcha(String phone, HttpServletRequest request);
+    RespBean getLoginCaptcha(String phone);
 
     /**
      * 注册时获取验证码，首先验证手机号不存在
      * @param phone
-     * @param request
      * @return
      */
-    RespBean getRegisterCaptcha(String phone, HttpServletRequest request);
+    RespBean getRegisterCaptcha(String phone);
+
+    /**
+     * 用户注册功能
+     * @param registerDto
+     * @return
+     */
+    RespBean register(RegisterDto registerDto);
 }

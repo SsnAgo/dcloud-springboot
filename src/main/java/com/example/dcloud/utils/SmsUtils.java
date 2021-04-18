@@ -11,8 +11,10 @@ import com.tencentcloudapi.sms.v20190711.models.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;;import javax.annotation.Resource;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class SmsUtils {
@@ -38,7 +40,7 @@ public class SmsUtils {
 
 
     @Resource
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String,String> redisTemplate;
 
     private HashOperations hashOperations;
 
@@ -65,6 +67,7 @@ public class SmsUtils {
             phone  = "+86" + phone.trim();
             String[] phoneNumberSet1 = {phone};
             req.setPhoneNumberSet(phoneNumberSet1);
+
             // 设置模板id及其内容
             req.setTemplateID(TEMPLATE_ID);
             String code = generatorCode();
@@ -73,14 +76,17 @@ public class SmsUtils {
             templateParam[0] = code;
             templateParam[1] = TIME_LIMIT;
             req.setTemplateParamSet(templateParam);
+
             // 设置签名
             req.setSign(SIGN);
+
             // 设置appid
             req.setSmsSdkAppid(SMS_SDK_APP_ID);
 
-            hashOperations = redisTemplate.opsForHash();
-            hashOperations.put("sms",phone,code);
+            // 存入redis 并设置过期时间
+            redisTemplate.opsForValue().set(phone,code,Integer.parseInt(TIME_LIMIT),TimeUnit.MINUTES);
 
+            // 发送短信
             resp = client.SendSms(req);
             System.out.println(SendSmsResponse.toJsonString(resp));
         } catch (TencentCloudSDKException e) {
@@ -102,19 +108,26 @@ public class SmsUtils {
 
     public Integer validateCode(String phone, String code){
         phone = "+86" + phone;
-        hashOperations = redisTemplate.opsForHash();
-        if (!hashOperations.entries("sms").containsKey(phone)){
+        ValueOperations<String, String> map = redisTemplate.opsForValue();
+        String s = map.get(phone);
+        if (s == null){
             return NO_PHONE;
         }
-        if (hashOperations.entries("sms").get(phone).equals(code)){
-            // 对的上 那就将这个phone给移除了
-            System.out.println("验证正确");
-            hashOperations.delete("sms",phone);
-
+        if (s.equals(code)){
+            // 删除
+            redisTemplate.delete(phone);
             return CODE_CORRECT;
         }else{
             return CODE_ERROR;
         }
+//        if (hashOperations.entries("sms").get(phone).equals(code)){
+//            // 对的上 那就将这个phone给移除了
+//            System.out.println("验证正确");
+//            hashOperations.delete("sms",phone);
+//            return CODE_CORRECT;
+//        }else{
+//            return CODE_ERROR;
+//        }
     }
 
 }

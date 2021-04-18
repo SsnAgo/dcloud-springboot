@@ -11,7 +11,7 @@ import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.RespPageBean;
 import com.example.dcloud.service.IDictService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.dcloud.vo.DictVo;
+import com.example.dcloud.dto.DictDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,10 +44,10 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
 
     @Override
     @Transactional
-    public RespBean updateDict(DictVo dictVo) {
+    public RespBean updateDict(DictDto dictDto) {
         // 如果字典信息插入不成功，就直接return
-        Dict dict = dictVo.getDict();
-        List<DictInfo> dictInfoList = dictVo.getDictInfoList();
+        Dict dict = dictDto.getDict();
+        List<DictInfo> dictInfoList = dictDto.getDictInfoList();
 
         // 判断当前是否有该字典 如果没有则不能修改
         Dict exits = dictMapper.selectById(dict.getId());
@@ -178,10 +178,10 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
 
     @Override
     @Transactional
-    public RespBean addDict(DictVo dictVo) {
+    public RespBean addDict(DictDto dictDto) {
         // 如果字典信息插入不成功，就直接return
-        Dict dict = dictVo.getDict();
-        List<DictInfo> dictInfoList = dictVo.getDictInfoList();
+        Dict dict = dictDto.getDict();
+        List<DictInfo> dictInfoList = dictDto.getDictInfoList();
         // 判断是否已存在
         Dict exits = dictMapper.selectOne(new QueryWrapper<Dict>().eq("tagZh", dict.getTagZh()).or().eq("tag", dict.getTag()));
         if (exits != null) return RespBean.error("添加字典失败，中英文标识不能重复");

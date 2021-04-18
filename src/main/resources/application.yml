@@ -95,4 +95,4 @@ sms:
   templateId: 925855
   sign: 今晚月色真美
   smsSdkAppid: 1400509565
-  timeLimit: 1
+  timeLimit: 5

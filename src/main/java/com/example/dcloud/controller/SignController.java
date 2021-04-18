@@ -56,14 +56,14 @@ public class SignController {
     }
 
     @Secured({"ROLE_TEACHER"})
-    @ApiOperation("创建一个一分钟限时签到")
+    @ApiOperation("传入限时分钟，创建一个限时签到")
     @PostMapping("/create/oneminute")
-    public RespBean startOneMinuteSign(@RequestParam("id") @ApiParam("传入班课id") Integer cid) {
+    public RespBean startOneMinuteSign(@RequestParam("id") @ApiParam("传入班课id") Integer cid,@RequestParam("timeout") @ApiParam("限时 单位分钟") Integer timeout) {
         if (!canCreate(cid)) {
             return RespBean.error("签到还在进行中，清勿重复发起");
         }
         Sign sign = new Sign();
-        sign.setStartTime(LocalDateTime.now()).setEndTime(LocalDateTime.now().plusMinutes(1)).setLocal(null).setEnabled(true).setCourseId(cid).setCode(null).setType(SignUtils.ONE_MINUTE);
+        sign.setStartTime(LocalDateTime.now()).setEndTime(LocalDateTime.now().plusMinutes(timeout)).setLocal(null).setEnabled(true).setCourseId(cid).setCode(null).setType(SignUtils.TIME_LIMIT);
         signService.save(sign);
         return RespBean.success("创建签到成功",sign);
     }
@@ -102,7 +102,7 @@ public class SignController {
         if (null != exist) {
             // 如果已经过期 将这个enabled置为null
             // 如果是由endtime的 就是有限时的 就检查有无过期
-            if (exist.getType() == SignUtils.ONE_MINUTE && exist.getEndTime() != null) {
+            if (exist.getType() == SignUtils.TIME_LIMIT && exist.getEndTime() != null) {
                 if (LocalDateTime.now().isAfter(exist.getEndTime())) {
                     exist.setEnabled(false);
                     signService.updateById(exist);
@@ -123,7 +123,7 @@ public class SignController {
             return true;
         }
     }
-    @ApiOperation("学生点击签到按钮查看有无签到 有则进入签到页面，并返回签到类型 0无限制 1一分钟 2手势 3 位置")
+    @ApiOperation("学生点击签到按钮查看有无签到 有则进入签到页面，并返回签到类型 0无限制 1限时 2手势 3 位置")
     @GetMapping("/cansign/{cid}")
     public RespBean canSign(@PathVariable Integer cid) {
         Sign exist = signService.getOne(new QueryWrapper<Sign>().eq("courseId", cid).eq("enabled", true));
@@ -132,7 +132,7 @@ public class SignController {
             return RespBean.error("暂无发起签到或签到已结束");
         }
         // 如果可用 但是是有时间的 就判断一下有无过期
-        if (exist.getEndTime() != null && exist.getType() == SignUtils.ONE_MINUTE) {
+        if (exist.getEndTime() != null && exist.getType() == SignUtils.TIME_LIMIT) {
             // 如果过期了 就设置为false
             if (LocalDateTime.now().isAfter(exist.getEndTime())) {
                 exist.setEnabled(false);
@@ -140,6 +140,7 @@ public class SignController {
                 return RespBean.error("暂无发起签到或签到已结束");
             }
         }
+
         return RespBean.success("可以签到", exist.getType());
     }
 

@@ -1,14 +1,12 @@
-package com.example.dcloud.vo;
+package com.example.dcloud.dto;
 
 
 import com.example.dcloud.pojo.SettingLevel;
 import com.example.dcloud.pojo.SettingSign;
-import com.example.dcloud.pojo.System;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 

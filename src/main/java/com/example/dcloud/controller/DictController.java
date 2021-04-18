@@ -1,17 +1,15 @@
 package com.example.dcloud.controller;
 
 
-import com.example.dcloud.mapper.DictMapper;
 import com.example.dcloud.pojo.*;
 import com.example.dcloud.service.IDictService;
-import com.example.dcloud.vo.DictVo;
+import com.example.dcloud.dto.DictDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * <p>
@@ -40,14 +38,14 @@ public class DictController {
 
     @ApiOperation("新增字典及其字典信息")
     @PostMapping("/manage/")
-    public RespBean addDict(@RequestBody DictVo dictVo){
-        return dictService.addDict(dictVo);
+    public RespBean addDict(@RequestBody DictDto dictDto){
+        return dictService.addDict(dictDto);
     }
 
     @ApiOperation("修改某个字典及其字典项信息")
     @PutMapping("/manage/")
-    public RespBean updateDict(@RequestBody DictVo dictVo){
-        return dictService.updateDict(dictVo);
+    public RespBean updateDict(@RequestBody DictDto dictDto){
+        return dictService.updateDict(dictDto);
     }
 
     @ApiOperation("删除某个字典及其字典项")

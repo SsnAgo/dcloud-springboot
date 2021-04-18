@@ -55,7 +55,7 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
             return RespBean.error("签到已结束，请联系教师");
         }
         // 如果还可用，那么进行日期检查
-        if (exist.getEndTime() != null && exist.getType()== SignUtils.ONE_MINUTE){
+        if (exist.getEndTime() != null && exist.getType()== SignUtils.TIME_LIMIT){
             if (LocalDateTime.now().isAfter(exist.getEndTime())){
                 exist.setEnabled(false);
                 signMapper.updateById(exist);

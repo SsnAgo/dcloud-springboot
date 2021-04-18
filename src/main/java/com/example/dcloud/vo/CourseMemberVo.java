@@ -1,4 +1,4 @@
-package com.example.dcloud.dto;
+package com.example.dcloud.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "班级成员dto", description = "")
-public class CourseMemberDto {
+public class CourseMemberVo {
 
     @ApiModelProperty(value = "cs表id")
     private Integer id;

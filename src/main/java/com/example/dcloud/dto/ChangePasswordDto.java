@@ -1,4 +1,4 @@
-package com.example.dcloud.vo;
+package com.example.dcloud.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "修改密码对象",description = "")
-public class ChangePasswordVo {
+public class ChangePasswordDto {
 
     @ApiModelProperty("用户id")
     private Integer id;

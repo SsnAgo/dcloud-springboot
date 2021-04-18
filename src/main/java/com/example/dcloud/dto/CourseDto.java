@@ -1,4 +1,4 @@
-package com.example.dcloud.vo;
+package com.example.dcloud.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "课程搜索对象",description = "")
 
-public class CourseVo {
+public class CourseDto {
 
     @ApiModelProperty("班课名")
     private String name;

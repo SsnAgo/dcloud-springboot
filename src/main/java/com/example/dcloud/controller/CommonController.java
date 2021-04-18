@@ -6,11 +6,10 @@ import com.example.dcloud.pojo.*;
 import com.example.dcloud.service.*;
 import com.example.dcloud.utils.FastDFSUtils;
 import com.example.dcloud.utils.UserUtils;
-import com.example.dcloud.vo.ChangePasswordVo;
+import com.example.dcloud.dto.ChangePasswordDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -109,8 +108,8 @@ public class CommonController {
 
     @ApiOperation("修改密码")
     @PostMapping("/user/pwd")
-    public RespBean changePassword(@RequestBody ChangePasswordVo changePasswordVo){
-        return userService.changePassword(changePasswordVo);
+    public RespBean changePassword(@RequestBody ChangePasswordDto changePasswordDto){
+        return userService.changePassword(changePasswordDto);
     }
 
     @ApiOperation("上传图片到fdfs并获取该url")
