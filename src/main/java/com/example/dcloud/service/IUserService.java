@@ -93,7 +93,7 @@ public interface IUserService extends IService<User> {
      * @param user
      * @return
      */
-    Department getDepartment(User user);
+    School getDepartment(User user);
 
 
     /**

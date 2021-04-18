@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import javax.validation.constraints.NotEmpty;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author ssn
@@ -27,7 +28,7 @@ import javax.validation.constraints.NotEmpty;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("t_school")
-@ApiModel(value="School对象", description="")
+@ApiModel(value = "School对象", description = "")
 public class School implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,7 +41,6 @@ public class School implements Serializable {
     @NotEmpty(message = "学校名称不能为空")
     private String name;
 
-
     @ApiModelProperty(value = "是否启用")
     private Boolean enabled;
 
@@ -49,7 +49,11 @@ public class School implements Serializable {
 
     @ApiModelProperty("学校下面的学院")
     @TableField(exist = false)
-    private List<Department> departments;
+    private List<School> departments;
+
+
+    @ApiModelProperty("父节点id")
+    private Integer parentId;
 
 
 }

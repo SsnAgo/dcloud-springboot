@@ -8,6 +8,7 @@
         <result column="name" property="name"/>
         <result column="enabled" property="enabled"/>
         <result column="schoolCode" property="schoolCode"/>
+        <result column="parentId" property="parentId"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -15,22 +16,41 @@
         id,
         name,
         enabled,
-        schoolCode
+        schoolCode,
+        parentId
     </sql>
-    <resultMap id="SchoolInfo" type="com.example.dcloud.pojo.School" extends="BaseResultMap">
-        <collection property="departments" ofType="com.example.dcloud.pojo.Department">
+<!--    <resultMap id="SchoolInfo" type="com.example.dcloud.pojo.School" extends="BaseResultMap">-->
+<!--        <collection property="departments" ofType="com.example.dcloud.pojo.Department">-->
+<!--            <id column="did" property="id"/>-->
+<!--            <result column="dname" property="name"/>-->
+<!--            <result column="dsid" property="schoolId"/>-->
+<!--        </collection>-->
+<!--    </resultMap>-->
+    <resultMap id="getAllSchoolsWithDepartments" type="com.example.dcloud.pojo.School" extends="BaseResultMap">
+        <id column="sid" property="id"/>
+        <result column="sname" property="name"/>
+        <result column="scode" property="schoolCode"/>
+        <collection property="departments" ofType="com.example.dcloud.pojo.School">
             <id column="did" property="id"/>
             <result column="dname" property="name"/>
-            <result column="dsid" property="schoolId"/>
+            <result column="dpid" property="parentId"/>
+
         </collection>
     </resultMap>
-    <select id="getSchools" resultMap="SchoolInfo">
-        select s.*,
-               d.id       as did,
-               d.name     as dname,
-               d.schoolId as dsid
-        from t_school s
-                     left join t_department d on s.id = d.schoolId
-                     where s.enabled = true
+    <select id="getSchools" resultMap="getAllSchoolsWithDepartments">
+        SELECT
+               p.id         as sid,
+               p.name       as sname,
+               p.schoolCode as scode,
+
+               d.id         as did,
+               d.name       as dname,
+               d.parentId   as dpid
+
+        FROM
+             t_school p,
+             t_school d
+        where
+           p.id = d.parentId
     </select>
 </mapper>

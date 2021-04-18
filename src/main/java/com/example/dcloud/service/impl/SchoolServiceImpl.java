@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -27,8 +28,6 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
 
     @Resource
     private SchoolMapper schoolMapper;
-    @Resource
-    private DepartmentMapper departmentMapper;
 
     @Override
     public List<School> getSchools() {
@@ -47,6 +46,7 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         if (exist != null) {
             return RespBean.error("该学校编号已存在");
         }
+
         if (schoolMapper.insert(school) == 1) {
             return RespBean.success("添加学校成功", school);
         }
@@ -55,8 +55,8 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
 
     @Override
     public RespBean deleteSchool(Integer sid) {
-        // 查询department表，如果有schoolid为sid的  就不能删除
-        Integer res = departmentMapper.selectCount(new QueryWrapper<Department>().eq("schoolId", sid));
+        // 查询school表，如果有parentId为sid的  就不能删除
+        Integer res = schoolMapper.selectCount(new QueryWrapper<School>().eq("parentId", sid));
         if (res > 0) {
             return RespBean.error("该学校下面还有学院，不能直接删除");
         }
@@ -91,6 +91,19 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
             return RespBean.success("修改学校信息成功",school);
         }
         return RespBean.error("修改学校信息失败");
+    }
+
+    @Override
+    public RespBean updateDept(School school) {
+        // 判断该pid下有无重名
+        School exist = schoolMapper.selectOne(new QueryWrapper<School>().eq("parentId",school.getParentId()).eq("name",school.getName()).ne("id",school.getId()));
+        if (exist != null) {
+            return RespBean.error("该学校下已有该学院");
+        }
+        if (schoolMapper.updateById(school) == 1) {
+            return RespBean.success("修改学院成功");
+        }
+        return RespBean.error("修改学院失败");
     }
 
 }

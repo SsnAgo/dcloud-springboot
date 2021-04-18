@@ -57,8 +57,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Resource
     private SchoolMapper schoolMapper;
 
-    @Resource
-    private DepartmentMapper departmentMapper;
+//    @Resource
+//    private DepartmentMapper departmentMapper;
 
     @Resource
     private PasswordEncoder passwordEncoder;
@@ -248,8 +248,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Department getDepartment(User user) {
-        return departmentMapper.selectById(user.getDepartmentId());
+    public School getDepartment(User user) {
+        return schoolMapper.selectById(user.getDepartmentId());
     }
 
 

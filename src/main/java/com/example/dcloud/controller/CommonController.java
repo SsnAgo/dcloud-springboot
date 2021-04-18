@@ -28,8 +28,8 @@ public class CommonController {
     private IDictInfoService dictInfoService;
     @Resource
     private ISchoolService schoolService;
-    @Resource
-    private IDepartmentService departmentService;
+//    @Resource
+//    private IDepartmentService departmentService;
     @Resource
     private IMajorService majorService;
     @Resource
@@ -44,13 +44,13 @@ public class CommonController {
     @ApiOperation("获取所有学校列表")
     @GetMapping("/school")
     public List<School> getSchools(){
-        return schoolService.list();
+        return schoolService.list(new QueryWrapper<School>().eq("parentId",-1));
     }
 
     @ApiOperation("获取该学校id的所有学院列表")
     @GetMapping("/school/{id}/departments")
-    public List<Department> getDepartments(@PathVariable Integer id){
-        return departmentService.list(new QueryWrapper<Department>().eq("schoolId",id));
+    public List<School> getDepartments(@PathVariable Integer id){
+        return schoolService.list(new QueryWrapper<School>().eq("parentId",id));
     }
 
     @ApiOperation("获取所有学校及其分院(树状结构)")

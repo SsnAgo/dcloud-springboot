@@ -57,7 +57,7 @@
             <result column="sname" property="name"/>
             <result column="scode" property="schoolCode"/>
         </association>
-        <association property="department" javaType="com.example.dcloud.pojo.Department">
+        <association property="department" javaType="com.example.dcloud.pojo.School">
             <id column="did" property="id"/>
             <result column="dname" property="name"/>
         </association>
@@ -89,7 +89,7 @@
                      LEFT JOIN t_dict_info dictsex ON u.sexCode = dictsex.id
                      LEFT JOIN t_dict_info dictedu ON u.educationCode = dictedu.id
                      LEFT JOIN t_school s ON u.schoolId = s.id
-                     LEFT JOIN t_department d ON u.departmentId = d.id
+                     LEFT JOIN t_school d ON u.departmentId = d.id
                      LEFT JOIN t_major m ON u.majorId = m.id
                      LEFT JOIN t_role r ON u.roleId = r.id
                 WHERE u.id != #{currentUserId}
