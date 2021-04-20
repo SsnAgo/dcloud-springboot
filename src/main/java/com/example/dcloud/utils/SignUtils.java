@@ -15,4 +15,10 @@ public class SignUtils {
     public static final Integer NO_SIGNED = 0;
     public static final Integer DAY_OFF = 2;
 
+    /**
+     * 放弃签到 和 关闭签到
+     */
+    public static final Integer GIVE_UP = 0;
+    public static final Integer CLOSE = 1;
+
 }

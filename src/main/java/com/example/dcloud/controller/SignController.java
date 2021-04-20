@@ -185,9 +185,9 @@ public class SignController {
     @Secured({"ROLE_TEACHER"})
     @ApiOperation("教师关闭签到")
     @GetMapping("/close")
-    public RespBean closeSign(@ApiParam("当前班课id 参数名为cid") @RequestParam("cid") Integer cid,
+    public RespBean closeSign(@ApiParam("当前签到id 参数名为id") @RequestParam("id") Integer id,
                               @ApiParam("0为放弃，1为关闭") @RequestParam("cid") Integer type){
-        return signService.closeSign(cid,type);
+        return signService.closeSign(id,type);
     }
 
 
@@ -213,13 +213,22 @@ public class SignController {
     }
 
 
-    @StudentAllow
     @ApiOperation("查看学生在某班课的签到记录")
     @GetMapping("/course")
     public List<SignRecord> getStudentHistory(@RequestParam("cid") @ApiParam("班课id") Integer cid,
                                                  @RequestParam("sid") @ApiParam("学生id") Integer sid){
         return signService.getStudentHistory(cid,sid);
     }
+
+
+    @ApiOperation("根据签到id获取限时签到的剩余时间")
+    @GetMapping("/time/{id}")
+    public Integer timeAvailable( Integer id){
+        return signService.timeAvailable(id);
+    }
+
+
+
 
 
 

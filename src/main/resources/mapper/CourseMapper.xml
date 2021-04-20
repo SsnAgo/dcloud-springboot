@@ -19,6 +19,7 @@
         <result column="teachProgress" property="teachProgress"/>
         <result column="examSchedule" property="examSchedule"/>
         <result column="schoolId" property="schoolId"/>
+        <result column="departmetnId" property="departmentId"/>
         <result column="flag" property="flag"/>
         <result column="enabled" property="enabled"/>
         <result column="allowIn" property="allowIn"/>
@@ -41,6 +42,7 @@
         teachProgress,
         examSchedule,
         schoolId,
+        departmentId,
         flag,
         enabled,
         allowIn
@@ -48,6 +50,7 @@
     <resultMap id="CourseInfo" type="com.example.dcloud.pojo.Course" extends="BaseResultMap">
         <result column="type" property="type"/>
         <result column="sname" property="schoolName"/>
+        <result column="dname" property="departmentName"/>
         <association property="creater" javaType="com.example.dcloud.pojo.User">
             <id column="uid" property="id"/>
             <result column="uname" property="name"/>
@@ -66,11 +69,13 @@
                r.name     as rname,
                r.nameZh   as rnamezh,
                u.enabled  as uen,
-               s.name     as sname
+               s.name     as sname,
+               d.name as dname
         from t_course c
                      left join t_dict_info di on c.typeCode = di.id
                      left join t_user u on c.createrId = u.id
                      left join t_school s on c.schoolId = s.id
+                     left join t_school d on c.departmentId = d.id
                      left join t_role r on r.id = u.roleId
                 where 1 = 1
         <if test="course != null">
@@ -190,11 +195,13 @@
                r.name     as rname,
                r.nameZh   as rnamezh,
                u.enabled  as uen,
-               s.name     as sname
+               s.name     as sname,
+               d.name as dname
         from t_course c
                      left join t_dict_info di on c.typeCode = di.id
                      left join t_user u on c.createrId = u.id
                      left join t_school s on c.schoolId = s.id
+                     left join t_school d on c.departmentId = d.id
                      left join t_role r on r.id = u.roleId
                 where c.id = #{id}
     </select>

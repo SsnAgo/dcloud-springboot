@@ -45,11 +45,11 @@ public interface ISignService extends IService<Sign> {
 
     /**
      * 教师关闭签到
-     * @param cid
+     * @param id
      * @param type
      * @return
      */
-    RespBean closeSign(Integer cid, Integer type);
+    RespBean closeSign(Integer id, Integer type);
 
     /**
      * 查看签到情况
@@ -79,4 +79,11 @@ public interface ISignService extends IService<Sign> {
      * @return
      */
     List<SignRecord> getStudentHistory(Integer cid, Integer sid);
+
+    /**
+     * 获取该签到的剩余时间
+     * @param id
+     * @return
+     */
+    Integer timeAvailable(Integer id);
 }

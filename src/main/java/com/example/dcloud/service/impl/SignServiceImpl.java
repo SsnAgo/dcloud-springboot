@@ -48,9 +48,9 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
             return RespBean.error("签到已结束，请联系教师");
         }
         Double distance = DistanceUtil.getDistanceMeter(exist.getLocal(),local);
-        Double settingDistance = settingSignMapper.selectById(1).getSignDistance();
+        Double settingDistance = settingSignMapper.selectById(1).getSignDistance() * 1000;
         if (settingDistance == 0 || distance <= settingDistance){
-            signSuccess(signId,sid,distance);
+            signSuccess(signId,sid,Double.parseDouble(String.format("%.1f",distance)));
             return RespBean.success("签到成功");
         }
         // 执行签到成功的数据库相关更新操作
@@ -73,9 +73,9 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
                 return RespBean.error("签到已结束，请联系教师");
             }else{
                 Double distance = DistanceUtil.getDistanceMeter(exist.getLocal(),local);
-                Double settingDistance = settingSignMapper.selectById(1).getSignDistance();
+                Double settingDistance = settingSignMapper.selectById(1).getSignDistance() * 1000;
                 if (settingDistance == 0 || distance <= settingDistance){
-                    signSuccess(signId,sid,distance);
+                    signSuccess(signId,sid,Double.parseDouble(String.format("%.1f",distance)));
                     return RespBean.success("签到成功");
                 }
                 // 执行签到成功的数据库相关更新操作
@@ -106,21 +106,21 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
 
     @Override
     @Transactional
-    public RespBean closeSign(Integer cid, Integer type) {
-        Sign exist = signMapper.selectOne(new QueryWrapper<Sign>().eq("courseId", cid).eq("enabled", true));
+    public RespBean closeSign(Integer id, Integer type) {
+        Sign exist = signMapper.selectOne(new QueryWrapper<Sign>().eq("id", id).eq("enabled", true));
         if (exist == null) {
             return RespBean.error("没有可关闭的签到");
         }
         // 如果type是 1 关闭签到
-        if (type == 1){
+        if (type == SignUtils.CLOSE){
             exist.setEnabled(false);
             exist.setEndTime(LocalDateTime.now());
             signMapper.updateById(exist);
             return RespBean.success("关闭签到成功",exist);
         }
-        if (type == 0) {
-            signMapper.deleteById(exist.getId());
-            signRecordMapper.deleteBySignId(exist.getId());
+        if (type == SignUtils.GIVE_UP) {
+            signMapper.deleteById(id);
+            signRecordMapper.deleteBySignId(id);
             return RespBean.success("放弃签到成功",exist);
         }
         return RespBean.error("无效关闭类型");
@@ -193,7 +193,22 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         return signRecordList;
     }
 
-
+    @Override
+    public Integer timeAvailable(Integer id) {
+        Sign sign = signMapper.selectById(id);
+        if (sign.getType() == SignUtils.TIME_LIMIT){
+            // 如果还没结束 就返回剩余秒数
+            if (LocalDateTime.now().isBefore(sign.getEndTime())){
+                return sign.getEndTime().minusSeconds(LocalDateTime.now().getSecond()).getSecond();
+            }else {
+                // 这个时候签到已经结束辽  调用关闭方法
+                closeSign(id,SignUtils.CLOSE);
+            }
+        }else {
+            return 0;
+        }
+        return 0;
+    }
 
 
     @Transactional
