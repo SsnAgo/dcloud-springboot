@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -33,13 +35,15 @@ public class Sign implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "签到开始时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT")
     private LocalDateTime startTime;
 
     @ApiModelProperty(value = "签到结束时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT")
     private LocalDateTime endTime;
 
     @ApiModelProperty(value = "签到位置")
-    private Double local;
+    private String local;
 
     @ApiModelProperty(value = "是否可用")
     private Boolean enabled;
@@ -55,6 +59,7 @@ public class Sign implements Serializable {
 
     @ApiModelProperty(value = "0 无限制签到 1 一分钟限时 2 手势签到  3位置签到")
     private Integer type;
+
 
 
 }

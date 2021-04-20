@@ -7,6 +7,8 @@ import com.example.dcloud.pojo.CourseStudent;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -17,4 +19,10 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface CourseStudentMapper extends BaseMapper<CourseStudent> {
 
+    /**
+     * 根据cid获取该班级的所有sid
+     * @param cid
+     * @return
+     */
+    List<Integer> listSidByCid(Integer cid);
 }

@@ -32,7 +32,7 @@ public interface ISchoolService extends IService<School> {
 
     /**
      * 根据id删除学校
-     * @param sid
+     * @param id
      * @return
      */
     RespBean deleteSchool(Integer id);

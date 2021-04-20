@@ -1,6 +1,6 @@
 package com.example.dcloud.mapper;
 
-import com.example.dcloud.dto.SettingVo;
+import com.example.dcloud.vo.SettingVo;
 import org.apache.ibatis.annotations.Param;
 
 public interface SettingMapper {

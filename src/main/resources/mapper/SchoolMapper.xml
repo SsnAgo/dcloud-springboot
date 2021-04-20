@@ -48,9 +48,8 @@
                d.parentId   as dpid
 
         FROM
-             t_school p,
-             t_school d
-        where
-           p.id = d.parentId
+             t_school p left join t_school d on p.id = d.parentId
+             where p.parentId = -1
+
     </select>
 </mapper>

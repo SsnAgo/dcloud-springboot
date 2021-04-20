@@ -21,4 +21,16 @@
         id, startTime, endTime, local, enabled, courseId, code, teacherId, type
     </sql>
 
+    <resultMap id="CourseHistoryInfo" type="com.example.dcloud.vo.SignHistoryVo">
+    <id column="sid" property="signId"/>
+    <result column="stime" property="startTime"/>
+    <result column="stype" property="type"/>
+</resultMap>
+    <select id="getCourseHistory" resultMap="CourseHistoryInfo">
+        select s.id as sid,
+        s.startTime as stime,
+        s.type as stype
+        from t_sign s where courseId = #{cid};
+</select>
+
 </mapper>

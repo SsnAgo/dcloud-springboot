@@ -69,22 +69,22 @@ public class LoginController {
     @ApiOperation("用户注册功能")
     @PostMapping("/register")
     public RespBean register(@RequestBody RegisterDto registerDto){
-        if (StringUtils.hasText(registerDto.getPhone())){
+        if (!StringUtils.hasText(registerDto.getPhone())){
             return RespBean.error("手机号不能为空");
         }
-        if (StringUtils.hasText(registerDto.getUsername())){
+        if (!StringUtils.hasText(registerDto.getUsername())){
             return RespBean.error("用户名不能为空");
         }
-        if (StringUtils.hasText(registerDto.getPassword())){
+        if (!StringUtils.hasText(registerDto.getPassword())){
             return RespBean.error("密码不能为空");
         }
-        if (StringUtils.hasText(registerDto.getCheckPassword())){
+        if (!StringUtils.hasText(registerDto.getCheckPassword())){
             return RespBean.error("请输入确认密码");
         }
-        if (StringUtils.hasText(registerDto.getUsername())){
+        if (!StringUtils.hasText(registerDto.getUsername())){
             return RespBean.error("请输入确认密码");
         }
-        if (StringUtils.hasText(registerDto.getCode())){
+        if (!StringUtils.hasText(registerDto.getCode())){
             return RespBean.error("请输入验证码");
         }
         if(!registerDto.getCheckPassword().equals(registerDto.getPassword())){

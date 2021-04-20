@@ -352,6 +352,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setPassword(new BCryptPasswordEncoder().encode(registerDto.getPassword()));
         user.setPhone(registerDto.getPhone());
         if (userMapper.insert(user) == 1){
+
             return RespBean.success("注册成功");
         }
         return RespBean.success("注册失败");

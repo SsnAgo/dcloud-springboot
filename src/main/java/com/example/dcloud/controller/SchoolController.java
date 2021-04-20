@@ -65,7 +65,7 @@ public class SchoolController {
     @ApiOperation("新增学院，需要传上parentId")
     @PostMapping("/manage/dept")
     public RespBean addDept(@RequestBody School school){
-        School exist = schoolService.getOne(new QueryWrapper<School>().eq("id", school.getParentId()).eq("name",school.getName()));
+        School exist = schoolService.getOne(new QueryWrapper<School>().eq("parentId", school.getParentId()).eq("name",school.getName()));
         if (exist != null) {
             return RespBean.error("该学校已有同名学院");
         }

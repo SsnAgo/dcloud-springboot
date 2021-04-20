@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "班级成员dto", description = "")
+@ApiModel(value = "班级成员vo", description = "")
 public class CourseMemberVo {
 
     @ApiModelProperty(value = "cs表id")
