@@ -20,6 +20,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.lang.System;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -49,7 +50,7 @@ public class SignController {
     @Secured({"ROLE_TEACHER"})
     @ApiOperation("创建一个一键签到")
     @PostMapping("/create/nolimit")
-    public RespBean startNoLimitSign(@RequestParam("id") @ApiParam("传入班课id") Integer cid,@ApiParam("传入位置参数")String local) {
+    public RespBean startNoLimitSign(@RequestParam("id") @ApiParam("传入班课id") Integer cid,@RequestParam("local")@ApiParam("传入位置参数")String local) {
         if (!canCreate(cid)) {
             return RespBean.error("签到还在进行中，清勿重复发起");
         }
@@ -71,7 +72,7 @@ public class SignController {
     @Secured({"ROLE_TEACHER"})
     @ApiOperation("传入限时分钟，创建一个限时签到")
     @PostMapping("/create/oneminute")
-    public RespBean startOneMinuteSign(@RequestParam("id") @ApiParam("传入班课id") Integer cid,@RequestParam("timeout") @ApiParam("限时 单位分钟") Integer timeout,@ApiParam("传入位置参数")String local) {
+    public RespBean startOneMinuteSign(@RequestParam("id") @ApiParam("传入班课id") Integer cid,@RequestParam("timeout") @ApiParam("限时 单位分钟") Integer timeout,@RequestParam("local")@ApiParam("传入位置参数") String local) {
         if (!canCreate(cid)) {
             return RespBean.error("签到还在进行中，清勿重复发起");
         }
@@ -139,8 +140,9 @@ public class SignController {
             return true;
         }
     }
-    @ApiOperation("学生点击签到按钮查看有无签到 有则进入签到页面，并返回该签到对象 0一键签到 1限时 2手势 3 位置")
-    @GetMapping("/cansign/{cid}")
+
+    @ApiOperation("查看有无签到 有则进入签到页面，并返回该签到对象 0一键签到 1限时 2手势 3 位置")
+    @GetMapping("/haveSign/{cid}")
     public RespBean canSign(@PathVariable Integer cid) {
         Sign exist = signService.getOne(new QueryWrapper<Sign>().eq("courseId", cid).eq("enabled", true));
         // 判断有无还可用的签到  如果不可用了 就返回不存在
@@ -162,14 +164,15 @@ public class SignController {
 
     @ApiOperation("学生进行无限制签到")
     @GetMapping("/nolimit")
-    public RespBean noLimitSign(@ApiParam("当前签到id") @RequestParam("id") Integer id,@ApiParam("传入位置参数")String local) {
+    public RespBean noLimitSign(@ApiParam("当前签到id") @RequestParam("id") Integer id,@RequestParam("local")@ApiParam("传入位置参数")String local) {
+        System.out.println("位置参数为：" + local);
         User student = UserUtils.getCurrentUser();
         return signService.noLimitSign(id, student.getId(),local);
     }
 
     @ApiOperation("学生进行限时签到")
     @GetMapping("/time")
-    public RespBean timeLimitSign(@ApiParam("当前签到id") @RequestParam("id") Integer id,@ApiParam("传入位置参数")String local) {
+    public RespBean timeLimitSign(@ApiParam("当前签到id") @RequestParam("id") Integer id,@RequestParam("local") @ApiParam("传入位置参数")String local) {
         User student = UserUtils.getCurrentUser();
         return signService.timeLimitSign(id, student.getId(),local);
     }
@@ -186,7 +189,7 @@ public class SignController {
     @ApiOperation("教师关闭签到")
     @GetMapping("/close")
     public RespBean closeSign(@ApiParam("当前签到id 参数名为id") @RequestParam("id") Integer id,
-                              @ApiParam("0为放弃，1为关闭") @RequestParam("cid") Integer type){
+                              @ApiParam("0为放弃，1为关闭") @RequestParam("type") Integer type){
         return signService.closeSign(id,type);
     }
 
@@ -226,6 +229,7 @@ public class SignController {
     public Integer timeAvailable( Integer id){
         return signService.timeAvailable(id);
     }
+
 
 
 

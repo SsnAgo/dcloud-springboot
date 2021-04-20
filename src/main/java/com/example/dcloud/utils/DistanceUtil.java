@@ -9,7 +9,7 @@ public class DistanceUtil {
     public static double getDistanceMeter(String local1,String local2)
     {
         String[] data1 = local1.split(",");
-        String[] data2 = local1.split(",");
+        String[] data2 = local2.split(",");
 
         //前面纬度后面经度
         GlobalCoordinates source = new GlobalCoordinates(Double.parseDouble(data1[1]), Double.parseDouble(data1[0]));

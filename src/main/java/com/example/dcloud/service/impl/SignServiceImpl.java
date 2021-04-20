@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -47,6 +48,15 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         if (exist == null){
             return RespBean.error("签到已结束，请联系教师");
         }
+        // 如果该签到没有位置信息  那就直接签到成功
+        if (exist.getLocal() == null ){
+            signSuccess(signId,sid,null);
+            return RespBean.success("签到成功");
+        }
+        if (local == null) {
+            signSuccess(signId,sid,null);
+            return RespBean.success("签到成功");
+        }
         Double distance = DistanceUtil.getDistanceMeter(exist.getLocal(),local);
         Double settingDistance = settingSignMapper.selectById(1).getSignDistance() * 1000;
         if (settingDistance == 0 || distance <= settingDistance){
@@ -72,6 +82,15 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
                 signMapper.updateById(exist);
                 return RespBean.error("签到已结束，请联系教师");
             }else{
+                // 如果该签到没有位置信息  那就直接签到成功
+                if (exist.getLocal() == null ){
+                    signSuccess(signId,sid,null);
+                    return RespBean.success("签到成功");
+                }
+                if (local == null) {
+                    signSuccess(signId,sid,null);
+                    return RespBean.success("签到成功");
+                }
                 Double distance = DistanceUtil.getDistanceMeter(exist.getLocal(),local);
                 Double settingDistance = settingSignMapper.selectById(1).getSignDistance() * 1000;
                 if (settingDistance == 0 || distance <= settingDistance){
@@ -158,7 +177,7 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         Sign sign = signMapper.selectById(signId);
         // 获取该班级总人数
         Integer total = courseStudentMapper.selectCount(new QueryWrapper<CourseStudent>().eq("cid",sign.getCourseId()));
-        Integer signedCount = signRecordMapper.selectCount(new QueryWrapper<SignRecord>().eq("status",SignUtils.SIGNED));
+        Integer signedCount = signRecordMapper.selectCount(new QueryWrapper<SignRecord>().eq("status",SignUtils.SIGNED).eq("signId",signId));
         Map<String,Integer> res = new HashMap<>();
         res.put("total",total);
         res.put("signedCount",signedCount);
@@ -199,7 +218,7 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         if (sign.getType() == SignUtils.TIME_LIMIT){
             // 如果还没结束 就返回剩余秒数
             if (LocalDateTime.now().isBefore(sign.getEndTime())){
-                return sign.getEndTime().minusSeconds(LocalDateTime.now().getSecond()).getSecond();
+                return Math.toIntExact(Duration.between(sign.getEndTime(), LocalDateTime.now()).getSeconds());
             }else {
                 // 这个时候签到已经结束辽  调用关闭方法
                 closeSign(id,SignUtils.CLOSE);
