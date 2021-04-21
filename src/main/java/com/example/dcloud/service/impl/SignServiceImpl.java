@@ -12,6 +12,7 @@ import com.example.dcloud.utils.WeekDayUtils;
 import com.example.dcloud.vo.SignHistoryVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.time.Duration;
@@ -48,23 +49,29 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         if (exist == null){
             return RespBean.error("签到已结束，请联系教师");
         }
-        // 如果该签到没有位置信息  那就直接签到成功
-        if (exist.getLocal() == null ){
-            signSuccess(signId,sid,null);
+        if (signRecordMapper.selectOne(new QueryWrapper<SignRecord>().eq("signId",exist.getId()).eq("studentId",sid).eq("status",SignUtils.SIGNED)) != null) {
+            return RespBean.success("已签到成功");
+        }
+        // 如果该签到没有位置信息  那就直接签到成失败 置位置信息为null
+        if (!StringUtils.hasText(exist.getLocal()) || exist.getLocal().equals("undefined,undefined")){
+            signSuccess(signId,sid,0.0);
             return RespBean.success("签到成功");
         }
-        if (local == null) {
-            signSuccess(signId,sid,null);
-            return RespBean.success("签到成功");
+        // 如果学生的位置没有签到信息，显示签到失败
+        if (!StringUtils.hasText(local) || local.equals("undefined,undefined")) {
+            signFailed(signId,sid,null);
+            return RespBean.success("定位失败，签到失败");
         }
         Double distance = DistanceUtil.getDistanceMeter(exist.getLocal(),local);
         Double settingDistance = settingSignMapper.selectById(1).getSignDistance() * 1000;
         if (settingDistance == 0 || distance <= settingDistance){
+            // 执行签到成功的数据库相关更新操作
             signSuccess(signId,sid,Double.parseDouble(String.format("%.1f",distance)));
             return RespBean.success("签到成功");
+        }else{
+            signFailed(signId,sid,distance);
+            return RespBean.error("距离太远，签到失败");
         }
-        // 执行签到成功的数据库相关更新操作
-        return RespBean.error("距离太远，签到失败");
 
     }
 
@@ -75,6 +82,9 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         if (exist == null) {
             return RespBean.error("签到已结束，请联系教师");
         }
+        if (signRecordMapper.selectOne(new QueryWrapper<SignRecord>().eq("signId",exist.getId()).eq("studentId",sid).eq("status",SignUtils.SIGNED)) != null) {
+            return RespBean.success("已签到成功");
+        }
         // 如果还可用，那么进行日期检查
         if (exist.getEndTime() != null && exist.getType()== SignUtils.TIME_LIMIT){
             if (LocalDateTime.now().isAfter(exist.getEndTime())){
@@ -82,23 +92,27 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
                 signMapper.updateById(exist);
                 return RespBean.error("签到已结束，请联系教师");
             }else{
-                // 如果该签到没有位置信息  那就直接签到成功
-                if (exist.getLocal() == null ){
-                    signSuccess(signId,sid,null);
+                // 如果该签到没有位置信息  那就直接签到成功 置距离为0
+                if (exist.getLocal() == null  || exist.getLocal().equals("undefined,undefined")){
+                    signSuccess(signId,sid,0.0);
                     return RespBean.success("签到成功");
                 }
-                if (local == null) {
-                    signSuccess(signId,sid,null);
-                    return RespBean.success("签到成功");
+                // 如果学生的位置没有签到信息，显示签到失败
+                if (local == null || local.equals("undefined,undefined")) {
+                    signFailed(signId,sid,null);
+                    return RespBean.success("定位失败，签到失败");
                 }
                 Double distance = DistanceUtil.getDistanceMeter(exist.getLocal(),local);
                 Double settingDistance = settingSignMapper.selectById(1).getSignDistance() * 1000;
                 if (settingDistance == 0 || distance <= settingDistance){
                     signSuccess(signId,sid,Double.parseDouble(String.format("%.1f",distance)));
                     return RespBean.success("签到成功");
+                }else{
+                    // 距离太远 签到失败
+                    signFailed(signId,sid,distance);
+                    return RespBean.error("距离太远，签到失败");
                 }
-                // 执行签到成功的数据库相关更新操作
-                return RespBean.error("距离太远，签到失败");
+
             }
         }
         return RespBean.error("发生错误，该签到类型不是限时签到");
@@ -240,12 +254,20 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         record.setSignTime(LocalDateTime.now()).setAddExp(exp).setDistance(distance).setStatus(SignUtils.SIGNED);
         signRecordMapper.updateById(record);
         //更新该学生在该班级的经验
-        CourseStudent courseStudent = courseStudentMapper.selectOne(new QueryWrapper<CourseStudent>().eq("signId", signId).eq("studentId", sid));
+        CourseStudent courseStudent = courseStudentMapper.selectOne(new QueryWrapper<CourseStudent>().eq("cid", record.getCourseId()).eq("sid", sid));
         courseStudent.setExp(courseStudent.getExp() + exp);
         courseStudentMapper.updateById(courseStudent);
         // 更新学生的总经验值
         User student = userMapper.selectById(sid);
         student.setExp(student.getExp() + exp);
         userMapper.updateById(student);
+    }
+
+    // 距离太远或没有定位  签到失败  但是会更新距离
+    public void signFailed(Integer signId,Integer sid,Double distance){
+        // 更新该签到记录的距离
+        SignRecord record = signRecordMapper.selectOne(new QueryWrapper<SignRecord>().eq("signId",signId).eq("studentId",sid));
+        record.setDistance(distance).setSignTime(LocalDateTime.now());
+        signRecordMapper.updateById(record);
     }
 }
