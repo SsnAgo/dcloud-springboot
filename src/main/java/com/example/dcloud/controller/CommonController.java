@@ -6,11 +6,10 @@ import com.example.dcloud.pojo.*;
 import com.example.dcloud.service.*;
 import com.example.dcloud.utils.FastDFSUtils;
 import com.example.dcloud.utils.UserUtils;
-import com.example.dcloud.vo.ChangePasswordVo;
+import com.example.dcloud.dto.ChangePasswordDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,8 +28,8 @@ public class CommonController {
     private IDictInfoService dictInfoService;
     @Resource
     private ISchoolService schoolService;
-    @Resource
-    private IDepartmentService departmentService;
+    //    @Resource
+//    private IDepartmentService departmentService;
     @Resource
     private IMajorService majorService;
     @Resource
@@ -38,20 +37,20 @@ public class CommonController {
 
     @ApiOperation("根据tag获取该字典的字典项信息")
     @GetMapping("/dict/info/{tag}")
-    public List<DictInfo> getDictInfoByTag(@PathVariable String tag){
-        return dictInfoService.list(new QueryWrapper<DictInfo>().eq("tag",tag));
+    public List<DictInfo> getDictInfoByTag(@PathVariable String tag) {
+        return dictInfoService.list(new QueryWrapper<DictInfo>().eq("tag", tag));
     }
 
     @ApiOperation("获取所有学校列表")
     @GetMapping("/school")
-    public List<School> getSchools(){
-        return schoolService.list();
+    public List<School> getSchools() {
+        return schoolService.list(new QueryWrapper<School>().eq("parentId", -1));
     }
 
     @ApiOperation("获取该学校id的所有学院列表")
     @GetMapping("/school/{id}/departments")
-    public List<Department> getDepartments(@PathVariable Integer id){
-        return departmentService.list(new QueryWrapper<Department>().eq("schoolId",id));
+    public List<School> getDepartments(@PathVariable Integer id) {
+        return schoolService.list(new QueryWrapper<School>().eq("parentId", id));
     }
 
     @ApiOperation("获取所有学校及其分院(树状结构)")
@@ -62,14 +61,14 @@ public class CommonController {
 
     @ApiOperation("获取所有专业列表")
     @GetMapping("/major")
-    public List<Major> getMajors(){
+    public List<Major> getMajors() {
         return majorService.list();
     }
 
 
     @ApiOperation(value = "获取当前用户信息")
     @GetMapping("/user/info")
-    public User userInfo(Principal principal){
+    public User userInfo(Principal principal) {
         User user = UserUtils.getCurrentUser();
 //        user = userService.getUserInfo(user);
         System.out.println("controller里的user : " + user);
@@ -79,47 +78,44 @@ public class CommonController {
 
     @ApiOperation("修改个人信息")
     @PutMapping("/user/edit")
-    public RespBean updateSelf(@RequestBody User user){
+    public RespBean updateSelf(@RequestBody User user) {
         User origin = userService.getById(user.getId());
-        if (!origin.getUsername().equals(user.getUsername())){
+        if (user.getUsername() != null && !origin.getUsername().equals(user.getUsername())) {
             return RespBean.error("用户名不能修改");
         }
-        if (!origin.getPhone().equals(user.getPhone())){
-            User exist = userService.getOne(new QueryWrapper<User>().eq("phone",user.getPhone()));
-            if (null != exist){
+        if (user.getPhone() != null && !origin.getPhone().equals(user.getPhone())) {
+            User exist = userService.getOne(new QueryWrapper<User>().eq("phone", user.getPhone()));
+            if (null != exist) {
                 return RespBean.error("该手机号已被绑定");
             }
         }
-
-        if (userService.updateById(user)){
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user,null,user.getAuthorities()));
-            return RespBean.success("更新成功",user);
+        if (userService.updateById(user)) {
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
+            return RespBean.success("更新成功", user);
         }
         return RespBean.error("更新失败");
     }
 
     @ApiOperation("更新用户头像")
     @PostMapping("/user/face")
-    public RespBean updateAdminUserFace(MultipartFile file){
+    public RespBean updateAdminUserFace(MultipartFile file) {
         User user = UserUtils.getCurrentUser();
         String[] fileResult = FastDFSUtils.uploadFile(file);
         String url = FastDFSUtils.getTrackerUrl() + fileResult[0] + "/" + fileResult[1];
-        return userService.updateUserFace(url,user);
+        return userService.updateUserFace(url, user);
     }
 
     @ApiOperation("修改密码")
     @PostMapping("/user/pwd")
-    public RespBean changePassword(@RequestBody ChangePasswordVo changePasswordVo){
-        return userService.changePassword(changePasswordVo);
+    public RespBean changePassword(@RequestBody ChangePasswordDto changePasswordDto) {
+        return userService.changePassword(changePasswordDto);
     }
 
     @ApiOperation("上传图片到fdfs并获取该url")
     @PostMapping("/image")
-    public String uploadImage(MultipartFile file){
+    public String uploadImage(MultipartFile file) {
         String[] fileResult = FastDFSUtils.uploadFile(file);
         String url = FastDFSUtils.getTrackerUrl() + fileResult[0] + "/" + fileResult[1];
         return url;
     }
-
-
 }

@@ -6,6 +6,10 @@ import com.example.dcloud.service.ISignRecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.util.List;
+
 /**
  * <p>
  *  服务实现类
@@ -17,4 +21,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class SignRecordServiceImpl extends ServiceImpl<SignRecordMapper, SignRecord> implements ISignRecordService {
 
+    @Resource
+    private SignRecordMapper signRecordMapper;
+    @Override
+    public void initSignRecords(Integer signId, LocalDateTime startTime, Integer cid, List<Integer> sids) {
+        signRecordMapper.initSignRecords(signId,startTime,cid,sids);
+    }
 }

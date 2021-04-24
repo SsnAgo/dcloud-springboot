@@ -4,7 +4,7 @@ import com.example.dcloud.pojo.Dict;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.RespPageBean;
-import com.example.dcloud.vo.DictVo;
+import com.example.dcloud.dto.DictDto;
 
 /**
  * <p>
@@ -21,25 +21,25 @@ public interface IDictService extends IService<Dict> {
      *
      * @param currentPage
      * @param size
-     * @param dict
+     * @param search
      * @return
      */
-    RespPageBean listDict(Integer currentPage, Integer size, Dict dict);
+    RespPageBean listDict(Integer currentPage, Integer size, String search);
 
 
     /**
      * 新增一个字典及其字典项
-     * @param dictVo
+     * @param dictDto
      * @return
      */
-    RespBean addDict(DictVo dictVo);
+    RespBean addDict(DictDto dictDto);
 
     /**
      * 修改一个字典及其字典项
-     * @param dictVo
+     * @param dictDto
      * @return
      */
-    RespBean updateDict(DictVo dictVo);
+    RespBean updateDict(DictDto dictDto);
 
 
     /**

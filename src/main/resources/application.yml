@@ -1,8 +1,6 @@
 server:
   # 端口
   port: 8083
-  servlet:
-    context-path: /dcloud
 spring:
   # 数据源配置
   datasource:
@@ -86,6 +84,15 @@ jwt:
 
 
 default:
-  password: 1234567
+  password: abc123
   signExp: 2
   signDistance: 0
+
+sms:
+  secretId: AKIDiV3Oozkln21qaGcJf0g6HD6kDR0aP757
+  secretKey: yhOCrHWWp7C5jcNtUI3XnoBOK1ptiPK8
+  endPoint: sms.tencentcloudapi.com
+  templateId: 925855
+  sign: 今晚月色真美
+  smsSdkAppid: 1400509565
+  timeLimit: 5

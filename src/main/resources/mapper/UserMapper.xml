@@ -57,7 +57,7 @@
             <result column="sname" property="name"/>
             <result column="scode" property="schoolCode"/>
         </association>
-        <association property="department" javaType="com.example.dcloud.pojo.Department">
+        <association property="department" javaType="com.example.dcloud.pojo.School">
             <id column="did" property="id"/>
             <result column="dname" property="name"/>
         </association>
@@ -89,29 +89,29 @@
                      LEFT JOIN t_dict_info dictsex ON u.sexCode = dictsex.id
                      LEFT JOIN t_dict_info dictedu ON u.educationCode = dictedu.id
                      LEFT JOIN t_school s ON u.schoolId = s.id
-                     LEFT JOIN t_department d ON u.departmentId = d.id
+                     LEFT JOIN t_school d ON u.departmentId = d.id
                      LEFT JOIN t_major m ON u.majorId = m.id
                      LEFT JOIN t_role r ON u.roleId = r.id
                 WHERE u.id != #{currentUserId}
 
-        <if test="null != user.name and '' != user.name">
-            and u.name like concat('%', #{user.name}, '%')
+        <if test="null != search and '' != search">
+            and (u.name like concat('%', #{search}, '%') or u.number like  concat('%', #{search}, '%'))
         </if>
-        <if test="null != user.schoolId and '' != user.schoolId">
-            and u.schoolId = #{user.schoolId}
-        </if>
-        <if test="null != user.departmentId and '' != user.departmentId">
-            and u.departmentId = #{user.departmentId}
-        </if>
-        <if test="null != user.majorId and '' != user.majorId">
-            and u.majorId = #{user.majorId}
-        </if>
-        <if test="null != user.majorId and '' != user.majorId">
-            and u.majorId = #{user.majorId}
-        </if>
-        <if test="null != user.roleId and '' != user.roleId">
-            and u.roleId = #{user.roleId}
-        </if>
+<!--        <if test="null != user.schoolId and '' != user.schoolId">-->
+<!--            and u.schoolId = #{user.schoolId}-->
+<!--        </if>-->
+<!--        <if test="null != user.departmentId and '' != user.departmentId">-->
+<!--            and u.departmentId = #{user.departmentId}-->
+<!--        </if>-->
+<!--        <if test="null != user.majorId and '' != user.majorId">-->
+<!--            and u.majorId = #{user.majorId}-->
+<!--        </if>-->
+<!--        <if test="null != user.majorId and '' != user.majorId">-->
+<!--            and u.majorId = #{user.majorId}-->
+<!--        </if>-->
+<!--        <if test="null != user.roleId and '' != user.roleId">-->
+<!--            and u.roleId = #{user.roleId}-->
+<!--        </if>-->
         order by u.id
     </select>
 </mapper>

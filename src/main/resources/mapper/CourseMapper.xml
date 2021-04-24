@@ -19,6 +19,7 @@
         <result column="teachProgress" property="teachProgress"/>
         <result column="examSchedule" property="examSchedule"/>
         <result column="schoolId" property="schoolId"/>
+        <result column="departmetnId" property="departmentId"/>
         <result column="flag" property="flag"/>
         <result column="enabled" property="enabled"/>
         <result column="allowIn" property="allowIn"/>
@@ -41,6 +42,7 @@
         teachProgress,
         examSchedule,
         schoolId,
+        departmentId,
         flag,
         enabled,
         allowIn
@@ -48,6 +50,7 @@
     <resultMap id="CourseInfo" type="com.example.dcloud.pojo.Course" extends="BaseResultMap">
         <result column="type" property="type"/>
         <result column="sname" property="schoolName"/>
+        <result column="dname" property="departmentName"/>
         <association property="creater" javaType="com.example.dcloud.pojo.User">
             <id column="uid" property="id"/>
             <result column="uname" property="name"/>
@@ -66,27 +69,18 @@
                r.name     as rname,
                r.nameZh   as rnamezh,
                u.enabled  as uen,
-               s.name     as sname
+               s.name     as sname,
+               d.name as dname
         from t_course c
                      left join t_dict_info di on c.typeCode = di.id
                      left join t_user u on c.createrId = u.id
                      left join t_school s on c.schoolId = s.id
+                     left join t_school d on c.departmentId = d.id
                      left join t_role r on r.id = u.roleId
                 where 1 = 1
-        <if test="course != null">
-            <if test="null != course.name and '' != course.name">
-                and c.name like concat('%', #{course.name}, '%')
+            <if test="null != search and '' != search">
+                and (c.name like concat('%', #{search}, '%') or c.courseCode like concat('%', #{search}, '%'))
             </if>
-            <if test="null != course.courseCode and '' != course.courseCode">
-                and c.courseCode = #{course.courseCode}
-            </if>
-            <if test="null != course.typeCode and '' != course.typeCode">
-                and c.typeCode = #{course.typeCode}
-            </if>
-            <if test="null != course.schoolId and '' != course.schoolId">
-                and c.schoolId = #{course.schoolId}
-            </if>
-        </if>
     </select>
     <resultMap id="SimpleStudentCourseInfo" type="com.example.dcloud.pojo.Course" extends="BaseResultMap">
         <id column="cid" property="id"/>
@@ -146,7 +140,7 @@
 
 
     </select>
-    <resultMap id="CourseMemberInfo" type="com.example.dcloud.dto.CourseMemberDto" extends="BaseResultMap">
+    <resultMap id="CourseMemberInfo" type="com.example.dcloud.vo.CourseMemberVo" extends="BaseResultMap">
         <id column="csid" property="id"/>
         <result column="cid" property="cid"/>
         <result column="uid" property="uid"/>
@@ -190,11 +184,13 @@
                r.name     as rname,
                r.nameZh   as rnamezh,
                u.enabled  as uen,
-               s.name     as sname
+               s.name     as sname,
+               d.name as dname
         from t_course c
                      left join t_dict_info di on c.typeCode = di.id
                      left join t_user u on c.createrId = u.id
                      left join t_school s on c.schoolId = s.id
+                     left join t_school d on c.departmentId = d.id
                      left join t_role r on r.id = u.roleId
                 where c.id = #{id}
     </select>

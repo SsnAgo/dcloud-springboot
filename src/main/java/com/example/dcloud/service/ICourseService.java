@@ -21,10 +21,10 @@ public interface ICourseService extends IService<Course> {
      * 分页获取所有课程列表（course为空则搜素全部，否则按条件搜搜
      * @param currentPage
      * @param size
-     * @param course
+     * @param search
      * @return
      */
-    RespPageBean getCourses(Integer currentPage, Integer size, Course course);
+    RespPageBean getCourses(Integer currentPage, Integer size, String search);
 
     /**
      * 批量删除班课

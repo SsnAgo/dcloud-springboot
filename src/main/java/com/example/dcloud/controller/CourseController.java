@@ -43,8 +43,8 @@ public class CourseController {
     @GetMapping("/manage/")
     public RespPageBean getCourses(@RequestParam(defaultValue = "1") Integer currentPage,
                                    @RequestParam(defaultValue = "10") Integer size,
-                                    Course course) {
-        return courseService.getCourses(currentPage,size,course);
+                                   @ApiParam("可按班课名或班课号搜索")String search) {
+        return courseService.getCourses(currentPage,size,search);
     }
 
     @ApiOperation("在管理系统新增班课")
@@ -75,8 +75,8 @@ public class CourseController {
 
     @ApiOperation("删除一个班课")
     @DeleteMapping("/manage/{id}")
-    public RespBean deleteCourse(@PathVariable Integer cid){
-        if (courseService.removeById(cid)) {
+    public RespBean deleteCourse(@PathVariable Integer id){
+        if (courseService.removeById(id)) {
             return RespBean.success("删除班课成功");
         }
         return RespBean.error("删除班课失败");
@@ -129,7 +129,7 @@ public class CourseController {
     @ApiOperation("教师查看班级成员")
     @GetMapping("/mobile/member")
     public RespPageBean courseMember(
-            @RequestParam(required = true) Integer id,
+            @ApiParam("班课id")@RequestParam(required = true) Integer id,
             @RequestParam(defaultValue = "1") Integer currentPage,
                                      @RequestParam(defaultValue = "10") Integer size,
                                      @ApiParam("按学号或姓名模糊查询 可不传") String search,
@@ -137,7 +137,7 @@ public class CourseController {
         return courseService.courseMember(id,currentPage,size,search,sortBy);
     }
 
-    @ApiOperation("根据id查看班课详情")
+    @ApiOperation("根据班课id查看班课详情")
     @GetMapping("/manage/{id}")
     public RespBean getCourseInfo(@PathVariable Integer id){
         return courseService.getCourseInfo(id);

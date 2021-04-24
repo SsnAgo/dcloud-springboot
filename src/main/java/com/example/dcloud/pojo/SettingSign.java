@@ -33,6 +33,12 @@ public class SettingSign implements Serializable {
 
     @ApiModelProperty(value = "签到经验值")
     private Integer signExp;
+    @ApiModelProperty(value = "请假经验值")
+    private Integer dayOffExp;
+    @ApiModelProperty(value = "迟到经验值")
+    private Integer lateExp;
+    @ApiModelProperty(value = "早退经验值")
+    private Integer leaveEarlyExp;
 
     @ApiModelProperty(value = "签到范围，支持小数3位")
     private Double signDistance;

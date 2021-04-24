@@ -19,8 +19,8 @@ public interface RoleMapper extends BaseMapper<Role> {
 
     /**
      * 如果传了role就按条件  不然就显示全部
-     * @param role
+     * @param search
      * @return
      */
-    List<Role> getRoles(@Param("role") Role role);
+    List<Role> getRoles(@Param("search") String search);
 }

@@ -2,6 +2,7 @@ package com.example.dcloud.mapper;
 
 import com.example.dcloud.pojo.School;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -20,4 +21,5 @@ public interface SchoolMapper extends BaseMapper<School> {
      * @return
      */
     List<School> getSchools();
+
 }

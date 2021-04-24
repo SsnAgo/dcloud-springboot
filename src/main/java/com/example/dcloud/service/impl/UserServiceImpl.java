@@ -7,16 +7,16 @@ import com.example.dcloud.mapper.*;
 import com.example.dcloud.pojo.*;
 import com.example.dcloud.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.dcloud.utils.CaptchaUtils;
 import com.example.dcloud.utils.JwtTokenUtil;
+import com.example.dcloud.utils.SmsUtils;
 import com.example.dcloud.utils.UserUtils;
-import com.example.dcloud.vo.ChangePasswordVo;
+import com.example.dcloud.dto.ChangePasswordDto;
+import com.example.dcloud.dto.RegisterDto;
+import com.tencentcloudapi.sms.v20190711.models.SendSmsResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,8 +57,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Resource
     private SchoolMapper schoolMapper;
 
-    @Resource
-    private DepartmentMapper departmentMapper;
+//    @Resource
+//    private DepartmentMapper departmentMapper;
 
     @Resource
     private PasswordEncoder passwordEncoder;
@@ -69,8 +69,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Resource
     private DictInfoMapper dictInfoMapper;
 
+    @Resource
+    private SmsUtils smsUtils;
+
     @Value("${jwt.tokenHead}")
     private String tokenHead;
+
 
 
     /**
@@ -126,9 +130,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         System.out.println("user信息为"+user);
         if (null == user) return RespBean.error("该手机号未注册，请先注册");
         if (!StringUtils.hasText(code)) return RespBean.error("验证码不能为空");
-//        if (user.getRoleId() != 1 && user.getRoleId() != 2){
-//            return RespBean.error("没有进入管理系统的权限");
-//        }
+        Integer res = smsUtils.validateCode(phone, code);
+        if (res == SmsUtils.NO_PHONE){
+            return RespBean.error("请先获取验证码");
+        }
+        if (res == SmsUtils.CODE_ERROR){
+            return RespBean.error("验证码输入错误");
+        }
         return loginSuccess(user);
     }
 
@@ -167,6 +175,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (user.getRoleId() != 2 && user.getRoleId() != 3){
             return RespBean.error("没有进入管理系统的权限");
         }
+        Integer res = smsUtils.validateCode(phone, code);
+        if (res == SmsUtils.NO_PHONE){
+            return RespBean.error("请先获取验证码");
+        }
+        if (res == SmsUtils.CODE_ERROR){
+            return RespBean.error("验证码输入错误");
+        }
+        System.out.println(res);
         return loginSuccess(user);
     }
 
@@ -232,8 +248,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Department getDepartment(User user) {
-        return departmentMapper.selectById(user.getDepartmentId());
+    public School getDepartment(User user) {
+        return schoolMapper.selectById(user.getDepartmentId());
     }
 
 
@@ -245,10 +261,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public RespPageBean getUsersByPage(Integer currentPage, Integer size, User user) {
+    public RespPageBean getUsersByPage(Integer currentPage, Integer size, String search) {
 
         Page<User> page = new Page<>(currentPage, size);
-        IPage<User> usersPage = userMapper.getUsersByPage(UserUtils.getCurrentUser().getId(), page, user);
+        IPage<User> usersPage = userMapper.getUsersByPage(UserUtils.getCurrentUser().getId(), page, search);
         RespPageBean respPageBean = new RespPageBean(usersPage.getTotal(), usersPage.getRecords());
         return respPageBean;
     }
@@ -273,7 +289,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     @Transactional
-    public RespBean changePassword(ChangePasswordVo vo) {
+    public RespBean changePassword(ChangePasswordDto vo) {
         User user = userMapper.selectById(vo.getId());
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         if (!bCryptPasswordEncoder.matches(vo.getOldPassword(),user.getPassword())){
@@ -289,7 +305,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     @Transactional
-    public RespBean getLoginCaptcha(String phone, HttpServletRequest request) {
+    public RespBean getLoginCaptcha(String phone) {
+
         // 登录的话，先认证手机号是否存在
         User exist = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
         if (null == exist){
@@ -299,22 +316,58 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return RespBean.error("该账号已被禁用，请联系管理员");
         }
         // 手机号可用，前往获取验证码
-        String captcha = CaptchaUtils.generatorCaptcha();
-        request.getSession().setAttribute("captcha",captcha);
-        return RespBean.success("发送验证码成功  " + captcha);
+        return sendSms(phone);
     }
 
     @Override
     @Transactional
-    public RespBean getRegisterCaptcha(String phone, HttpServletRequest request) {
+    public RespBean getRegisterCaptcha(String phone) {
+
         // 注册的话，先认证手机号是否 不存在
-        User exist = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
+        User exist = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone.trim()));
         if (null != exist){
             return RespBean.error("该手机号已注册，请去登录");
         }
+        return sendSms(phone);
+    }
+
+    @Override
+    @Transactional
+    public RespBean register(RegisterDto registerDto) {
+        User exist = userMapper.selectOne(new QueryWrapper<User>().eq("username", registerDto.getUsername()));
+        if (exist != null) {
+            return RespBean.error("该用户名已被注册");
+        }
+        Integer res = smsUtils.validateCode(registerDto.getPhone(), registerDto.getCode());
+        if (res == SmsUtils.NO_PHONE){
+            return RespBean.error("请先获取验证码");
+        }
+        if (res == SmsUtils.CODE_ERROR){
+            return RespBean.error("验证码输入错误");
+        }
+        User user = new User();
+        user.setEnabled(true);
+        user.setRoleId(registerDto.getRoleId());
+        user.setUsername(registerDto.getUsername());
+        user.setPassword(new BCryptPasswordEncoder().encode(registerDto.getPassword()));
+        user.setPhone(registerDto.getPhone());
+        if (userMapper.insert(user) == 1){
+
+            return RespBean.success("注册成功");
+        }
+        return RespBean.success("注册失败");
+    }
+
+
+    public RespBean sendSms(String phone){
         // 手机号可用，前往获取验证码
-        String captcha = CaptchaUtils.generatorCaptcha();
-        request.getSession().setAttribute("captcha",captcha);
-        return RespBean.success("发送验证码成功  " + captcha);
+        SendSmsResponse resp = smsUtils.SendSms(phone);
+        if (resp == null) {
+            return RespBean.error("发送验证码遇到错误，请重试");
+        }
+        if (!resp.getSendStatusSet()[0].getCode().equals("Ok")){
+            return RespBean.error("发送验证码遇到错误，请重试");
+        }
+        return RespBean.success("发送验证码成功");
     }
 }

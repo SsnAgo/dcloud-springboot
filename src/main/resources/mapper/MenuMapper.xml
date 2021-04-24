@@ -105,14 +105,14 @@
                m2.enabled     AS enabled2
         FROM t_menu m1,
              t_menu m2,
-             t_user_role ur,
+             t_user u,
              t_menu_role mr
         WHERE m1.id = m2.parentId
           AND m2.id = mr.mid
-          AND mr.rid = ur.rid
-          AND ur.uid = #{userId}
+          AND mr.rid = u.roleId
+          AND u.id = #{userId}
           AND m2.enabled = TRUE
-        order by m1.id
+        order by m2.id
     </select>
 
     <select id="getMenus" resultMap="BaseResultMap">

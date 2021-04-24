@@ -18,8 +18,8 @@
         select r.*
             from t_role r
             where 1=1
-        <if test="null != role.nameZh and ''!=role.nameZh">
-            and r.nameZh like concat('%',#{role.nameZh}，'%')
+        <if test="null != search and ''!=search">
+            and r.nameZh like concat('%',#{search}，'%')
         </if>
     </select>
 </mapper>

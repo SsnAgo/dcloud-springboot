@@ -1,19 +1,33 @@
 package com.example.dcloud.controller;
 
 
+import com.example.dcloud.anotation.ManageAllow;
+import com.example.dcloud.anotation.StudentAllow;
+import com.example.dcloud.anotation.TeacherAllow;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/hello")
 public class HelloController {
-    @GetMapping("/hello")
-    public String hello(){
-        return "hello";
+
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/admin")
+    public String admin(){
+        return "admin";
     }
 
-    @GetMapping("/test")
-    public String test(){
-        return "test";
+    @ManageAllow
+    @GetMapping("/teacher")
+    public String teacher(){
+        return "teacher";
+    }
+
+    @StudentAllow
+    @GetMapping("/student")
+    public String student(){
+        return "student";
     }
 }

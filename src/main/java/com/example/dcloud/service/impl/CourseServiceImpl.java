@@ -3,7 +3,7 @@ package com.example.dcloud.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.dcloud.dto.CourseMemberDto;
+import com.example.dcloud.vo.CourseMemberVo;
 import com.example.dcloud.mapper.CourseStudentMapper;
 import com.example.dcloud.pojo.*;
 import com.example.dcloud.mapper.CourseMapper;
@@ -35,9 +35,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Resource
     private CourseStudentMapper courseStudentMapper;
     @Override
-    public RespPageBean getCourses(Integer currentPage, Integer size, Course course) {
+    public RespPageBean getCourses(Integer currentPage, Integer size, String search) {
         Page<Course> page = new Page<>(currentPage,size);
-        IPage<Course> coursePage = courseMapper.getCourses(page,course);
+        IPage<Course> coursePage = courseMapper.getCourses(page,search);
         RespPageBean res = new RespPageBean(coursePage.getTotal(),coursePage.getRecords());
         System.out.println("这里已经封装了");
         return res;
@@ -118,8 +118,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Override
     public RespPageBean courseMember(Integer id, Integer currentPage, Integer size, String search, String sortBy) {
-        Page<CourseMemberDto> page = new Page<>(currentPage,size);
-        IPage<CourseMemberDto> iPage = courseMapper.courseMember(id,page,search,sortBy);
+        Page<CourseMemberVo> page = new Page<>(currentPage,size);
+        IPage<CourseMemberVo> iPage = courseMapper.courseMember(id,page,search,sortBy);
         System.out.println("执行到这里了");
         RespPageBean respPageBean = new RespPageBean(iPage.getTotal(),iPage.getRecords());
         System.out.println("这里挂了");

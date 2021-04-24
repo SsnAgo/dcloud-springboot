@@ -1,20 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.dcloud.mapper.SignRecordMapper">
-
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.SignRecord">
-    <!--@Table t_sign_record-->
-        <id column="id" property="id" />
-        <result column="teacherId" property="teacherId" />
-        <result column="courseId" property="courseId" />
-        <result column="studentId" property="studentId" />
-        <result column="signTime" property="signTime" />
+        <!--@Table t_sign_record-->
+        <id column="id" property="id"/>
+        <result column="signId" property="signId"/>
+        <result column="courseId" property="courseId"/>
+        <result column="studentId" property="studentId"/>
+        <result column="startTime" property="startTime"/>
+        <result column="signTime" property="signTime"/>
+        <result column="addExp" property="addExp"/>
+        <result column="status" property="status"/>
+        <result column="distance" property="distance"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, teacherId, courseId, studentId, signTime
+        id,
+        signId,
+        courseId,
+        studentId,
+        startTime,
+        signTime,
+        addExp,
+        status,
+        distance
     </sql>
 
+    <resultMap id="SignStudentInfo" type="com.example.dcloud.dto.SignStudentDto">
+        <id column="uid" property="id"/>
+        <result column="uname" property="name"/>
+        <result column="unum" property="number"/>
+        <result column="sstatus" property="status"/>
+        <result column="stime" property="signTime"/>
+        <result column="uface" property="userFace"/>
+        <result column="sdistance" property="distance"/>
+    </resultMap>
+    <select id="listSign" resultMap="SignStudentInfo">
+        select u.id        as uid,
+               u.name      as uname,
+               u.userFace  as uface,
+               u.number    as unum,
+               sr.status   as sstatus,
+               sr.signTime as stime,
+               sr.distance as sdistance
+        from t_sign_record sr
+                     left join t_user u on sr.studentId = u.id
+        where sr.courseId = #{courseId}
+          and sr.signId = #{signId}
+    </select>
+    <insert id="initSignRecords">
+            insert into t_sign_record (signId, courseId, startTime, studentId)
+                    values
+            <foreach collection="sids" item="item" separator=",">
+                (#{signId}, #{cid}, #{startTime}, #{item})
+            </foreach>
+    </insert>
+    <delete id="deleteBySignId">
+        delete
+        from t_sign_record
+        where signId = #{id}
+    </delete>
 </mapper>

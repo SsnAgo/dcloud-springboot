@@ -17,4 +17,9 @@
         sid,
         exp
     </sql>
+    <select id="listSidByCid" resultType="java.lang.Integer">
+        select cs.sid as sid
+        from t_course_student cs
+        where cs.cid = #{cid}
+    </select>
 </mapper>

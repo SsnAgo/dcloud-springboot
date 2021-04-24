@@ -118,7 +118,7 @@ public class User implements Serializable, UserDetails {
 
     @ApiModelProperty(value = "学院")
     @TableField(exist = false)
-    private Department department;
+    private School department;
 
     @ApiModelProperty(value = "专业")
     @TableField(exist = false)

@@ -5,8 +5,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.dcloud.pojo.Dict;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.dcloud.pojo.DictInfo;
-import com.example.dcloud.pojo.RespBean;
-import com.example.dcloud.vo.DictVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -24,10 +22,10 @@ public interface DictMapper extends BaseMapper<Dict> {
     /**
      * 按条件查询分页  没有则查全部
      * @param page
-     * @param dict
+     * @param search
      * @return
      */
-    IPage<Dict> listDictPage(Page<Dict> page, @Param("dict") Dict dict);
+    IPage<Dict> listDictPage(Page<Dict> page, @Param("search") String search);
 
     /**
      * 添加字典及其字典项

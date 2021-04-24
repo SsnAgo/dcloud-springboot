@@ -17,8 +17,8 @@ public interface IRoleService extends IService<Role> {
 
     /**
      * 如果role为null则查询全部，否则按照role.nameZh 和 enabled查询
-     * @param role
+     * @param search
      * @return
      */
-    List<Role> getRoles(Role role);
+    List<Role> getRoles(String search);
 }
