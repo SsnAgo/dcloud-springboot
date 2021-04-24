@@ -20,10 +20,10 @@ public interface CourseMapper extends BaseMapper<Course> {
     /**
      * 分页获取课程信息
      * @param page
-     * @param course
+     * @param search
      * @return
      */
-    IPage<Course> getCourses(Page<Course> page,@Param("course") Course course);
+    IPage<Course> getCourses(Page<Course> page,@Param("search") String search);
 
     /**
      * 分页按条件查询学生的班课

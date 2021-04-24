@@ -1,6 +1,7 @@
 package com.example.dcloud.vo;
 
 
+
 import com.example.dcloud.dto.SignStudentDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -20,8 +21,15 @@ public class SignHistoryVo {
     @ApiModelProperty("签到id")
     private Integer signId;
     @ApiModelProperty("发起时间")
-    @JsonFormat(pattern = "yy-MM-dd HH:mm:ss",timezone = "GMT")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT")
     private LocalDateTime startTime;
+    @ApiModelProperty("结束时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT")
+    private LocalDateTime endTime;
+
+    @ApiModelProperty("持续时间（分钟）")
+    private Integer duration;
+
     @ApiModelProperty("星期几")
     private String dayOfWeek;
     @ApiModelProperty("签到类型")

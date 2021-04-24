@@ -23,11 +23,4 @@ public interface SignMapper extends BaseMapper<Sign> {
      */
     List<SignHistoryVo> getCourseHistory(Integer cid);
 
-    /**
-     * 获取学生在某班课的签到记录
-     * @param cid
-     * @param sid
-     * @return
-     */
-    List<SignHistoryVo> getStudentHistory(Integer cid, Integer sid);
 }

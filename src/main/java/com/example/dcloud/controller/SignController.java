@@ -57,10 +57,15 @@ public class SignController {
         Sign sign = new Sign();
         sign.setStartTime(LocalDateTime.now()).setEndTime(null).setLocal(local).setEnabled(true).setCourseId(cid).setCode(null).setType(SignUtils.NO_LIMIT);
         // 创建一条发起签到记录
+        if (courseStudentService.count(new QueryWrapper<CourseStudent>().eq("cid",cid)) == 0){
+            return RespBean.error("班级内暂无学生");
+        }
         signService.save(sign);
+
         initRecords(sign.getId(),sign.getStartTime(),cid);
         return RespBean.success("创建签到成功",sign);
     }
+
     public void initRecords(Integer signId,LocalDateTime startTime,Integer courseId){
         // 获取该班课id所有学生 统一插入signrecord表 并将状态初始化为 0
         // 1.获取班课所有学生id列表
@@ -78,7 +83,11 @@ public class SignController {
         }
         Sign sign = new Sign();
         sign.setStartTime(LocalDateTime.now()).setEndTime(LocalDateTime.now().plusMinutes(timeout)).setLocal(local).setEnabled(true).setCourseId(cid).setCode(null).setType(SignUtils.TIME_LIMIT);
+        if (courseStudentService.count(new QueryWrapper<CourseStudent>().eq("cid",cid)) == 0){
+            return RespBean.error("班级内暂无学生");
+        }
         signService.save(sign);
+
         initRecords(sign.getId(),sign.getStartTime(),cid);
         return RespBean.success("创建签到成功",sign);
     }
@@ -210,7 +219,7 @@ public class SignController {
 
     @TeacherAllow
     @ApiOperation("获取该班课所有签到记录")
-    @GetMapping("/course/hisgory/{cid}")
+    @GetMapping("/course/history/{cid}")
     public List<SignHistoryVo> getCourseHistory(@PathVariable @ApiParam("班课id") Integer cid){
         return signService.getCourseHistory(cid);
     }
@@ -226,9 +235,13 @@ public class SignController {
 
     @ApiOperation("根据签到id获取限时签到的剩余时间")
     @GetMapping("/time/{id}")
-    public Integer timeAvailable( Integer id){
+    public Integer timeAvailable(@PathVariable Integer id){
         return signService.timeAvailable(id);
     }
+
+
+
+
 
 
 

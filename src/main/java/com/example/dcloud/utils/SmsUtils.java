@@ -42,8 +42,6 @@ public class SmsUtils {
     @Resource
     private RedisTemplate<String,String> redisTemplate;
 
-    private HashOperations hashOperations;
-
     public SendSmsResponse SendSms(String phone) {
         SendSmsResponse resp = null;
         try {
@@ -120,14 +118,6 @@ public class SmsUtils {
         }else{
             return CODE_ERROR;
         }
-//        if (hashOperations.entries("sms").get(phone).equals(code)){
-//            // 对的上 那就将这个phone给移除了
-//            System.out.println("验证正确");
-//            hashOperations.delete("sms",phone);
-//            return CODE_CORRECT;
-//        }else{
-//            return CODE_ERROR;
-//        }
     }
 
 }

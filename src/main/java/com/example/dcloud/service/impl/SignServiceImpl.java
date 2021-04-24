@@ -63,7 +63,7 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
             return RespBean.success("定位失败，签到失败");
         }
         Double distance = DistanceUtil.getDistanceMeter(exist.getLocal(),local);
-        Double settingDistance = settingSignMapper.selectById(1).getSignDistance() * 1000;
+        Double settingDistance = settingSignMapper.selectById(1).getSignDistance();
         if (settingDistance == 0 || distance <= settingDistance){
             // 执行签到成功的数据库相关更新操作
             signSuccess(signId,sid,Double.parseDouble(String.format("%.1f",distance)));
@@ -103,7 +103,7 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
                     return RespBean.success("定位失败，签到失败");
                 }
                 Double distance = DistanceUtil.getDistanceMeter(exist.getLocal(),local);
-                Double settingDistance = settingSignMapper.selectById(1).getSignDistance() * 1000;
+                Double settingDistance = settingSignMapper.selectById(1).getSignDistance();
                 if (settingDistance == 0 || distance <= settingDistance){
                     signSuccess(signId,sid,Double.parseDouble(String.format("%.1f",distance)));
                     return RespBean.success("签到成功");
@@ -199,9 +199,10 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
     }
 
     @Override
+    @Transactional
     public List<SignHistoryVo> getCourseHistory(Integer cid) {
         List<SignHistoryVo> signHistoryVoList = signMapper.getCourseHistory(cid);
-        Integer total = courseStudentMapper.selectCount(new QueryWrapper<CourseStudent>().eq("courseId", cid));
+        Integer total = courseStudentMapper.selectCount(new QueryWrapper<CourseStudent>().eq("cid", cid));
         for (SignHistoryVo hist : signHistoryVoList) {
             Integer signedCount = signRecordMapper.selectCount(new QueryWrapper<SignRecord>().eq("signId", hist.getSignId()).eq("status",SignUtils.SIGNED));
             hist.setSignedCount(signedCount);
@@ -232,15 +233,15 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         if (sign.getType() == SignUtils.TIME_LIMIT){
             // 如果还没结束 就返回剩余秒数
             if (LocalDateTime.now().isBefore(sign.getEndTime())){
-                return Math.toIntExact(Duration.between(sign.getEndTime(), LocalDateTime.now()).getSeconds());
+                return Math.toIntExact(Duration.between( LocalDateTime.now(),sign.getEndTime()).getSeconds());
             }else {
                 // 这个时候签到已经结束辽  调用关闭方法
                 closeSign(id,SignUtils.CLOSE);
             }
         }else {
-            return 0;
+            return null;
         }
-        return 0;
+        return null;
     }
 
 
@@ -263,6 +264,7 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         userMapper.updateById(student);
     }
 
+    @Transactional
     // 距离太远或没有定位  签到失败  但是会更新距离
     public void signFailed(Integer signId,Integer sid,Double distance){
         // 更新该签到记录的距离
@@ -270,4 +272,9 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         record.setDistance(distance).setSignTime(LocalDateTime.now());
         signRecordMapper.updateById(record);
     }
+
+
+
+
+
 }

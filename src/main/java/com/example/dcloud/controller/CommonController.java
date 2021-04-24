@@ -89,7 +89,6 @@ public class CommonController {
                 return RespBean.error("该手机号已被绑定");
             }
         }
-
         if (userService.updateById(user)) {
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
             return RespBean.success("更新成功", user);
@@ -119,6 +118,4 @@ public class CommonController {
         String url = FastDFSUtils.getTrackerUrl() + fileResult[0] + "/" + fileResult[1];
         return url;
     }
-
-
 }

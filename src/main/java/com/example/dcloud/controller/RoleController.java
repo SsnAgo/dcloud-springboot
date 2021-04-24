@@ -8,6 +8,7 @@ import com.example.dcloud.service.IMenuRoleService;
 import com.example.dcloud.service.IRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -34,8 +35,8 @@ public class RoleController {
 
     @ApiOperation("获取角色,如果不传参就显示全部")
     @GetMapping("/")
-    public List<Role> getRoles(Role role){
-        return roleService.getRoles(role);
+    public List<Role> getRoles(@ApiParam("可按角色名查询") String search){
+        return roleService.getRoles(search);
     }
 
 

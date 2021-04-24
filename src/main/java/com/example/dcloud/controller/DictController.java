@@ -32,7 +32,7 @@ public class DictController {
     @GetMapping("/manage/")
     public RespPageBean listDict(@RequestParam(defaultValue = "1") Integer currentPage,
                                  @RequestParam(defaultValue = "10")Integer size,
-                                 String search){
+                                 @ApiParam("可按中文标识或英文标识搜索") String search){
         return dictService.listDict(currentPage,size,search);
     }
 

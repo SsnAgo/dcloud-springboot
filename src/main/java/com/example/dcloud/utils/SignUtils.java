@@ -14,6 +14,9 @@ public class SignUtils {
     public static final Integer SIGNED = 1;
     public static final Integer NO_SIGNED = 0;
     public static final Integer DAY_OFF = 2;
+    public static final Integer LATE_IN = 3;
+    public static final Integer EARLY_LEAVE = 4;
+
 
     /**
      * 放弃签到 和 关闭签到

@@ -43,8 +43,8 @@ public class CourseController {
     @GetMapping("/manage/")
     public RespPageBean getCourses(@RequestParam(defaultValue = "1") Integer currentPage,
                                    @RequestParam(defaultValue = "10") Integer size,
-                                   Course course) {
-        return courseService.getCourses(currentPage,size,course);
+                                   @ApiParam("可按班课名或班课号搜索")String search) {
+        return courseService.getCourses(currentPage,size,search);
     }
 
     @ApiOperation("在管理系统新增班课")
@@ -75,8 +75,8 @@ public class CourseController {
 
     @ApiOperation("删除一个班课")
     @DeleteMapping("/manage/{id}")
-    public RespBean deleteCourse(@PathVariable Integer cid){
-        if (courseService.removeById(cid)) {
+    public RespBean deleteCourse(@PathVariable Integer id){
+        if (courseService.removeById(id)) {
             return RespBean.success("删除班课成功");
         }
         return RespBean.error("删除班课失败");

@@ -78,20 +78,9 @@
                      left join t_school d on c.departmentId = d.id
                      left join t_role r on r.id = u.roleId
                 where 1 = 1
-        <if test="course != null">
-            <if test="null != course.name and '' != course.name">
-                and c.name like concat('%', #{course.name}, '%')
+            <if test="null != search and '' != search">
+                and (c.name like concat('%', #{search}, '%') or c.courseCode like concat('%', #{search}, '%'))
             </if>
-            <if test="null != course.courseCode and '' != course.courseCode">
-                and c.courseCode = #{course.courseCode}
-            </if>
-            <if test="null != course.typeCode and '' != course.typeCode">
-                and c.typeCode = #{course.typeCode}
-            </if>
-            <if test="null != course.schoolId and '' != course.schoolId">
-                and c.schoolId = #{course.schoolId}
-            </if>
-        </if>
     </select>
     <resultMap id="SimpleStudentCourseInfo" type="com.example.dcloud.pojo.Course" extends="BaseResultMap">
         <id column="cid" property="id"/>

@@ -35,9 +35,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Resource
     private CourseStudentMapper courseStudentMapper;
     @Override
-    public RespPageBean getCourses(Integer currentPage, Integer size, Course course) {
+    public RespPageBean getCourses(Integer currentPage, Integer size, String search) {
         Page<Course> page = new Page<>(currentPage,size);
-        IPage<Course> coursePage = courseMapper.getCourses(page,course);
+        IPage<Course> coursePage = courseMapper.getCourses(page,search);
         RespPageBean res = new RespPageBean(coursePage.getTotal(),coursePage.getRecords());
         System.out.println("这里已经封装了");
         return res;

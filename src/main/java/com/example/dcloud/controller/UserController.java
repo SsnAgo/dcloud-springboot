@@ -36,8 +36,6 @@ public class UserController {
     @Resource
     private IUserService userService;
 
-
-
     @ApiOperation("获取所有用户(分页) 除了用户自己")
     @GetMapping("/manage/")
     public RespPageBean getAllEmployees(@RequestParam(defaultValue = "1") Integer currentPage,
