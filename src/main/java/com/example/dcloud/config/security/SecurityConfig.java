@@ -60,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/manage/loginByPassword",
                 "/manage/loginByCode",
                 "/mobile/oauth/**",
+                "/mobile/quickRegister",
                 "/loginCaptcha",
                 "/registerCaptcha",
                 "/logout",
