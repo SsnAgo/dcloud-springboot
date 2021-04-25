@@ -165,13 +165,12 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
     public RespBean signInfo(Integer signId) {
         // 获取该签到
         Sign sign = signMapper.selectById(signId);
-        Integer courseId = sign.getCourseId();
-        // 获取该班级所有成员的signStudentDto
-        List<SignStudentDto> allList = signRecordMapper.listSign(courseId,signId);
+        // 通过查询该 cid的所有学生 通过学生左表连接 签到记录表，实现查询该班课里所有记录
+        List<SignStudentDto> allList = signRecordMapper.listSign(signId);
         List<SignStudentDto> signedList = new ArrayList<>();
         List<SignStudentDto> unSignedList = new ArrayList<>();
         for (SignStudentDto item : allList) {
-            if (item.getStatus() == SignUtils.SIGNED){
+            if (item.getStatus() != null && item.getStatus() == SignUtils.SIGNED){
                 signedList.add(item);
             }else{
                 unSignedList.add(item);
@@ -247,13 +246,20 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
 
     @Transactional
     public void signSuccess(Integer signId,Integer sid,Double distance){
-        // 执行签到成功的各个更新操作  更新到signrecoreds里面 同时获取系统经验值，根据系统经验值增加经验， 更新学生在该班课的经验值 更新学生的总经验值
-        SignRecord record = signRecordMapper.selectOne(new QueryWrapper<SignRecord>().eq("signId",signId).eq("studentId",sid));
+//        // 执行签到成功的各个更新操作  更新到signrecoreds里面 同时获取系统经验值，根据系统经验值增加经验， 更新学生在该班课的经验值 更新学生的总经验值
+//        SignRecord record = signRecordMapper.selectOne(new QueryWrapper<SignRecord>().eq("signId",signId).eq("studentId",sid));
+//        // 获取系统设置的签到经验值
+//        Integer exp = settingSignMapper.selectById(1).getSignExp();
+//        // 更新状态为签到
+//        record.setSignTime(LocalDateTime.now()).setAddExp(exp).setDistance(distance).setStatus(SignUtils.SIGNED);
+//        signRecordMapper.updateById(record);
+        SignRecord record = new SignRecord();
         // 获取系统设置的签到经验值
         Integer exp = settingSignMapper.selectById(1).getSignExp();
-        // 更新状态为签到
-        record.setSignTime(LocalDateTime.now()).setAddExp(exp).setDistance(distance).setStatus(SignUtils.SIGNED);
-        signRecordMapper.updateById(record);
+        Sign sign = signMapper.selectById(signId);
+        // 新增一条签到成功记录
+        record.setSignTime(LocalDateTime.now()).setAddExp(exp).setDistance(distance).setStatus(SignUtils.SIGNED).setStartTime(sign.getStartTime()).setCourseId(sign.getCourseId()).setSignId(signId).setStudentId(sid);
+        signRecordMapper.insert(record);
         //更新该学生在该班级的经验
         CourseStudent courseStudent = courseStudentMapper.selectOne(new QueryWrapper<CourseStudent>().eq("cid", record.getCourseId()).eq("sid", sid));
         courseStudent.setExp(courseStudent.getExp() + exp);
@@ -265,12 +271,14 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
     }
 
     @Transactional
-    // 距离太远或没有定位  签到失败  但是会更新距离
+    // 距离太远或没有定位  签到失败  但是会有距离
     public void signFailed(Integer signId,Integer sid,Double distance){
-        // 更新该签到记录的距离
-        SignRecord record = signRecordMapper.selectOne(new QueryWrapper<SignRecord>().eq("signId",signId).eq("studentId",sid));
-        record.setDistance(distance).setSignTime(LocalDateTime.now());
-        signRecordMapper.updateById(record);
+        SignRecord record = new SignRecord();
+        // 获取系统设置的签到经验值
+        Sign sign = signMapper.selectById(signId);
+        // 新增一条签到失败记录
+        record.setSignTime(LocalDateTime.now()).setAddExp(0).setDistance(distance).setStatus(SignUtils.NO_SIGNED).setStartTime(sign.getStartTime()).setCourseId(sign.getCourseId()).setSignId(signId).setStudentId(sid);
+        signRecordMapper.insert(record);
     }
 
 

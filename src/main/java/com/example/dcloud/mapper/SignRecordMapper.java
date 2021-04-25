@@ -19,12 +19,11 @@ import java.util.List;
 public interface SignRecordMapper extends BaseMapper<SignRecord> {
 
     /**
-     * 获取该班课所有的学生的签到情况
-     * @param courseId
+     * 获取本次签到所有的学生的签到情况
      * @param signId
      * @return
      */
-    List<SignStudentDto> listSign(@Param("courseId") Integer courseId,@Param("signId") Integer signId);
+    List<SignStudentDto> listSign(@Param("signId") Integer signId);
 
     /**
      * 批量初始化签到情况
@@ -40,4 +39,12 @@ public interface SignRecordMapper extends BaseMapper<SignRecord> {
      * @param id
      */
     void deleteBySignId(Integer id);
+
+    /**
+     *  @param signId
+     * @param studentIds
+     * @param status
+     * @return
+     */
+    boolean changeStatus(@Param("signId")Integer signId,@Param("studentIds") List<Integer> studentIds, @Param("status") Integer status);
 }

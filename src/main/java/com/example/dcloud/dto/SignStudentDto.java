@@ -23,9 +23,13 @@ public class SignStudentDto {
     private String number;
     @ApiModelProperty("签到状态")
     private Integer status;
+    @ApiModelProperty("增加的经验值")
+    private Integer addExp;
     @ApiModelProperty("签到时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT")
     private LocalDateTime signTime;
+
+
     @ApiModelProperty("学生头像")
     private String userFace;
     @ApiModelProperty("签到距离")

@@ -7,6 +7,7 @@ import com.example.dcloud.dto.LoginDto;
 import com.example.dcloud.dto.RegisterDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -99,6 +100,11 @@ public class LoginController {
 
     }
 
+    @ApiOperation("github授权")
+    @GetMapping("/mobile/oauth/")
+    public RespBean oauthLogin(@RequestParam("code") String code,HttpServletRequest req) throws Exception {
+        return userService.oauthLogin(code,req);
+    }
 
 
 

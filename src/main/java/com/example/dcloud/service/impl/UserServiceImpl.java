@@ -7,9 +7,7 @@ import com.example.dcloud.mapper.*;
 import com.example.dcloud.pojo.*;
 import com.example.dcloud.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.dcloud.utils.JwtTokenUtil;
-import com.example.dcloud.utils.SmsUtils;
-import com.example.dcloud.utils.UserUtils;
+import com.example.dcloud.utils.*;
 import com.example.dcloud.dto.ChangePasswordDto;
 import com.example.dcloud.dto.RegisterDto;
 import com.tencentcloudapi.sms.v20190711.models.SendSmsResponse;
@@ -76,7 +74,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private String tokenHead;
 
 
-
     /**
      * 管理端通过用户名登录
      *
@@ -92,7 +89,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (null == user || !passwordEncoder.matches(password, user.getPassword())) {
             return RespBean.error("用户名/手机号或密码输入错误");
         }
-        if (user.getRoleId() != 1 && user.getRoleId() != 2){
+        if (user.getRoleId() != 1 && user.getRoleId() != 2) {
             return RespBean.error("没有进入管理系统的权限");
         }
         return loginSuccess(user);
@@ -127,14 +124,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public RespBean manageLoginByCode(String phone, String code, HttpServletRequest request) {
 //        UserDetails user = userDetailsService.loadUserByUsername(phone);
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
-        System.out.println("user信息为"+user);
+        System.out.println("user信息为" + user);
         if (null == user) return RespBean.error("该手机号未注册，请先注册");
         if (!StringUtils.hasText(code)) return RespBean.error("验证码不能为空");
         Integer res = smsUtils.validateCode(phone, code);
-        if (res == SmsUtils.NO_PHONE){
+        if (res == SmsUtils.NO_PHONE) {
             return RespBean.error("请先获取验证码");
         }
-        if (res == SmsUtils.CODE_ERROR){
+        if (res == SmsUtils.CODE_ERROR) {
             return RespBean.error("验证码输入错误");
         }
         return loginSuccess(user);
@@ -142,6 +139,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     /**
      * 手机端通过手机号/账号 + 密码登录
+     *
      * @param usernameOrPhone
      * @param password
      * @param request
@@ -153,7 +151,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (null == user || !passwordEncoder.matches(password, user.getPassword())) {
             return RespBean.error("用户名/手机号或密码输入错误");
         }
-        if (user.getRoleId() != 2 && user.getRoleId() != 3){
+        if (user.getRoleId() != 2 && user.getRoleId() != 3) {
             return RespBean.error("手机端仅允许教师/学生登录");
         }
         return loginSuccess(user);
@@ -161,6 +159,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     /**
      * 手机端通过手机号验证码登录
+     *
      * @param phone
      * @param code
      * @param request
@@ -172,14 +171,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
         if (null == user) return RespBean.error("该手机号未注册，请先注册");
         if (!StringUtils.hasText(code)) return RespBean.error("验证码不能为空");
-        if (user.getRoleId() != 2 && user.getRoleId() != 3){
+        if (user.getRoleId() != 2 && user.getRoleId() != 3) {
             return RespBean.error("没有进入管理系统的权限");
         }
         Integer res = smsUtils.validateCode(phone, code);
-        if (res == SmsUtils.NO_PHONE){
+        if (res == SmsUtils.NO_PHONE) {
             return RespBean.error("请先获取验证码");
         }
-        if (res == SmsUtils.CODE_ERROR){
+        if (res == SmsUtils.CODE_ERROR) {
             return RespBean.error("验证码输入错误");
         }
         System.out.println(res);
@@ -217,8 +216,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (userByPhone != null) return userByPhone;
         return null;
     }
-
-
 
 
     @Override
@@ -278,7 +275,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     @Transactional
-    public RespBean updateUserFace(String url,User user) {
+    public RespBean updateUserFace(String url, User user) {
         user.setUserFace(url);
         if (userMapper.updateById(user) == 1) {
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
@@ -292,7 +289,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public RespBean changePassword(ChangePasswordDto vo) {
         User user = userMapper.selectById(vo.getId());
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        if (!bCryptPasswordEncoder.matches(vo.getOldPassword(),user.getPassword())){
+        if (!bCryptPasswordEncoder.matches(vo.getOldPassword(), user.getPassword())) {
             return RespBean.error("当前密码输入不正确，请重新输入");
         }
         //验证通过了就修改密码
@@ -309,10 +306,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         // 登录的话，先认证手机号是否存在
         User exist = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
-        if (null == exist){
+        if (null == exist) {
             return RespBean.error("该手机号未注册，请先注册");
         }
-        if (!exist.isEnabled()){
+        if (!exist.isEnabled()) {
             return RespBean.error("该账号已被禁用，请联系管理员");
         }
         // 手机号可用，前往获取验证码
@@ -325,7 +322,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         // 注册的话，先认证手机号是否 不存在
         User exist = userMapper.selectOne(new QueryWrapper<User>().eq("phone", phone.trim()));
-        if (null != exist){
+        if (null != exist) {
             return RespBean.error("该手机号已注册，请去登录");
         }
         return sendSms(phone);
@@ -339,10 +336,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return RespBean.error("该用户名已被注册");
         }
         Integer res = smsUtils.validateCode(registerDto.getPhone(), registerDto.getCode());
-        if (res == SmsUtils.NO_PHONE){
+        if (res == SmsUtils.NO_PHONE) {
             return RespBean.error("请先获取验证码");
         }
-        if (res == SmsUtils.CODE_ERROR){
+        if (res == SmsUtils.CODE_ERROR) {
             return RespBean.error("验证码输入错误");
         }
         User user = new User();
@@ -351,21 +348,45 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setUsername(registerDto.getUsername());
         user.setPassword(new BCryptPasswordEncoder().encode(registerDto.getPassword()));
         user.setPhone(registerDto.getPhone());
-        if (userMapper.insert(user) == 1){
+        if (userMapper.insert(user) == 1) {
 
             return RespBean.success("注册成功");
         }
         return RespBean.success("注册失败");
     }
 
+    @Override
+    public RespBean oauthLogin(String code, HttpServletRequest req) throws Exception {
+        if (StringUtils.hasText(code)) {
+            //拿到我们的code,去请求token
+            //发送一个请求到
+            System.out.println("code is " + code);
+            String token_url = GitHubConstant.TOKEN_URL.replace("CODE", code);
+            //得到的responseStr是一个字符串需要将它解析放到map中
+            String responseStr = HttpClientUtils.doGet(token_url);
+            // 调用方法从map中获得返回的--》 令牌
+            String token = HttpClientUtils.getMap(responseStr).get("access_token");
+            System.out.println("token is :" +  token);
+            //根据token发送请求获取登录人的信息  ，通过令牌去获得用户信息
+            String userinfo_url = GitHubConstant.USER_INFO_URL.replace("TOKEN", token);
+            responseStr = HttpClientUtils.doGet(userinfo_url);//json
+            System.out.println("resp str : " + responseStr);
+            Map<String, String> responseMap = HttpClientUtils.getMapByJson(responseStr);
 
-    public RespBean sendSms(String phone){
+            // 成功则登陆
+            System.out.println("成功");
+        }
+        return RespBean.error("失败");
+    }
+
+
+    public RespBean sendSms(String phone) {
         // 手机号可用，前往获取验证码
         SendSmsResponse resp = smsUtils.SendSms(phone);
         if (resp == null) {
             return RespBean.error("发送验证码遇到错误，请重试");
         }
-        if (!resp.getSendStatusSet()[0].getCode().equals("Ok")){
+        if (!resp.getSendStatusSet()[0].getCode().equals("Ok")) {
             return RespBean.error("发送验证码遇到错误，请重试");
         }
         return RespBean.success("发送验证码成功");

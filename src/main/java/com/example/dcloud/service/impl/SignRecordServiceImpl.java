@@ -1,5 +1,6 @@
 package com.example.dcloud.service.impl;
 
+import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.SignRecord;
 import com.example.dcloud.mapper.SignRecordMapper;
 import com.example.dcloud.service.ISignRecordService;
@@ -26,5 +27,14 @@ public class SignRecordServiceImpl extends ServiceImpl<SignRecordMapper, SignRec
     @Override
     public void initSignRecords(Integer signId, LocalDateTime startTime, Integer cid, List<Integer> sids) {
         signRecordMapper.initSignRecords(signId,startTime,cid,sids);
+    }
+
+    @Override
+    public RespBean changeStatus(Integer signId, List<Integer> studentIds, Integer status) {
+        if (signRecordMapper.changeStatus(signId,studentIds,status)){
+            return RespBean.success("修改状态成功");
+        }
+        return RespBean.error("修改状态失败");
+
     }
 }

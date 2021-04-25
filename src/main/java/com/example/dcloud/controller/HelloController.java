@@ -30,4 +30,9 @@ public class HelloController {
     public String student(){
         return "student";
     }
+
+    @GetMapping("/oauth")
+    public String oauth(){
+        return "oauth";
+    }
 }
