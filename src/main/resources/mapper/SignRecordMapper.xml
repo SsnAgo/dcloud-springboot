@@ -34,32 +34,57 @@
         <result column="unum" property="number"/>
         <result column="sstatus" property="status"/>
         <result column="stime" property="signTime"/>
+        <result column="sadd" property="addExp"/>
         <result column="uface" property="userFace"/>
         <result column="sdistance" property="distance"/>
     </resultMap>
     <select id="listSign" resultMap="SignStudentInfo">
+        <!--        select u.id        as uid,-->
+        <!--               u.name      as uname,-->
+        <!--               u.userFace  as uface,-->
+        <!--               u.number    as unum,-->
+        <!--               sr.status   as sstatus,-->
+        <!--               sr.signTime as stime,-->
+        <!--               sr.distance as sdistance-->
+        <!--        from t_sign_record sr-->
+        <!--                     left join t_user u on sr.studentId = u.id-->
+        <!--        where sr.courseId = #{courseId}-->
+        <!--          and sr.signId = #{signId}-->
+        <!--        查询该签到id对应班课的所有成员的签到情况及成员头像-->
         select u.id        as uid,
                u.name      as uname,
-               u.userFace  as uface,
                u.number    as unum,
                sr.status   as sstatus,
-               sr.signTime as stime,
+               sr.signTime    stime,
+               sr.addExp   as sadd,
+               u.userFace  as uface,
                sr.distance as sdistance
-        from t_sign_record sr
-                     left join t_user u on sr.studentId = u.id
-        where sr.courseId = #{courseId}
-          and sr.signId = #{signId}
+        from t_sign s
+                     left join t_course_student cs on s.courseId = cs.cid
+                     left join t_user u on u.id = cs.sid
+                     left join t_sign_record sr on cs.sid = sr.studentId and sr.signId = s.id
+        where s.id = #{signId}
     </select>
     <insert id="initSignRecords">
-            insert into t_sign_record (signId, courseId, startTime, studentId)
-                    values
-            <foreach collection="sids" item="item" separator=",">
-                (#{signId}, #{cid}, #{startTime}, #{item})
-            </foreach>
+        insert into t_sign_record (signId, courseId, startTime, studentId)
+                values
+        <foreach collection="sids" item="item" separator=",">
+            (#{signId}, #{cid}, #{startTime}, #{item})
+        </foreach>
     </insert>
     <delete id="deleteBySignId">
         delete
         from t_sign_record
         where signId = #{id}
     </delete>
+
+
+    <update id="changeStatus">
+        <foreach collection="studentIds" item="sid" separator=";">
+            update t_sign_record
+            set status = #{status}
+            where signId = #{signId}
+              and studentId = #{sid}
+        </foreach>
+    </update>
 </mapper>

@@ -5,8 +5,8 @@
         update t_setting_sign
         set signExp=#{settingVo.settingSign.signExp},
             dayOffExp = #{settingVo.settingSign.dayOffExp},
-            dayOffExp = #{settingVo.settingSign.lateExp},
-            dayOffExp = #{settingVo.settingSign.leaveEarlyExp},
+            lateExp = #{settingVo.settingSign.lateExp},
+            leaveEarlyExp = #{settingVo.settingSign.leaveEarlyExp},
             signDistance=#{settingVo.settingSign.signDistance};
                 delete
                 from t_setting_level;

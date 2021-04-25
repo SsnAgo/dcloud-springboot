@@ -111,9 +111,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         courseStudent.setCid(exist.getId());
         courseStudent.setSid(sid);
         if (courseStudentMapper.insert(courseStudent) == 1) {
-            return RespBean.success("新增班课成功");
+            return RespBean.success("加入班课成功");
         }
-        return RespBean.error("新增班课失败");
+        return RespBean.error("加入班课失败");
     }
 
     @Override

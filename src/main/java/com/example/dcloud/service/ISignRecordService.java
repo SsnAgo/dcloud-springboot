@@ -1,5 +1,6 @@
 package com.example.dcloud.service;
 
+import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.SignRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -25,4 +26,12 @@ public interface ISignRecordService extends IService<SignRecord> {
      * @return
      */
     void initSignRecords(Integer id, LocalDateTime startTime, Integer cid, List<Integer> sids);
+
+    /**
+     * 修改学生状态
+     * @param signId
+     * @param studentIds
+     * @param status
+     */
+    RespBean changeStatus(Integer signId, List<Integer> studentIds, Integer status);
 }

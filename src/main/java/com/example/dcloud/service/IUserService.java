@@ -157,4 +157,12 @@ public interface IUserService extends IService<User> {
      * @return
      */
     RespBean register(RegisterDto registerDto);
+
+    /**
+     * github登录
+     * @param code
+     * @param req
+     * @return
+     */
+    RespBean oauthLogin(String code,HttpServletRequest req) throws Exception;
 }

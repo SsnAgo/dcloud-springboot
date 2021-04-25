@@ -241,6 +241,15 @@ public class SignController {
 
 
 
+    @ApiOperation("修改学生签到状态")
+    @PutMapping("/status")
+    public RespBean changeStatus(@RequestParam("signId") @ApiParam("签到id") Integer signId,@RequestParam("studentIds")@ApiParam("多个学生id（传数组，也可单个）") List<Integer> studentIds,
+                                 @RequestParam("status") @ApiParam("要修改的状态") Integer status){
+        return signRecordService.changeStatus(signId,studentIds,status);
+    }
+
+
+
 
 
 
