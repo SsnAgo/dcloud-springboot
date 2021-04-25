@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.System;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * <p>
@@ -73,6 +74,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
+    @Value("${default.password}")
+    private String defaultPassword;
 
     /**
      * 管理端通过用户名登录
@@ -377,6 +380,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             System.out.println("成功");
         }
         return RespBean.error("失败");
+    }
+
+    @Override
+    public RespBean quickRegister(RegisterDto registerDto) {
+        String phone = registerDto.getPhone();
+        String code = registerDto.getCode();
+        Integer roleId = registerDto.getRoleId();
+        Integer res = smsUtils.validateCode(phone, code);
+        if (res == SmsUtils.NO_PHONE) {
+            return RespBean.error("请先获取验证码");
+        }
+        if (res == SmsUtils.CODE_ERROR) {
+            return RespBean.error("验证码输入错误");
+        }
+        User user = new User();
+        user.setEnabled(true);
+        user.setRoleId(roleId);
+        user.setUsername(UUID.randomUUID().toString());
+        user.setPassword(new BCryptPasswordEncoder().encode(defaultPassword));
+        user.setPhone(phone);
+        if (userMapper.insert(user) == 1) {
+
+            return RespBean.success("注册成功");
+        }
+        return RespBean.success("注册失败");
     }
 
 

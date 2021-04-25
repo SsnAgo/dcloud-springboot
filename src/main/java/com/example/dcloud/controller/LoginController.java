@@ -107,6 +107,23 @@ public class LoginController {
     }
 
 
+    @ApiOperation("快速注册")
+    @PostMapping("/mobile/quickRegister")
+    public RespBean quickRegister(@RequestBody RegisterDto registerDto){
+
+        if (!StringUtils.hasText(registerDto.getPhone())){
+            return RespBean.error("请输入手机号");
+        }
+        if (!StringUtils.hasText(registerDto.getCode())){
+            return RespBean.error("请输入验证码");
+        }
+        if (registerDto.getRoleId() == null){
+            return RespBean.error("请选择角色");
+        }
+        return userService.quickRegister(registerDto);
+    }
+
+
 
 
 

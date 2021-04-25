@@ -84,6 +84,7 @@ jwt:
 
 
 default:
+
   password: abc123
   signExp: 2
   signDistance: 0

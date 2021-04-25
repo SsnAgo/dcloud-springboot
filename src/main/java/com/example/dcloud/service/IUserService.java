@@ -165,4 +165,11 @@ public interface IUserService extends IService<User> {
      * @return
      */
     RespBean oauthLogin(String code,HttpServletRequest req) throws Exception;
+
+    /**
+     * 快速注册
+     * @param registerDto
+     * @return
+     */
+    RespBean quickRegister(RegisterDto registerDto);
 }
