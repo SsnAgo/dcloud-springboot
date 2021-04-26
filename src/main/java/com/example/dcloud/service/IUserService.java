@@ -160,11 +160,14 @@ public interface IUserService extends IService<User> {
 
     /**
      * github登录
+     *
+     * @param clientId
+     * @param clientSecret
      * @param code
      * @param req
      * @return
      */
-    RespBean oauthLogin(String code,HttpServletRequest req) throws Exception;
+    RespBean oauthLogin(String clientId, String clientSecret, String code, HttpServletRequest req) throws Exception;
 
     /**
      * 快速注册

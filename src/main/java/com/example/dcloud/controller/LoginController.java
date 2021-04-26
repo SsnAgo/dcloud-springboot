@@ -102,8 +102,11 @@ public class LoginController {
 
     @ApiOperation("github授权")
     @GetMapping("/mobile/oauth/")
-    public RespBean oauthLogin(@RequestParam("code") String code,HttpServletRequest req) throws Exception {
-        return userService.oauthLogin(code,req);
+    public RespBean oauthLogin(@RequestParam("client_id") String clientId,
+                               @RequestParam("client_secret") String clientSecret,
+                               @RequestParam("code") String code,
+                               HttpServletRequest req) throws Exception {
+        return userService.oauthLogin(clientId,clientSecret,code,req);
     }
 
 

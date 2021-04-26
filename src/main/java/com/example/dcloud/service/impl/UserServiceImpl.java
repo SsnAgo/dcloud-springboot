@@ -1,5 +1,7 @@
 package com.example.dcloud.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,6 +14,12 @@ import com.example.dcloud.dto.ChangePasswordDto;
 import com.example.dcloud.dto.RegisterDto;
 import com.tencentcloudapi.sms.v20190711.models.SendSmsResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +32,10 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.lang.System;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -359,27 +370,40 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public RespBean oauthLogin(String code, HttpServletRequest req) throws Exception {
-        if (StringUtils.hasText(code)) {
-            //拿到我们的code,去请求token
-            //发送一个请求到
-            System.out.println("code is " + code);
-            String token_url = GitHubConstant.TOKEN_URL.replace("CODE", code);
-            //得到的responseStr是一个字符串需要将它解析放到map中
-            String responseStr = HttpClientUtils.doGet(token_url);
-            // 调用方法从map中获得返回的--》 令牌
-            String token = HttpClientUtils.getMap(responseStr).get("access_token");
-            System.out.println("token is :" +  token);
-            //根据token发送请求获取登录人的信息  ，通过令牌去获得用户信息
-            String userinfo_url = GitHubConstant.USER_INFO_URL.replace("TOKEN", token);
-            responseStr = HttpClientUtils.doGet(userinfo_url);//json
-            System.out.println("resp str : " + responseStr);
-            Map<String, String> responseMap = HttpClientUtils.getMapByJson(responseStr);
-
-            // 成功则登陆
-            System.out.println("成功");
+    public RespBean oauthLogin(String clientId, String clientSecret, String code, HttpServletRequest req) throws Exception {
+//        if (StringUtils.hasText(code)) {
+//            //拿到我们的code,去请求token
+//            //发送一个请求到
+//            System.out.println("code is " + code);
+//            String token_url = GitHubConstant.TOKEN_URL.replace("CODE", code);
+//            //得到的responseStr是一个字符串需要将它解析放到map中
+//            String responseStr = HttpClientUtils.doGet(token_url);
+//            // 调用方法从map中获得返回的--》 令牌
+//            String token = HttpClientUtils.getMap(responseStr).get("access_token");
+//            System.out.println("token is :" +  token);
+//            //根据token发送请求获取登录人的信息  ，通过令牌去获得用户信息
+//            String userinfo_url = GitHubConstant.USER_INFO_URL.replace("TOKEN", token);
+//            responseStr = HttpClientUtils.doGet(userinfo_url);//json
+//            System.out.println("resp str : " + responseStr);
+//            Map<String, String> responseMap = HttpClientUtils.getMapByJson(responseStr);
+//
+//            // 成功则登陆
+//            System.out.println("成功");
+//        }
+//        return RespBean.error("失败");
+        try{
+            String token_url = sendPost("https://github.com/login/oauth/access_token?client_id="+clientId+"&client_secret="+clientSecret+"&code="+code,null);
+            String token = token_url.split("&")[0];
+            String token1 = token.substring(13);
+            // String res = httpGet("https://api.github.com/user?" + token + "", "token  " + token);
+            String res = httpGet("https://api.github.com/user", "token  " + token1);
+            JSONObject user = (JSONObject) JSON.parse(res);
+            return RespBean.success("成功",user);
+        }catch (Exception e){
+            e.printStackTrace();
+            return RespBean.error("失败");
         }
-        return RespBean.error("失败");
+
     }
 
     @Override
@@ -415,8 +439,96 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return RespBean.error("发送验证码遇到错误，请重试");
         }
         if (!resp.getSendStatusSet()[0].getCode().equals("Ok")) {
-            return RespBean.error("发送验证码遇到错误，请重试");
+            return RespBean.error("发送验证码遇到错误，错误信息 : " + resp.getSendStatusSet()[0].getMessage());
         }
         return RespBean.success("发送验证码成功");
+    }
+
+
+    public static String sendPost(String url, String param) {
+        PrintWriter out = null;
+        BufferedReader in = null;
+        String result = "";
+        try {
+            URL realUrl = new URL(url);
+            // 打开和URL之间的连接
+            URLConnection conn = realUrl.openConnection();
+            // 设置通用的请求属性
+            conn.setRequestProperty("accept", "*/*");
+            conn.setRequestProperty("connection", "Keep-Alive");
+            conn.setRequestProperty("user-agent",
+                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+            // 发送POST请求必须设置如下两行
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.connect();
+            // 获取URLConnection对象对应的输出流
+            out = new PrintWriter(conn.getOutputStream());
+            // 发送请求参数
+            out.print(param);
+            // flush输出流的缓冲
+            out.flush();
+            // 定义BufferedReader输入流来读取URL的响应
+            InputStream instream = conn.getInputStream();
+            if(instream!=null){
+                in = new BufferedReader( new InputStreamReader(instream));
+                String line;
+                while ((line = in.readLine()) != null) {
+                    result += line;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //使用finally块来关闭输出流、输入流
+        finally{
+            try{
+                if(out!=null){
+                    out.close();
+                }
+                if(in!=null){
+                    in.close();
+                }
+            }
+            catch(IOException ex){
+                ex.printStackTrace();
+            }
+        }
+        return result;
+    }
+    public static String httpGet(String url, String token){
+        System.out.println(token);
+        // 获取连接客户端工具
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse httpResponse=null;
+        String finalString = null;
+        HttpGet httpGet = new HttpGet(url);
+        /**公共参数添加至httpGet*/
+
+        /*header中通用属性*/
+        httpGet.setHeader("Accept","*/*");
+        httpGet.setHeader("Accept-Encoding","gzip, deflate");
+        httpGet.setHeader("Cache-Control","no-cache");
+        httpGet.setHeader("Connection", "keep-alive");
+        httpGet.setHeader("Content-Type", "application/json;charset=UTF-8");
+        /*业务参数*/
+        httpGet.setHeader("Content-Type","application/json");
+        httpGet.setHeader("Authorization",token);
+
+        try {
+            httpResponse = httpClient.execute(httpGet);
+            HttpEntity entity = httpResponse.getEntity();
+            finalString= EntityUtils.toString(entity, "UTF-8");
+            try {
+                httpResponse.close();
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(finalString);
+        return finalString;
     }
 }
