@@ -4,6 +4,7 @@ package com.example.dcloud.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.dcloud.anotation.StudentAllow;
 import com.example.dcloud.anotation.TeacherAllow;
+import com.example.dcloud.dto.SignRecordChangeDto;
 import com.example.dcloud.pojo.*;
 import com.example.dcloud.service.ICourseStudentService;
 import com.example.dcloud.service.ISettingSignService;
@@ -243,8 +244,10 @@ public class SignController {
 
     @ApiOperation("修改学生签到状态")
     @PutMapping("/status")
-    public RespBean changeStatus(@RequestParam("signId") @ApiParam("签到id") Integer signId,@RequestParam("studentIds")@ApiParam("多个学生id（传数组，也可单个）") List<Integer> studentIds,
-                                 @RequestParam("status") @ApiParam("要修改的状态") Integer status){
+    public RespBean changeStatus(@RequestBody SignRecordChangeDto signRecordChangeDto){
+        Integer signId = signRecordChangeDto.getSignId();
+        Integer status = signRecordChangeDto.getStatus();
+        List<Integer> studentIds = signRecordChangeDto.getStudentIds();
         return signRecordService.changeStatus(signId,studentIds,status);
     }
 

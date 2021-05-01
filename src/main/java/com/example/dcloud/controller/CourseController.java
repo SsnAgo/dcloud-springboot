@@ -116,6 +116,13 @@ public class CourseController {
         return courseService.getStudentCourse(student.getId(),currentPage,size,search);
     }
 
+    @ApiOperation("根据班课号搜索班课信息")
+    @GetMapping("/")
+    public RespBean getCourseInfoByCode(@RequestParam("code") String code){
+        return courseService.getCourseInfoByCode(code);
+    }
+
+
     @ApiOperation("学生根据班课号加入课堂")
     @PostMapping("/mobile/student")
     public RespBean studentAddCourse(@RequestParam("code") String code){

@@ -1,6 +1,7 @@
 package com.example.dcloud.mapper;
 
 import com.example.dcloud.dto.SignStudentDto;
+import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.SignRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -47,4 +48,13 @@ public interface SignRecordMapper extends BaseMapper<SignRecord> {
      * @return
      */
     boolean changeStatus(@Param("signId")Integer signId,@Param("studentIds") List<Integer> studentIds, @Param("status") Integer status);
+
+    /**
+     * 设置状态为已签到并设置当前时间
+     * @param signId
+     * @param studentIds
+     * @param signed
+     * @return
+     */
+    boolean changeToSigned(@Param("signId")Integer signId,@Param("studentIds") List<Integer> studentIds,@Param("status") Integer signed,@Param("time") LocalDateTime localDateTime);
 }

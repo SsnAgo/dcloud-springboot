@@ -87,4 +87,11 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     RespBean getCourseInfo(Integer id);
+
+    /**
+     * 根据班课号查看班课信息
+     * @param code
+     * @return
+     */
+    RespBean getCourseInfoByCode(String code);
 }

@@ -137,5 +137,23 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         return RespBean.success("",course);
     }
 
+    @Override
+    @Transactional
+    public RespBean getCourseInfoByCode(String code) {
+        Course course = courseMapper.selectOne(new QueryWrapper<Course>().eq("courseCode", code));
+        if (course == null) {
+            return RespBean.error("没有此班课");
+        }
+        if (!course.getAllowIn()){
+            return RespBean.error("该班课不允许加入，请联系教师");
+        }
+        Course courseInfo = courseMapper.getCourseInfo(course.getId());
+        if (courseInfo == null) {
+            return RespBean.error("无此班课");
+        }
+        return RespBean.success(null,courseInfo);
+
+    }
+
 
 }

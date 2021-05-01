@@ -87,4 +87,12 @@
               and studentId = #{sid}
         </foreach>
     </update>
+    <update id="changeToSigned">
+    <foreach collection="studentIds" item="sid" separator=";">
+            update t_sign_record
+            set status = #{status},signTime = #{time}
+            where signId = #{signId}
+              and studentId = #{sid}
+        </foreach>
+</update>
 </mapper>
