@@ -173,6 +173,7 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
             if (item.getStatus() != null && item.getStatus() == SignUtils.SIGNED){
                 signedList.add(item);
             }else{
+                item.setStatus(SignUtils.NO_SIGNED);
                 unSignedList.add(item);
             }
         }

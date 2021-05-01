@@ -47,7 +47,7 @@ public class SignRecordServiceImpl extends ServiceImpl<SignRecordMapper, SignRec
         Integer courseId = sign.getCourseId();
         LocalDateTime startTime = sign.getStartTime();
         // 获取所有这个签到下  已有签到记录的sids （包括签到和签到失败的 以及其他被设置状态了的）
-        List<Integer> sidList = signRecords.stream().map(SignRecord::getId).collect(Collectors.toList());
+        List<Integer> sidList = signRecords.stream().map(SignRecord::getStudentId).collect(Collectors.toList());
         // 放到set里  方便查询contains
         Set<Integer> sidSet = new HashSet<>(sidList);
         // 备用
@@ -81,6 +81,10 @@ public class SignRecordServiceImpl extends ServiceImpl<SignRecordMapper, SignRec
 
     }
 
+    /**
+     * 初始化 签到状态：签到经验值  的map
+     * @return
+     */
     private Map<Integer, Integer> initStatusExpMap() {
         // 获取各个签到类型对应的经验值
         SettingSign settingSign = settingSignMapper.selectById(1);

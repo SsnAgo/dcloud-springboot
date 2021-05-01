@@ -63,7 +63,7 @@ public class SignController {
         }
         signService.save(sign);
 
-        initRecords(sign.getId(),sign.getStartTime(),cid);
+//        initRecords(sign.getId(),sign.getStartTime(),cid);
         return RespBean.success("创建签到成功",sign);
     }
 
@@ -88,8 +88,7 @@ public class SignController {
             return RespBean.error("班级内暂无学生");
         }
         signService.save(sign);
-
-        initRecords(sign.getId(),sign.getStartTime(),cid);
+//        initRecords(sign.getId(),sign.getStartTime(),cid);
         return RespBean.success("创建签到成功",sign);
     }
 
@@ -242,6 +241,7 @@ public class SignController {
 
 
 
+    @TeacherAllow
     @ApiOperation("修改学生签到状态")
     @PutMapping("/status")
     public RespBean changeStatus(@RequestBody SignRecordChangeDto signRecordChangeDto){
