@@ -1,10 +1,8 @@
 package com.example.dcloud.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.dcloud.mapper.SettingSignMapper;
-import com.example.dcloud.mapper.SignMapper;
+import com.example.dcloud.mapper.*;
 import com.example.dcloud.pojo.*;
-import com.example.dcloud.mapper.SignRecordMapper;
 import com.example.dcloud.service.ISignRecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.dcloud.utils.SignUtils;
@@ -33,6 +31,10 @@ public class SignRecordServiceImpl extends ServiceImpl<SignRecordMapper, SignRec
     private SettingSignMapper settingSignMapper;
     @Resource
     private SignMapper signMapper;
+    @Resource
+    private CourseStudentMapper courseStudentMapper;
+    @Resource
+    private UserMapper userMapper;
 
     @Override
     public void initSignRecords(Integer signId, LocalDateTime startTime, Integer cid, List<Integer> sids) {
@@ -62,13 +64,16 @@ public class SignRecordServiceImpl extends ServiceImpl<SignRecordMapper, SignRec
                     if (temp.getStatus() == status) {
                         continue;
                     }
+                    Integer changeExp = map.get(status) - temp.getAddExp();
                     // 状态不一样  则判断处于什么状态  更改状态的同时 也要修改各个经验值
-                    temp.setStatus(status).setAddExp(map.get(status));
+                    temp.setStatus(status).setAddExp(map.get(status)).setSignTime(LocalDateTime.now());
                     signRecordMapper.updateById(temp);
+                    changeStudentExp(studentId,courseId,changeExp);
                 } else {
                     temp = new SignRecord();
                     temp.setSignId(signId).setCourseId(courseId).setStudentId(studentId).setStartTime(startTime).setSignTime(LocalDateTime.now()).setStatus(status).setAddExp(map.get(status)).setDistance(null);
                     signRecordMapper.insert(temp);
+                    changeStudentExp(studentId,courseId,map.get(status));
                 }
             }
             return RespBean.success("修改状态成功");
@@ -116,6 +121,23 @@ public class SignRecordServiceImpl extends ServiceImpl<SignRecordMapper, SignRec
 //        }
 //        return temp;
     }
+
+    /**
+     * 修改状态后，也要修改对应的学生的在改班课的经验值和总经验值 新增经验值则传正数 否则传负数
+     * 需要学生id和班课id
+     */
+    private void changeStudentExp(Integer studentId,Integer courseId,Integer addExp){
+        CourseStudent courseStudent = courseStudentMapper.selectOne(new QueryWrapper<CourseStudent>().eq("sid", studentId).eq("cid", courseId));
+        User user = userMapper.selectById(studentId);
+        // 更新班课经验值
+        courseStudent.setExp(courseStudent.getExp() + addExp);
+        courseStudentMapper.updateById(courseStudent);
+        // 更新用户经验值
+        user.setExp(user.getExp() + addExp);
+        userMapper.updateById(user);
+    }
+
+
 
 
 }
