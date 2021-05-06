@@ -38,7 +38,6 @@ public class Course implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "班课名称")
-    @NotEmpty(message = "班课名称不能为空")
     private String name;
 
     @ApiModelProperty(value = "类别编号，对应字典，必修选修")
