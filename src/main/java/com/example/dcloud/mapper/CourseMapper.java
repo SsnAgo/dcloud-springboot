@@ -7,6 +7,8 @@ import com.example.dcloud.pojo.Course;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -38,14 +40,13 @@ public interface CourseMapper extends BaseMapper<Course> {
     IPage<Course> getTeacherCourse(@Param("tid")Integer tid, Page<Course> page,@Param("search") String search);
 
     /**
-     * 分页 按条件查询并排序 该班级的成员
+     * 条件查询并排序 该班级的成员
      * @param id
-     * @param page
      * @param search
      * @param sortBy
      * @return
      */
-    IPage<CourseMemberVo> courseMember(@Param("cid") Integer id, Page<CourseMemberVo> page, @Param("search") String search, @Param("sortBy") String sortBy);
+    List<CourseMemberVo> courseMember(@Param("cid") Integer id, @Param("search") String search, @Param("sortBy") String sortBy);
 
     /**
      * 根据id获取课程

@@ -22,4 +22,10 @@
         from t_course_student cs
         where cs.cid = #{cid}
     </select>
+    <delete id="deleteCourseBySidAndCid">
+        delete
+        from t_course_student
+        where cid = #{cid}
+          and sid = #{sid}
+    </delete>
 </mapper>

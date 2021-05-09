@@ -215,7 +215,7 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
     }
     @Override
     public List<SignRecord> getStudentHistory(Integer cid, Integer sid) {
-        List<SignRecord> signRecordList = signRecordMapper.selectList(new QueryWrapper<SignRecord>().eq("courseId",cid).eq("studentId",sid));
+        List<SignRecord> signRecordList = signRecordMapper.getStudentHistory(cid,sid);
         for (SignRecord record : signRecordList) {
             // 如果有签到  就设置为签到的时间
             if (record.getSignTime() != null){

@@ -14,6 +14,7 @@
         <result column="requireAuth" property="requireAuth"/>
         <result column="parentId" property="parentId"/>
         <result column="enabled" property="enabled"/>
+        <result column="sequence" property="sequence"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -28,7 +29,8 @@
         keepAlive,
         requireAuth,
         parentId,
-        enabled
+        enabled,
+        sequence
     </sql>
     <resultMap id="MenusWithRole" type="com.example.dcloud.pojo.Menu" extends="BaseResultMap">
         <collection property="roles" ofType="com.example.dcloud.pojo.Role">
@@ -112,14 +114,18 @@
           AND mr.rid = u.roleId
           AND u.id = #{userId}
           AND m2.enabled = TRUE
-        order by m2.id
+        order by m2.sequence
     </select>
 
     <select id="getMenus" resultMap="BaseResultMap">
         select m.*
         from t_menu m
-        <if test="null != menu.name and '' != menu.name">
-            where m.name like concat('%',#{menu.name},'%')
-        </if>
+        <where>
+            m.sequence is not null
+            <if test="null != search and '' != search">
+                and m.name like concat('%',#{search},'%')
+            </if>
+        </where>
+        order by m.sequence
     </select>
 </mapper>

@@ -4,6 +4,7 @@ import com.example.dcloud.pojo.Course;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.RespPageBean;
+import com.example.dcloud.vo.CourseMemberVo;
 
 import java.util.List;
 
@@ -73,13 +74,11 @@ public interface ICourseService extends IService<Course> {
      * 获取班级全部成员
      *
      * @param id
-     * @param currentPage
-     * @param size
      * @param search
      * @param sortBy
      * @return
      */
-    RespPageBean courseMember(Integer id, Integer currentPage, Integer size, String search, String sortBy);
+    List<CourseMemberVo> courseMember(Integer id, String search, String sortBy);
 
     /**
      * 根据id获取班课详情

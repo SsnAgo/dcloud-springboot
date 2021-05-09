@@ -22,4 +22,20 @@ public interface ICourseStudentService extends IService<CourseStudent> {
      * @return
      */
     List<Integer> listSidByCid(Integer cid);
+
+    /**
+     * 学生退出班课
+     * @param studentId
+     * @param courseId
+     * @return
+     */
+    RespBean quitCourse(Integer studentId, Integer courseId);
+
+    /**
+     * 学生获取在该班课的经验值和排名
+     * @param sid
+     * @param cid
+     * @return
+     */
+    RespBean studentGetExpRank(Integer sid, Integer cid);
 }

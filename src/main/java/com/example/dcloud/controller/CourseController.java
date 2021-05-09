@@ -10,6 +10,7 @@ import com.example.dcloud.service.ICourseService;
 import com.example.dcloud.service.ICourseStudentService;
 import com.example.dcloud.utils.CourseUtils;
 import com.example.dcloud.utils.UserUtils;
+import com.example.dcloud.vo.CourseMemberVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
@@ -133,15 +134,13 @@ public class CourseController {
         return courseService.studentAddCourse(user.getId(),code);
     }
 
-    @ApiOperation("教师查看班级成员")
+    @ApiOperation("查看班级成员")
     @GetMapping("/mobile/member")
-    public RespPageBean courseMember(
+    public List<CourseMemberVo> courseMember(
             @ApiParam("班课id")@RequestParam(required = true) Integer id,
-            @RequestParam(defaultValue = "1") Integer currentPage,
-                                     @RequestParam(defaultValue = "10") Integer size,
                                      @ApiParam("按学号或姓名模糊查询 可不传") String search,
                                      @ApiParam("按经验值或学号排序 exp or num")@RequestParam(defaultValue = "number") String sortBy){
-        return courseService.courseMember(id,currentPage,size,search,sortBy);
+        return courseService.courseMember(id,search,sortBy);
     }
 
     @ApiOperation("根据班课id查看班课详情")
@@ -149,6 +148,21 @@ public class CourseController {
     public RespBean getCourseInfo(@PathVariable Integer id){
         return courseService.getCourseInfo(id);
     }
+
+    @ApiOperation("学生退出班课")
+    @DeleteMapping("/mobile/student/{id}")
+    public RespBean quitCourse(@PathVariable @ApiParam("班课id") Integer id){
+        User student = UserUtils.getCurrentUser();
+        return courseStudentService.quitCourse(student.getId(),id);
+    }
+
+    @ApiOperation("学生在班课成员列表获取他的经验值和排名")
+    @GetMapping("/mobile/rank")
+    public RespBean studentGetExpRank(@RequestParam("cid")@ApiParam("班课id") Integer cid){
+        User student = UserUtils.getCurrentUser();
+        return courseStudentService.studentGetExpRank(student.getId(),cid);
+    }
+
 
 
 

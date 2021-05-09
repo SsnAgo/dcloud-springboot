@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -58,6 +59,10 @@ public class SignRecord implements Serializable {
 
     @ApiModelProperty(value = "签到状态")
     private Integer status;
+
+    @ApiModelProperty(value = "签到类型")
+    @TableField(exist = false)
+    private Integer type;
 
     @ApiModelProperty(value = "离签到位置的距离")
     private Double distance;

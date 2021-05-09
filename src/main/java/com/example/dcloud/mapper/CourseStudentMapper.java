@@ -25,4 +25,12 @@ public interface CourseStudentMapper extends BaseMapper<CourseStudent> {
      * @return
      */
     List<Integer> listSidByCid(Integer cid);
+
+    /**
+     * 学生退出班课
+     * @param studentId
+     * @param courseId
+     * @return
+     */
+    boolean deleteCourseBySidAndCid(@Param("sid") Integer studentId,@Param("cid") Integer courseId);
 }

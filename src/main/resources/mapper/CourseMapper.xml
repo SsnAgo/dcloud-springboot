@@ -166,7 +166,7 @@
         <if test="sortBy != null and sortBy != ''">
             <choose>
                 <when test="sortBy.equals('exp')">
-                    order by cs.exp
+                    order by cs.exp DESC
                 </when>
                 <otherwise>
                     order by u.number

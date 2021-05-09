@@ -29,8 +29,8 @@ public interface MenuMapper extends BaseMapper<Menu> {
 
     /**
      * 根据条件查询menus 如果为空就查全部
-     * @param menu
+     * @param search
      * @return
      */
-    List<Menu> getMenus(@Param("menu") Menu menu);
+    List<Menu> getMenus(@Param("search") String search);
 }

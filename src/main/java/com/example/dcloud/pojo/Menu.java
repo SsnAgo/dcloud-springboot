@@ -61,6 +61,9 @@ public class Menu implements Serializable {
     @ApiModelProperty(value = "是否启用")
     private Boolean enabled;
 
+    @ApiModelProperty(value = "排列顺序")
+    private Integer sequence;
+
     @ApiModelProperty(value = "能访问该菜单的角色列表")
     @TableField(exist = false)
     private List<Role> roles;

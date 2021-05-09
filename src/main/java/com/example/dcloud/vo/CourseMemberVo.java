@@ -28,8 +28,12 @@ public class CourseMemberVo {
     @ApiModelProperty(value = "学生在该班课的经验值")
     private Integer exp;
 
+    @ApiModelProperty(value = "该学生在班课的经验值排名")
+    private Integer rank;
     @ApiModelProperty(value = "学生头像")
     private String uface;
+
+
 
 
 }

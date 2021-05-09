@@ -43,5 +43,6 @@
         from t_sign s
         where courseId = #{cid}
           and s.enabled = false
+        order by s.id DESC
     </select>
 </mapper>

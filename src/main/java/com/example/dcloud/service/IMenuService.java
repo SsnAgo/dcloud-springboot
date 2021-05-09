@@ -2,6 +2,7 @@ package com.example.dcloud.service;
 
 import com.example.dcloud.pojo.Menu;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.dcloud.pojo.RespBean;
 
 import java.util.List;
 
@@ -28,9 +29,16 @@ public interface IMenuService extends IService<Menu> {
     List<Menu> getUserMenus();
 
     /**
-     * 根据条件查询 如果为空 就查全部
+     * 根据菜单名查询 如果为空 就查全部
+     * @param search
+     * @return
+     */
+    List<Menu> getMenus(String search);
+
+    /**
+     * 修改菜单
      * @param menu
      * @return
      */
-    List<Menu> getMenus(Menu menu);
+    RespBean updateMenu(Menu menu);
 }

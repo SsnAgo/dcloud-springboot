@@ -17,7 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.lang.System;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -102,7 +103,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             return RespBean.error("该班课不允许加入，请联系老师");
         }
         // 如果存在，则检查该学生有没有这个课了 有的就不加了
-        Integer res = courseStudentMapper.selectCount(new QueryWrapper<CourseStudent>().eq("cid", exist.getId()));
+        Integer res = courseStudentMapper.selectCount(new QueryWrapper<CourseStudent>().eq("cid", exist.getId()).eq("sid",sid));
         if (res > 0 ){
             return RespBean.error("您已加入该班课");
         }
@@ -117,13 +118,25 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     }
 
     @Override
-    public RespPageBean courseMember(Integer id, Integer currentPage, Integer size, String search, String sortBy) {
-        Page<CourseMemberVo> page = new Page<>(currentPage,size);
-        IPage<CourseMemberVo> iPage = courseMapper.courseMember(id,page,search,sortBy);
-        System.out.println("执行到这里了");
-        RespPageBean respPageBean = new RespPageBean(iPage.getTotal(),iPage.getRecords());
+    public List<CourseMemberVo> courseMember(Integer id, String search, String sortBy) {
+        // 原始数据
+        List<CourseMemberVo> members = courseMapper.courseMember(id,search,sortBy);
+        // copy一份进行排序等操作
+        List<CourseMemberVo> temp = new ArrayList<>(members);
+        // 降序排序数组
+        temp.sort(Comparator.comparing(CourseMemberVo::getExp).reversed());
+        // 这是已经排好序的 对其取经验值并去重，得到的下标+1即排名
+        List<Integer> exps = temp.stream().map(CourseMemberVo::getExp).distinct().collect(Collectors.toList());
+        Map<Integer,Integer> exp2rank = new HashMap<>();
+        for (int i = 0; i < exps.size(); i++) {
+            exp2rank.put(exps.get(i),i + 1);
+        }
+        // 给原数组赋值  保证原来的顺序没被打乱
+        for (CourseMemberVo member : members) {
+            member.setRank(exp2rank.get(member.getExp()));
+        }
         System.out.println("这里挂了");
-        return respPageBean;
+        return members;
     }
 
     @Override

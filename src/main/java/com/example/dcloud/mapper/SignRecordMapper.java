@@ -57,4 +57,12 @@ public interface SignRecordMapper extends BaseMapper<SignRecord> {
      * @return
      */
     boolean changeToSigned(@Param("signId")Integer signId,@Param("studentIds") List<Integer> studentIds,@Param("status") Integer signed,@Param("time") LocalDateTime localDateTime);
+
+    /**
+     * 获取学生签到历史
+     * @param cid
+     * @param sid
+     * @return
+     */
+    List<SignRecord> getStudentHistory(@Param("cid") Integer cid,@Param("sid") Integer sid);
 }

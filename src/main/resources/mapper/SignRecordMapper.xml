@@ -88,11 +88,27 @@
         </foreach>
     </update>
     <update id="changeToSigned">
-    <foreach collection="studentIds" item="sid" separator=";">
+        <foreach collection="studentIds" item="sid" separator=";">
             update t_sign_record
-            set status = #{status},signTime = #{time}
+            set status   = #{status},
+                signTime = #{time}
             where signId = #{signId}
               and studentId = #{sid}
         </foreach>
-</update>
+    </update>
+
+    <resultMap id="StudentHistoryInfo" type="com.example.dcloud.pojo.SignRecord" extends="BaseResultMap">
+        <result column="stype" property="type"></result>
+    </resultMap>
+
+    <select id="getStudentHistory" resultMap="StudentHistoryInfo">
+        select sr.*,
+        s.type as stype
+        from t_sign_record sr,
+             t_sign s
+        where sr.courseId = #{cid}
+          and sr.studentId = #{sid}
+          and sr.signId = s.id
+          order by sr.studentId DESC
+    </select>
 </mapper>
