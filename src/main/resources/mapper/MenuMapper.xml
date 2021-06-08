@@ -3,7 +3,7 @@
 <mapper namespace="com.example.dcloud.mapper.MenuMapper">
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.dcloud.pojo.Menu">
-<!--    @Table t_menu-->
+        <!--    @Table t_menu-->
         <id column="id" property="id"/>
         <result column="url" property="url"/>
         <result column="path" property="path"/>
@@ -96,7 +96,7 @@
     <select id="getMenusByUserId" resultMap="Menus">
         SELECT m1.*,
                m2.id          AS id2,
-               m2.url AS url2,
+               m2.url         AS url2,
                m2.path        AS path2,
                m2.component   AS component2,
                m2.`name`      AS name2,
@@ -123,9 +123,19 @@
         <where>
             m.sequence is not null
             <if test="null != search and '' != search">
-                and m.name like concat('%',#{search},'%')
+                and m.name like concat('%', #{search}, '%')
             </if>
         </where>
         order by m.sequence
     </select>
+    <!--    <update id="updateMenusSequence" parameterType="java.util.Map">-->
+    <!--        <foreach collection="mid2seq" index="key" item="value" open="" separator=";" close="">-->
+    <!--            update t_menu-->
+    <!--            set sequence=#{value}-->
+    <!--            where id = #{key}-->
+    <!--        </foreach>-->
+    <!--    </update>-->
+    <update id="updateMenuSequence">
+        UPDATE t_menu SET sequence = #{seq} where id = #{mid}
+    </update>
 </mapper>

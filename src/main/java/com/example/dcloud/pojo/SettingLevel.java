@@ -43,5 +43,4 @@ public class SettingLevel implements Serializable {
     @ApiModelProperty(value = "是否启用")
     private Boolean enabled;
 
-
 }

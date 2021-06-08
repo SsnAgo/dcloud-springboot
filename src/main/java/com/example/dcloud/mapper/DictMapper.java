@@ -41,7 +41,7 @@ public interface DictMapper extends BaseMapper<Dict> {
      * @param dictInfoList
      * @return
      */
-    boolean updateDictAndDictInfo(@Param("dict") Dict dict,@Param("dictInfoList") List<DictInfo> dictInfoList);
+//    boolean updateDictAndDictInfo(@Param("dict") Dict dict,@Param("dictInfoList") List<DictInfo> dictInfoList);
 
 
 

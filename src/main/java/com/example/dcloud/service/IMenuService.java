@@ -41,4 +41,18 @@ public interface IMenuService extends IService<Menu> {
      * @return
      */
     RespBean updateMenu(Menu menu);
+
+    /**
+     * 新增菜单
+     * @param menu
+     * @return
+     */
+    RespBean saveMenu(Menu menu);
+
+    /**
+     * 删除菜单
+     * @param id
+     * @return
+     */
+    RespBean delMenu(Integer id);
 }

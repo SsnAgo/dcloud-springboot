@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -33,4 +34,12 @@ public interface MenuMapper extends BaseMapper<Menu> {
      * @return
      */
     List<Menu> getMenus(@Param("search") String search);
+
+    /**
+     * 修改菜单顺序
+     * @param id
+     * @param seq
+     * @return
+     */
+    Integer updateMenuSequence(@Param("mid") Integer id,@Param("seq") Integer seq);
 }

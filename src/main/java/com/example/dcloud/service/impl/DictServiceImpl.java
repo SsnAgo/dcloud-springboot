@@ -91,6 +91,9 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         exits = dictMapper.selectById(dict.getId());
         System.out.println("开始更新字典项了");
         // 接下来更新字典项
+        if (dictInfoList == null) {
+            return RespBean.success("更新成功");
+        }
         // 判断要更新的有没有值 没有就表示要删掉
         if (dictInfoList.size() == 0) {
             dictInfoMapper.deleteDictInfo(exits.getTag());

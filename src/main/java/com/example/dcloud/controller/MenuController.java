@@ -6,6 +6,7 @@ import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.service.IMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -48,6 +49,23 @@ public class MenuController {
 //        return RespBean.error("修改菜单失败");
         return menuService.updateMenu(menu);
     }
+
+    @ApiOperation("管理员新增菜单")
+    @PostMapping("/manage/")
+    public RespBean addMenu(@RequestBody Menu menu) {
+        if (!StringUtils.hasText(menu.getName())) {
+            return RespBean.error("菜单名不能为空");
+        }
+        return menuService.saveMenu(menu);
+    }
+
+    @ApiOperation("管理员删除菜单")
+    @DeleteMapping("/manage/")
+    public RespBean delMenu(@RequestParam Integer id){
+        return menuService.delMenu(id);
+    }
+
+
 
 
 
