@@ -199,10 +199,10 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
                 defaultCount++;
             }
         }
-        // 如果存到set里会小于 那么就有重复顺序
-        if (sequenceSet.size() < dictInfoList.size()) {
-            return RespBean.error("排列序号有重复");
-        }
+//        // 如果存到set里会小于 那么就有重复顺序
+//        if (sequenceSet.size() < dictInfoList.size()) {
+//            return RespBean.error("排列序号有重复");
+//        }
         //判断默认值是否唯一
         if (defaultCount > 1) {
             return RespBean.error("默认值只能唯一");
@@ -236,6 +236,9 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         }
         return RespBean.success("删除字典成功");
     }
+
+
+
 
 /**
  * {

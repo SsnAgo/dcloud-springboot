@@ -1,6 +1,7 @@
 package com.example.dcloud.controller;
 
 
+import com.example.dcloud.dto.MenuSeqDto;
 import com.example.dcloud.pojo.Menu;
 import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.service.IMenuService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -63,6 +65,13 @@ public class MenuController {
     @DeleteMapping("/manage/")
     public RespBean delMenu(@RequestParam Integer id){
         return menuService.delMenu(id);
+    }
+
+
+    @ApiOperation("调换菜单顺序，并返回最新的顺序(返回所有菜单和当前用户菜单)")
+    @PutMapping("/manage/seq")
+    public Map<String,Object> changeMenuSeq(@RequestBody List<MenuSeqDto> menuSeqList){
+        return menuService.changeMenuSeq(menuSeqList);
     }
 
 

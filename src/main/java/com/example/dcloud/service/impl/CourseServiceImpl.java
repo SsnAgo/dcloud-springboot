@@ -95,12 +95,15 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Transactional
     public RespBean studentAddCourse(Integer sid, String code) {
         // 验证班课存在且可用
-        Course exist = courseMapper.selectOne(new QueryWrapper<Course>().eq("courseCode", code).eq("enabled", true));
+        Course exist = courseMapper.selectOne(new QueryWrapper<Course>().eq("courseCode", code));
         if (null == exist) {
             return RespBean.error("该班课不存在");
         }
         if (!exist.getAllowIn()){
             return RespBean.error("该班课不允许加入，请联系老师");
+        }
+        if (!exist.getEnabled()) {
+            return RespBean.error("该班课已结束");
         }
         // 如果存在，则检查该学生有没有这个课了 有的就不加了
         Integer res = courseStudentMapper.selectCount(new QueryWrapper<CourseStudent>().eq("cid", exist.getId()).eq("sid",sid));

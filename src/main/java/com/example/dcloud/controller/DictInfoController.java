@@ -35,7 +35,7 @@ public class DictInfoController {
     @ApiOperation("根据tag获取字典项列表")
     @GetMapping("/{tag}")
     public List<DictInfo> getDictInfo(@PathVariable String tag){
-        return dictInfoService.list(new QueryWrapper<DictInfo>().eq("tag", tag));
+        return dictInfoService.list(new QueryWrapper<DictInfo>().eq("tag", tag).orderByAsc("sequence"));
     }
 
 

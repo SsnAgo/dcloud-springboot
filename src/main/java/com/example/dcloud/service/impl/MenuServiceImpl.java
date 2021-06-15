@@ -2,6 +2,7 @@ package com.example.dcloud.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.example.dcloud.dto.MenuSeqDto;
 import com.example.dcloud.mapper.MenuRoleMapper;
 import com.example.dcloud.pojo.Menu;
 import com.example.dcloud.mapper.MenuMapper;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,19 +66,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         if (exist != null) {
             return RespBean.error("菜单名不能重复");
         }
-        if (menu.getSequence() == null) {
-            return RespBean.error("顺序不能为空");
-        }
-        if (menu.getSequence() < 1 || menu.getSequence() > menuSize) {
-            return RespBean.error("请输入正确的顺序范围");
-        }
-        // 范围没问题 就去更新列表
-        Integer pos = updateMenusSequence(menu.getId(), menu.getSequence());
-        if (pos == 0){
-            return RespBean.error("修改顺序失败");
-        }
-        // 获取修改完的顺序
-        menu.setSequence(pos);
         if (menuMapper.updateById(menu) == 1) {
             return RespBean.success("修改成功");
         }
@@ -88,13 +77,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     public RespBean saveMenu(Menu menu) {
         menu.setParentId(1);
         if (menuMapper.insert(menu) == 1) {
-            Integer pos = updateMenusSequence(menu.getId(), menu.getSequence());
-            if (pos == 0){
-                return RespBean.error("修改顺序失败");
-            }
-            // 获取修改完的顺序
-            menu.setSequence(pos);
-            menuMapper.updateById(menu);
+//            Integer pos = updateMenusSequence(menu.getId(), menu.getSequence());
+//            if (pos == 0){
+//                return RespBean.error("修改顺序失败");
+//            }
+//            // 获取修改完的顺序
+//            menu.setSequence(pos);
+//            menuMapper.updateById(menu);
             return RespBean.success("新增菜单成功");
         }
         return RespBean.error("新增菜单失败");
@@ -103,16 +92,40 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     @Transactional
     public RespBean delMenu(Integer id) {
-        Integer pos = updateMenusSequence(id, -1);
-        if (pos == 0) {
-            System.out.println("重置顺序成功");
-        }
+//        Integer pos = updateMenusSequence(id, -1);
+//        if (pos == 0) {
+//            System.out.println("重置顺序成功");
+//        }
         // 删除 菜单-角色关联表里的项
         menuRoleMapper.deleteMenu(id);
         if (menuMapper.deleteById(id) == 1) {
-            return RespBean.success("删除菜单成功");
+            // 删除掉了之后要把顺序调整一下
+            // 1. 获取所有菜单
+            List<Menu> menus = getMenus(null);
+            // 2. （由于获取到的已经是按照seq排序的 因此按照下标重新索引一下即可
+            Integer idx = 0;
+            List<MenuSeqDto> menuSeqDtoList = new ArrayList<>();
+            for (Menu item : menus) {
+                menuSeqDtoList.add(new MenuSeqDto(item.getId(),idx));
+                idx ++;
+            }
+            Map<String, Object> res = changeMenuSeq(menuSeqDtoList);
+
+            return RespBean.success("删除菜单成功",res);
         }
         return RespBean.error("删除菜单失败");
+    }
+
+    @Override
+    @Transactional
+    public Map<String,Object> changeMenuSeq(List<MenuSeqDto> menuSeqList) {
+        Map<String,Object> res = new HashMap<>();
+        for (MenuSeqDto item: menuSeqList) {
+            menuMapper.updateMenuSequence(item.getId(),item.getSequence());
+        }
+        res.put("allMenus",getMenus(null));
+        res.put("userMenus",getUserMenus());
+        return res;
     }
 
     /**
@@ -121,28 +134,28 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
      * @param seq 要调整到的位置 如果是删除就是-1
      * @return 返回更改后的位置  如果是删除或者修改失败就会返回0
      */
-    private Integer updateMenusSequence(Integer mid, Integer seq) {
-
-        // 获取mids列表 将此mid插入到对应seq的下标位置
-        List<Menu> menus = getMenus(null);
-        List<Integer> ids = menus.stream().map(Menu::getId).collect(Collectors.toList());
-        // 移除这个id先
-        ids.remove(mid);
-        // 插入到对应位置
-        if (seq != -1) {
-            ids.add(seq - 1,mid);
-        }
-        // 返回的当前顺序
-        Integer res = 0;
-        // 根据索引生成顺序
-        for (Integer id: ids) {
-            Integer pos = ids.indexOf(id) + 1;
-            menuMapper.updateMenuSequence(id,pos);
-            if (id == mid) {
-                res = pos;
-            }
-        }
-        // 去批量更改
-        return res;
-    }
+//    private Integer updateMenusSequence(Integer mid, Integer seq) {
+//
+//        // 获取mids列表 将此mid插入到对应seq的下标位置
+//        List<Menu> menus = getMenus(null);
+//        List<Integer> ids = menus.stream().map(Menu::getId).collect(Collectors.toList());
+//        // 移除这个id先
+//        ids.remove(mid);
+//        // 插入到对应位置
+//        if (seq != -1) {
+//            ids.add(seq - 1,mid);
+//        }
+//        // 返回的当前顺序
+//        Integer res = 0;
+//        // 根据索引生成顺序
+//        for (Integer id: ids) {
+//            Integer pos = ids.indexOf(id) + 1;
+//            menuMapper.updateMenuSequence(id,pos);
+//            if (id == mid) {
+//                res = pos;
+//            }
+//        }
+//        // 去批量更改
+//        return res;
+//    }
 }

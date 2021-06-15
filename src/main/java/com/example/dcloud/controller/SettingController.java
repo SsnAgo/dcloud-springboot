@@ -129,13 +129,13 @@ public class SettingController {
         return RespBean.error("删除失败");
     }
 
-    @ApiOperation("检查名称是否有可用")
+    @ApiOperation("检查名称是否可用")
     @GetMapping("/ckname/{name}")
     public RespBean checkName(@PathVariable String name){
-        if (settingService.getOne(new QueryWrapper<Setting>().eq("name",name)) == null) {
-            return RespBean.success("名称可用",true);
+        if (settingService.getOne(new QueryWrapper<Setting>().eq("name",name)) != null) {
+            return RespBean.error("名称重复",false);
         }
-        return RespBean.success("名称重复",false);
+        return null;
     }
 
 
@@ -143,12 +143,12 @@ public class SettingController {
     @GetMapping("/ckkwd/{keyword}")
     public RespBean checkKwd(@PathVariable String keyword){
         if (!keyword.matches("^[a-zA-Z][a-zA-Z0-9_]*$")){
-            return RespBean.success("关键词必须为英文或数字,且以英文开头",false);
+            return RespBean.error("关键词必须为英文或数字,且以英文开头",false);
         }
-        if (settingService.getOne(new QueryWrapper<Setting>().eq("keyword",keyword)) == null) {
-            return RespBean.success("关键词可用",true);
+        if (settingService.getOne(new QueryWrapper<Setting>().eq("keyword",keyword)) != null) {
+            return RespBean.error("关键词重复",false);
         }
-        return RespBean.success("关键词重复",false);
+        return null;
     }
 
 }

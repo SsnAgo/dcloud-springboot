@@ -28,10 +28,10 @@
     <insert id="insertDictAndDictInfo">
         insert into t_dict(tag, tagZh, description)
         values (#{dict.tag}, #{dict.tagZh}, #{dict.description});
-                insert into t_dict_info(tag, content, sequence, isDefault)
+                insert into t_dict_info(tag, content, sequence, isDefault,value)
                 VALUES
         <foreach collection="dictInfoList" item="item" separator=",">
-            (#{dict.tag}, #{item.content}, #{item.sequence}, #{item.isDefault})
+            (#{dict.tag}, #{item.content}, #{item.sequence}, #{item.isDefault},#{item.value})
         </foreach>
     </insert>
 <!--    <update id="updateDictAndDictInfo">-->

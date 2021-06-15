@@ -37,11 +37,12 @@ public class DictInfo implements Serializable {
     private String tag;
 
     @ApiModelProperty(value = "具体内容")
-    @NotEmpty(message = "字典项内容不能为空")
     private String content;
 
+    @ApiModelProperty(value = "值")
+    private Integer value;
+
     @ApiModelProperty(value = "前后顺序")
-    @NotEmpty(message = "顺序不能为空")
     private Integer sequence;
 
     @ApiModelProperty(value = "是否默认显示")
