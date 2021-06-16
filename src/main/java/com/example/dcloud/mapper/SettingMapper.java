@@ -7,10 +7,4 @@ import org.apache.ibatis.annotations.Param;
 
 public interface SettingMapper extends BaseMapper<Setting> {
 
-    /**
-     * 更新设置
-     * @param settingVo
-     * @return
-     */
-    boolean updateSetting(@Param("settingVo")SettingVo settingVo);
 }

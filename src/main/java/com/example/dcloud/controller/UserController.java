@@ -4,7 +4,9 @@ package com.example.dcloud.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.RespPageBean;
+import com.example.dcloud.pojo.Setting;
 import com.example.dcloud.pojo.User;
+import com.example.dcloud.service.ISettingService;
 import com.example.dcloud.service.IUserService;
 import com.example.dcloud.utils.UserUtils;
 import io.swagger.annotations.Api;
@@ -35,6 +37,8 @@ public class UserController {
     private String defaultPass;
     @Resource
     private IUserService userService;
+    @Resource
+    private ISettingService settingService;
 
     @ApiOperation("获取所有用户(分页) 除了用户自己")
     @GetMapping("/manage/")
@@ -52,6 +56,7 @@ public class UserController {
             return RespBean.error("该手机号码已被绑定");
         }
         // 如果没设置用户名  就随便给个用户名
+
         if (!StringUtils.hasText(user.getUsername())){
             user.setUsername(UserUtils.generateUsername());
         }else{
@@ -61,15 +66,16 @@ public class UserController {
             }
         }
         // 如果没设置密码，就设置默认密码
-        if (!StringUtils.hasText(user.getPassword())){
-            user.setPassword(new BCryptPasswordEncoder().encode(defaultPass));
-        }else{
-            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        Setting settingPassword = settingService.getOne(new QueryWrapper<Setting>().eq("keyword", "password"));
+
+        if (settingPassword != null) {
+            defaultPass = settingPassword.getValue();
         }
+        user.setPassword(new BCryptPasswordEncoder().encode(defaultPass));
         user.setEnabled(true);
         user.setCreateTime(LocalDateTime.now());
         if (userService.save(user)) {
-            return RespBean.success("新增用户成功");
+            return RespBean.success("新增用户成功,密码: "+ defaultPass +"}",user);
         }
         return RespBean.error("新增用户失败");
     }

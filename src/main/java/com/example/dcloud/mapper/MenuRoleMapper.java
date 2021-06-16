@@ -33,7 +33,7 @@ public interface MenuRoleMapper extends BaseMapper<MenuRole> {
      * @param ids
      * @return
      */
-    Integer insertRecords(@Param("rid") Integer rid,@Param("mids") Integer[] ids);
+    Integer insertRecords(@Param("rid") Integer rid,@Param("mids") List<Integer> ids);
 
     /**
      * 删除该id菜单的对应的权限赋予

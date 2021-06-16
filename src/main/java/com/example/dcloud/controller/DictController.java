@@ -27,7 +27,6 @@ public class DictController {
     @Resource
     private IDictService dictService;
 
-
     @ApiOperation("列出字典列表，传参就是按条件查询，不传就是查全部")
     @GetMapping("/manage/")
     public RespPageBean listDict(@RequestParam(defaultValue = "1") Integer currentPage,
@@ -53,12 +52,6 @@ public class DictController {
     public RespBean deleteDict(@ApiParam("字典id")@PathVariable Integer id){
         return dictService.deleteDict(id);
     }
-
-
-
-
-
-
 
 
 }

@@ -112,6 +112,6 @@
 <!--        <if test="null != user.roleId and '' != user.roleId">-->
 <!--            and u.roleId = #{user.roleId}-->
 <!--        </if>-->
-        order by u.id
+        order by u.roleId,u.id
     </select>
 </mapper>

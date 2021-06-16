@@ -34,13 +34,14 @@ public class MenuRoleServiceImpl extends ServiceImpl<MenuRoleMapper, MenuRole> i
 
     @Override
     @Transactional
-    public RespBean updateRoleMenus(Integer rid, Integer[] ids) {
+    public RespBean updateRoleMenus(Integer rid, List<Integer> ids) {
         menuRoleMapper.delete(new QueryWrapper<MenuRole>().eq("rid", rid));
-        if (null == ids || ids.length == 0){
+        Integer size = ids.size();
+        if (null == ids || size == 0){
             return RespBean.success("更新角色菜单成功");
         }
         Integer result = menuRoleMapper.insertRecords(rid,ids);
-        if (result == ids.length) {
+        if (result == size) {
             return RespBean.success("更新角色菜单成功");
         }
         return RespBean.error("更新角色菜单失败");

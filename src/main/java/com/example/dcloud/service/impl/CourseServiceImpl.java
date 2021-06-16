@@ -61,6 +61,15 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             return RespBean.error("没有创建班课的权限");
         }
         String code = CourseUtils.generatorCourseCode();
+        Integer counter = 0;
+        while(courseMapper.selectOne(new QueryWrapper<Course>().eq("courseCode",code))!= null && counter < 3) {
+            code = CourseUtils.generatorCourseCode();
+            counter ++;
+        }
+        // 如果三次还是重复  那就只好取max了
+        if (counter == 3) {
+            code = String.valueOf(Integer.valueOf(getMaxCourseCode()) + 1);
+        }
         course.setCreateTime(LocalDateTime.now());
         course.setCourseCode(code);
         course.setCreaterId(currentUser.getId());
@@ -99,11 +108,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         if (null == exist) {
             return RespBean.error("该班课不存在");
         }
-        if (!exist.getAllowIn()){
-            return RespBean.error("该班课不允许加入，请联系老师");
-        }
         if (!exist.getEnabled()) {
             return RespBean.error("该班课已结束");
+        }
+        if (!exist.getAllowIn()){
+            return RespBean.error("该班课不允许加入，请联系老师");
         }
         // 如果存在，则检查该学生有没有这个课了 有的就不加了
         Integer res = courseStudentMapper.selectCount(new QueryWrapper<CourseStudent>().eq("cid", exist.getId()).eq("sid",sid));
@@ -169,6 +178,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         }
         return RespBean.success(null,courseInfo);
 
+    }
+
+    @Override
+    public String getMaxCourseCode() {
+        return courseMapper.getMaxCourseCode();
     }
 
 

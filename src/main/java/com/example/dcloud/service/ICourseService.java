@@ -93,4 +93,10 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     RespBean getCourseInfoByCode(String code);
+
+    /**
+     * 获取数据库里最大的
+     * @return
+     */
+    String getMaxCourseCode();
 }

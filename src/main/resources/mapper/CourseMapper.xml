@@ -194,4 +194,7 @@
                      left join t_role r on r.id = u.roleId
                 where c.id = #{id}
     </select>
+    <select id="getMaxCourseCode" resultType="java.lang.String">
+    select max(courseCode) from t_course
+</select>
 </mapper>

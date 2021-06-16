@@ -1,6 +1,7 @@
 package com.example.dcloud.controller;
 
 
+import com.example.dcloud.dto.RidMidsDto;
 import com.example.dcloud.pojo.Menu;
 import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.Role;
@@ -78,8 +79,8 @@ public class RoleController {
 
     @ApiOperation("更新该角色的菜单权限")
     @PutMapping("/menus")
-    public RespBean updateRoleMenus(Integer rid,Integer[] ids){
-        return menuRoleService.updateRoleMenus(rid,ids);
+    public RespBean updateRoleMenus(@RequestBody RidMidsDto ridMidsDto){
+        return menuRoleService.updateRoleMenus(ridMidsDto.getRid(),ridMidsDto.getIds());
     }
 
 }

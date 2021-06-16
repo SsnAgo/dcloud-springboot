@@ -35,6 +35,8 @@ public class SignRecordServiceImpl extends ServiceImpl<SignRecordMapper, SignRec
     private CourseStudentMapper courseStudentMapper;
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private SettingMapper settingMapper;
 
     @Override
     public void initSignRecords(Integer signId, LocalDateTime startTime, Integer cid, List<Integer> sids) {
@@ -81,9 +83,6 @@ public class SignRecordServiceImpl extends ServiceImpl<SignRecordMapper, SignRec
             e.printStackTrace();
             return RespBean.error("修改状态失败");
         }
-
-
-
     }
 
     /**
@@ -92,18 +91,21 @@ public class SignRecordServiceImpl extends ServiceImpl<SignRecordMapper, SignRec
      */
     private Map<Integer, Integer> initStatusExpMap() {
         // 获取各个签到类型对应的经验值
-        SettingSign settingSign = settingSignMapper.selectById(1);
-        Integer signedExp = settingSign.getSignExp();
-        Integer dayOffExp = settingSign.getDayOffExp();
-        Integer lateExp = settingSign.getLateExp();
-        Integer leaveEarlyExp = settingSign.getLeaveEarlyExp();
+        Setting settingSign = settingMapper.selectOne(new QueryWrapper<Setting>().eq("keyword","experience"));
+        Integer signedExp = 2;
+        if (settingSign != null) {
+            signedExp = Integer.valueOf(settingSign.getValue());
+        }
+//        Integer dayOffExp = settingSign.getDayOffExp();
+//        Integer lateExp = settingSign.getLateExp();
+//        Integer leaveEarlyExp = settingSign.getLeaveEarlyExp();
         // 创建类型和经验值的map
         Map<Integer, Integer> signExpMap = new HashMap();
         signExpMap.put(SignUtils.SIGNED, signedExp);
         signExpMap.put(SignUtils.NO_SIGNED, 0);
-        signExpMap.put(SignUtils.DAY_OFF, dayOffExp);
-        signExpMap.put(SignUtils.LATE_IN, lateExp);
-        signExpMap.put(SignUtils.EARLY_LEAVE, leaveEarlyExp);
+        signExpMap.put(SignUtils.DAY_OFF, 0);
+        signExpMap.put(SignUtils.LATE_IN, 0);
+        signExpMap.put(SignUtils.EARLY_LEAVE, 0);
         return signExpMap;
 //        temp.setStatus(status).setAddExp(signExpMap.get(status));
 //        if (status == SignUtils.SIGNED){

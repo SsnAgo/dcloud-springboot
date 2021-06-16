@@ -250,19 +250,4 @@ public class SignController {
         List<Integer> studentIds = signRecordChangeDto.getStudentIds();
         return signRecordService.changeStatus(signId,studentIds,status);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

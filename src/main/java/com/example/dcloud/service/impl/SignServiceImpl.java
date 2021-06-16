@@ -40,6 +40,8 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
     private CourseStudentMapper courseStudentMapper;
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private SettingMapper settingMapper;
 
     @Override
     @Transactional
@@ -63,8 +65,13 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
             return RespBean.success("定位失败，签到失败");
         }
         Double distance = DistanceUtil.getDistanceMeter(exist.getLocal(),local);
-        Double settingDistance = settingSignMapper.selectById(1).getSignDistance();
-        if (settingDistance == 0 || distance <= settingDistance){
+
+        Setting setting = settingMapper.selectOne(new QueryWrapper<Setting>().eq("keyword", "distance"));
+        Double settingDistance = 0.0;
+        if (setting != null) {
+            settingDistance = Double.parseDouble(setting.getValue());
+        }
+        if (settingDistance == 0.0 || distance <= settingDistance){
             // 执行签到成功的数据库相关更新操作
             signSuccess(signId,sid,Double.parseDouble(String.format("%.1f",distance)));
             return RespBean.success("签到成功");
@@ -103,7 +110,11 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
                     return RespBean.success("定位失败，签到失败");
                 }
                 Double distance = DistanceUtil.getDistanceMeter(exist.getLocal(),local);
-                Double settingDistance = settingSignMapper.selectById(1).getSignDistance();
+                Setting setting = settingMapper.selectOne(new QueryWrapper<Setting>().eq("keyword", "distance"));
+                Double settingDistance = 0.0;
+                if (setting != null) {
+                    settingDistance = Double.parseDouble(setting.getValue());
+                }
                 if (settingDistance == 0 || distance <= settingDistance){
                     signSuccess(signId,sid,Double.parseDouble(String.format("%.1f",distance)));
                     return RespBean.success("签到成功");
@@ -258,7 +269,11 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
 //        signRecordMapper.updateById(record);
         SignRecord record = new SignRecord();
         // 获取系统设置的签到经验值
-        Integer exp = settingSignMapper.selectById(1).getSignExp();
+        Setting settingSign = settingMapper.selectOne(new QueryWrapper<Setting>().eq("keyword","experience"));
+        Integer exp = 2;
+        if (settingSign != null) {
+            exp = Integer.valueOf(settingSign.getValue());
+        }
         Sign sign = signMapper.selectById(signId);
         // 新增一条签到成功记录
         record.setSignTime(LocalDateTime.now()).setAddExp(exp).setDistance(distance).setStatus(SignUtils.SIGNED).setStartTime(sign.getStartTime()).setCourseId(sign.getCourseId()).setSignId(signId).setStudentId(sid);

@@ -29,5 +29,5 @@ public interface IMenuRoleService extends IService<MenuRole> {
      * @param ids
      * @return
      */
-    RespBean updateRoleMenus(Integer rid,Integer[] ids);
+    RespBean updateRoleMenus(Integer rid,List<Integer> ids);
 }

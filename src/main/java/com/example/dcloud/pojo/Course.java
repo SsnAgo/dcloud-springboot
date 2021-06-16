@@ -106,7 +106,6 @@ public class Course implements Serializable {
     @ApiModelProperty("允许加入")
     private Boolean allowIn;
 
-
     @ApiModelProperty(value = "是否可用")
     private Boolean enabled;
 

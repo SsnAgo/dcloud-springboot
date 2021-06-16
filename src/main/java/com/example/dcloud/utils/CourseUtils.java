@@ -1,13 +1,14 @@
 package com.example.dcloud.utils;
 
 import com.example.dcloud.pojo.Course;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.Date;
 import java.util.Random;
 
 public class CourseUtils {
     public static final String PR_PREFIX = "https://api.pwmqr.com/qrcode/create/?url=";
-
+    public static Integer Length = 6;
     private static final String[] images = {
             "http://116.62.152.144:7777/group1/M00/00/00/dD6YkGByilyAWJbEAAAJFcHyt_U366.png",
             "http://116.62.152.144:7777/group1/M00/00/00/dD6YkGByipmAaqhEAAAJis5Vxq4365.png",
@@ -21,8 +22,12 @@ public class CourseUtils {
             "http://116.62.152.144:7777/group1/M00/00/00/dD6YkGByjjuAEZ4iAAAKQRbMkFI204.png"};
 
     public static String generatorCourseCode() {
-        Date date = new Date();
-        return String.valueOf((long) (date.getTime() / 1000));
+        String code = "";
+        Random random = new Random();
+        for (int i = 0; i < Length; i++) {
+            code += random.nextInt(10);
+        }
+        return code;
     }
 
     public static String generatorCourseImage() {

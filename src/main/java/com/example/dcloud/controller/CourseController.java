@@ -52,6 +52,16 @@ public class CourseController {
     @PostMapping("/manage/")
     public RespBean manageAddCourse(@RequestBody Course course){
         String code = CourseUtils.generatorCourseCode();
+        // 重复了就再重新随机三次  如果三次还挂了 就直接找最大值然后+1
+        Integer counter = 0;
+        while(courseService.getOne(new QueryWrapper<Course>().eq("courseCode",code))!= null && counter < 3) {
+            code = CourseUtils.generatorCourseCode();
+            counter ++;
+        }
+        // 如果三次还是重复  那就只好取max了
+        if (counter == 3) {
+            code = String.valueOf(Integer.valueOf(courseService.getMaxCourseCode()) + 1);
+        }
         course.setCourseCode(code);
         course.setCreateTime(LocalDateTime.now());
         course.setCreaterId(UserUtils.getCurrentUser().getId());

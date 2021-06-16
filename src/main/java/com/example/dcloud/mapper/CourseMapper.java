@@ -54,4 +54,10 @@ public interface CourseMapper extends BaseMapper<Course> {
      * @return
      */
     Course getCourseInfo(@Param("id") Integer id);
+
+    /**
+     * 获取最大的班课号
+     * @return
+     */
+    String getMaxCourseCode();
 }
