@@ -25,5 +25,13 @@ public interface UserMapper extends BaseMapper<User> {
      * @param search
      * @return
      */
-    IPage<User> getUsersByPage(@Param("currentUserId") Integer currentUserId, Page<User> page, @Param("search") String search);
+    IPage<User> getUsersByPage(@Param("currentUserId") Integer currentUserId, Page<User> page, @Param("search") String search,@Param("enabledSearch") String enabledSearch);
+
+    /**
+     * 管理员修改用户密码
+     * @param id
+     * @param encodePassword
+     * @return
+     */
+    Integer changeUserPassword(@Param("id")Integer id,@Param("password") String encodePassword);
 }

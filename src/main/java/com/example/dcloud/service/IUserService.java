@@ -111,7 +111,7 @@ public interface IUserService extends IService<User> {
      * @param search
      * @return
      */
-    RespPageBean getUsersByPage(Integer currentPage, Integer size, String search);
+    RespPageBean getUsersByPage(Integer currentPage, Integer size, String search,String enabledSearch);
 
     /**
      * 获取用户角色
@@ -175,4 +175,12 @@ public interface IUserService extends IService<User> {
      * @return
      */
     RespBean quickRegister(RegisterDto registerDto);
+
+    /**
+     * 管理员改用户密码
+     * @param id
+     * @param password
+     * @return
+     */
+    RespBean changeUserPassword(Integer id, String password);
 }

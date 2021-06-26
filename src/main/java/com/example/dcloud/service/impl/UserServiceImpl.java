@@ -272,10 +272,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public RespPageBean getUsersByPage(Integer currentPage, Integer size, String search) {
+    public RespPageBean getUsersByPage(Integer currentPage, Integer size, String search,String enabledSearch) {
 
         Page<User> page = new Page<>(currentPage, size);
-        IPage<User> usersPage = userMapper.getUsersByPage(UserUtils.getCurrentUser().getId(), page, search);
+        System.out.println("search : " + search + "   enabled : " + enabledSearch);
+
+        IPage<User> usersPage = userMapper.getUsersByPage(UserUtils.getCurrentUser().getId(), page, search,enabledSearch);
         RespPageBean respPageBean = new RespPageBean(usersPage.getTotal(), usersPage.getRecords());
         return respPageBean;
     }
@@ -429,6 +431,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return RespBean.success("注册成功");
         }
         return RespBean.success("注册失败");
+    }
+
+    @Override
+    public RespBean changeUserPassword(Integer id, String password) {
+        String encodePassword = new BCryptPasswordEncoder().encode(password);
+        if (userMapper.changeUserPassword(id,encodePassword) == 1) {
+            return RespBean.success("修改用户密码成功");
+        }
+        return RespBean.success("修改用户密码失败");
     }
 
 

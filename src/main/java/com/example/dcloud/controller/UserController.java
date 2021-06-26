@@ -2,6 +2,7 @@ package com.example.dcloud.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.dcloud.dto.ChangePasswordDto;
 import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.RespPageBean;
 import com.example.dcloud.pojo.Setting;
@@ -44,8 +45,9 @@ public class UserController {
     @GetMapping("/manage/")
     public RespPageBean getAllEmployees(@RequestParam(defaultValue = "1") Integer currentPage,
                                         @RequestParam(defaultValue = "10") Integer size,
-                                        @ApiParam("可按姓名或学工号搜索") String search) {
-        return userService.getUsersByPage(currentPage, size, search);
+                                        @ApiParam("可按姓名或学工号搜索") String search,
+                                        String enabled) {
+        return userService.getUsersByPage(currentPage, size, search,enabled);
     }
 
     @ApiOperation("管理员新增用户")
@@ -75,7 +77,7 @@ public class UserController {
         user.setEnabled(true);
         user.setCreateTime(LocalDateTime.now());
         if (userService.save(user)) {
-            return RespBean.success("新增用户成功,密码: "+ defaultPass +"}",user);
+            return RespBean.success("新增用户成功,密码为系统参数的密码");
         }
         return RespBean.error("新增用户失败");
     }
@@ -97,6 +99,17 @@ public class UserController {
             return RespBean.success("删除用户成功");
         }
         return RespBean.error("删除用户失败");
+    }
+
+    @ApiOperation("管理员修改用户密码")
+    @PostMapping("/manage/changepassword/")
+    public RespBean changeUserPassword(@RequestBody ChangePasswordDto changePasswordDto){
+        Integer id = changePasswordDto.getId();
+        String password = changePasswordDto.getNewPassword();
+        if (!StringUtils.hasText(password)) {
+            return RespBean.error("密码不能为空");
+        }
+        return userService.changeUserPassword(id,password);
     }
 
 

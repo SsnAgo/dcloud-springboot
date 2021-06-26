@@ -95,23 +95,39 @@
                 WHERE u.id != #{currentUserId}
 
         <if test="null != search and '' != search">
-            and (u.name like concat('%', #{search}, '%') or u.number like  concat('%', #{search}, '%'))
+            and (u.name like concat('%', #{search}, '%') or u.number like concat('%', #{search}, '%') or
+                 u.username like concat('%', #{search}, '%') or r.nameZh like concat('%', #{search}, '%'))
         </if>
-<!--        <if test="null != user.schoolId and '' != user.schoolId">-->
-<!--            and u.schoolId = #{user.schoolId}-->
-<!--        </if>-->
-<!--        <if test="null != user.departmentId and '' != user.departmentId">-->
-<!--            and u.departmentId = #{user.departmentId}-->
-<!--        </if>-->
-<!--        <if test="null != user.majorId and '' != user.majorId">-->
-<!--            and u.majorId = #{user.majorId}-->
-<!--        </if>-->
-<!--        <if test="null != user.majorId and '' != user.majorId">-->
-<!--            and u.majorId = #{user.majorId}-->
-<!--        </if>-->
-<!--        <if test="null != user.roleId and '' != user.roleId">-->
-<!--            and u.roleId = #{user.roleId}-->
-<!--        </if>-->
-        order by u.roleId,u.id
+        <if test="null != enabledSearch and '' != enabledSearch">
+            <choose>
+                <when test="enabledSearch == 'true'">
+                    and u.enabled = true
+                </when>
+                <otherwise>
+                    and u.enabled = false
+                </otherwise>
+            </choose>
+        </if>
+        <!--        <if test="null != user.schoolId and '' != user.schoolId">-->
+        <!--            and u.schoolId = #{user.schoolId}-->
+        <!--        </if>-->
+        <!--        <if test="null != user.departmentId and '' != user.departmentId">-->
+        <!--            and u.departmentId = #{user.departmentId}-->
+        <!--        </if>-->
+        <!--        <if test="null != user.majorId and '' != user.majorId">-->
+        <!--            and u.majorId = #{user.majorId}-->
+        <!--        </if>-->
+        <!--        <if test="null != user.majorId and '' != user.majorId">-->
+        <!--            and u.majorId = #{user.majorId}-->
+        <!--        </if>-->
+        <!--        <if test="null != user.roleId and '' != user.roleId">-->
+        <!--            and u.roleId = #{user.roleId}-->
+        <!--        </if>-->
+        order by u.roleId, u.id
     </select>
+    <update id="changeUserPassword">
+        update t_user
+        set password=#{password}
+        where id = #{id}
+    </update>
 </mapper>
