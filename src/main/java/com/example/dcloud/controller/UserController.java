@@ -67,6 +67,12 @@ public class UserController {
                 return RespBean.error("用户名已被注册");
             }
         }
+        if (!StringUtils.hasText(user.getName())) {
+            user.setName(user.getUsername());
+        }
+        if (!StringUtils.hasText(user.getNickname())) {
+            user.setNickname(user.getUsername());
+        }
         // 如果没设置密码，就设置默认密码
         Setting settingPassword = settingService.getOne(new QueryWrapper<Setting>().eq("keyword", "password"));
 
