@@ -28,4 +28,8 @@
         where cid = #{cid}
           and sid = #{sid}
     </delete>
+    <delete id="deleteCourseStuentByCid">
+        delete
+        from t_course_student where cid=#{cid}
+</delete>
 </mapper>

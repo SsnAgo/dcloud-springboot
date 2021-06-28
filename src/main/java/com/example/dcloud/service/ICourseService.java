@@ -99,4 +99,11 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     String getMaxCourseCode();
+
+    /**
+     * 删除班课
+     * @param id
+     * @return
+     */
+    RespBean deleteCourse(Integer id);
 }

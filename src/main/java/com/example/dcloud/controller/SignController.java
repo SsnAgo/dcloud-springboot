@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.dcloud.anotation.StudentAllow;
 import com.example.dcloud.anotation.TeacherAllow;
 import com.example.dcloud.dto.SignRecordChangeDto;
+import com.example.dcloud.dto.StudentCourseHistoryDto;
 import com.example.dcloud.pojo.*;
 import com.example.dcloud.service.ICourseStudentService;
 import com.example.dcloud.service.ISettingSignService;
@@ -126,7 +127,6 @@ public class SignController {
         Sign exist = signService.getOne(new QueryWrapper<Sign>().eq("courseId", cid).eq("enabled", true));
         // 如果存在可用的，说明要么正在可用  要么还没被检测出来过期  现在检测一下过期
         if (null != exist) {
-            // 如果已经过期 将这个enabled置为null
             // 如果是由endtime的 就是有限时的 就检查有无过期
             if (exist.getType() == SignUtils.TIME_LIMIT && exist.getEndTime() != null) {
                 if (LocalDateTime.now().isAfter(exist.getEndTime())) {
@@ -227,8 +227,8 @@ public class SignController {
 
     @ApiOperation("查看学生在某班课的签到记录")
     @GetMapping("/course")
-    public List<SignRecord> getStudentHistory(@RequestParam("cid") @ApiParam("班课id") Integer cid,
-                                                 @RequestParam("sid") @ApiParam("学生id") Integer sid){
+    public List<StudentCourseHistoryDto> getStudentHistory(@RequestParam("cid") @ApiParam("班课id") Integer cid,
+                                                           @RequestParam("sid") @ApiParam("学生id") Integer sid){
         return signService.getStudentHistory(cid,sid);
     }
 

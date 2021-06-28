@@ -87,10 +87,10 @@ public class CourseController {
     @ApiOperation("删除一个班课")
     @DeleteMapping("/manage/{id}")
     public RespBean deleteCourse(@PathVariable Integer id){
-        if (courseService.removeById(id)) {
-            return RespBean.success("删除班课成功");
-        }
-        return RespBean.error("删除班课失败");
+//        if (courseService.removeById(id)) {
+//            return RespBean.success("删除班课成功");
+//        }
+        return courseService.deleteCourse(id);
     }
 
 
@@ -147,7 +147,7 @@ public class CourseController {
     @ApiOperation("查看班级成员")
     @GetMapping("/mobile/member")
     public List<CourseMemberVo> courseMember(
-            @ApiParam("班课id")@RequestParam(required = true) Integer id,
+            @ApiParam("班课id")@RequestParam Integer id,
                                      @ApiParam("按学号或姓名模糊查询 可不传") String search,
                                      @ApiParam("按经验值或学号排序 exp or num")@RequestParam(defaultValue = "number") String sortBy){
         return courseService.courseMember(id,search,sortBy);
@@ -172,12 +172,4 @@ public class CourseController {
         User student = UserUtils.getCurrentUser();
         return courseStudentService.studentGetExpRank(student.getId(),cid);
     }
-
-
-
-
-
-
-
-
 }

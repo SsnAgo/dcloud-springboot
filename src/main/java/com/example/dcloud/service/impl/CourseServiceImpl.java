@@ -185,5 +185,15 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         return courseMapper.getMaxCourseCode();
     }
 
+    @Transactional
+    @Override
+    public RespBean deleteCourse(Integer id) {
+        if (courseMapper.deleteById(id) == 1) {
+            courseStudentMapper.deleteCourseStuentByCid(id);
+            return RespBean.success("删除班课成功");
+        }
+        return RespBean.error("删除班课失败");
+    }
+
 
 }

@@ -2,6 +2,7 @@ package com.example.dcloud.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.dcloud.dto.SignStudentDto;
+import com.example.dcloud.dto.StudentCourseHistoryDto;
 import com.example.dcloud.mapper.*;
 import com.example.dcloud.pojo.*;
 import com.example.dcloud.service.ISignService;
@@ -34,8 +35,6 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
     private SignMapper signMapper;
     @Resource
     private SignRecordMapper signRecordMapper;
-    @Resource
-    private SettingSignMapper settingSignMapper;
     @Resource
     private CourseStudentMapper courseStudentMapper;
     @Resource
@@ -199,6 +198,7 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
     }
 
     @Override
+    @Transactional
     public RespBean showCount(Integer signId) {
         // 获取该签到
         Sign sign = signMapper.selectById(signId);
@@ -214,6 +214,8 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
     @Override
     @Transactional
     public List<SignHistoryVo> getCourseHistory(Integer cid) {
+        canCreate(cid);
+
         List<SignHistoryVo> signHistoryVoList = signMapper.getCourseHistory(cid);
         Integer total = courseStudentMapper.selectCount(new QueryWrapper<CourseStudent>().eq("cid", cid));
         for (SignHistoryVo hist : signHistoryVoList) {
@@ -225,9 +227,9 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         return signHistoryVoList;
     }
     @Override
-    public List<SignRecord> getStudentHistory(Integer cid, Integer sid) {
-        List<SignRecord> signRecordList = signRecordMapper.getStudentHistory(cid,sid);
-        for (SignRecord record : signRecordList) {
+    public List<StudentCourseHistoryDto> getStudentHistory(Integer cid, Integer sid) {
+        List<StudentCourseHistoryDto> studentHistoryList = signRecordMapper.getStudentHistory(cid, sid);
+        for (StudentCourseHistoryDto record : studentHistoryList) {
             // 如果有签到  就设置为签到的时间
             if (record.getSignTime() != null){
                 record.setDayOfWeek(WeekDayUtils.num2word(record.getSignTime().getDayOfWeek().getValue()));
@@ -235,9 +237,10 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
             // 未签到 就设置为签到发起的时间
             else{
                 record.setDayOfWeek(WeekDayUtils.num2word(record.getStartTime().getDayOfWeek().getValue()));
+                record.setStatus(SignUtils.NO_SIGNED);
             }
         }
-        return signRecordList;
+        return studentHistoryList;
     }
 
     @Override
@@ -299,7 +302,34 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         signRecordMapper.insert(record);
     }
 
+    @Transactional
+    public Boolean canCreate(Integer cid) {
+        // 查出该班课已经有的正在进行的签到
+        Sign exist = signMapper.selectOne(new QueryWrapper<Sign>().eq("courseId", cid).eq("enabled", true));
+        // 如果存在可用的，说明要么正在可用  要么还没被检测出来过期  现在检测一下过期
+        if (null != exist) {
+            // 如果是由endtime的 就是有限时的 就检查有无过期
+            if (exist.getType() == SignUtils.TIME_LIMIT && exist.getEndTime() != null) {
+                if (LocalDateTime.now().isAfter(exist.getEndTime())) {
+                    exist.setEnabled(false);
+                    signMapper.updateById(exist);
+                    return true;
+                } else {
+                    // 存在且没过期
+                    return false;
+                }
+            }
+            // 如果是无限时的 且存在 那就不能创建
+            else {
+                return false;
+            }
 
+        }
+        // 不存在可用的就可以创建 返回 true
+        else {
+            return true;
+        }
+    }
 
 
 

@@ -33,4 +33,10 @@ public interface CourseStudentMapper extends BaseMapper<CourseStudent> {
      * @return
      */
     boolean deleteCourseBySidAndCid(@Param("sid") Integer studentId,@Param("cid") Integer courseId);
+
+    /**
+     *
+     * @param cid
+     */
+    void deleteCourseStuentByCid(@Param("cid") Integer cid);
 }

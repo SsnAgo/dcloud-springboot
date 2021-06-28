@@ -1,7 +1,7 @@
 package com.example.dcloud.mapper;
 
 import com.example.dcloud.dto.SignStudentDto;
-import com.example.dcloud.pojo.RespBean;
+import com.example.dcloud.dto.StudentCourseHistoryDto;
 import com.example.dcloud.pojo.SignRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -64,5 +64,5 @@ public interface SignRecordMapper extends BaseMapper<SignRecord> {
      * @param sid
      * @return
      */
-    List<SignRecord> getStudentHistory(@Param("cid") Integer cid,@Param("sid") Integer sid);
+    List<StudentCourseHistoryDto> getStudentHistory(@Param("cid") Integer cid, @Param("sid") Integer sid);
 }

@@ -47,15 +47,18 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             if (null != username && null == SecurityContextHolder.getContext().getAuthentication()){
                 //登陆
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                //验证userDetails是否是有效的，重新设置登陆对象
-                if (jwtTokenUtil.validateToken(authToken, userDetails)){
-                    // 根据userDetails拿到authenticationToken对象
-                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    //再用这个对象设置一个  新的   userDetails，从WebAuthenticationDetailsSource里build一个
-                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    //向Security环境中设置此权限对象。
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                if (userDetails != null ) {
+                    //验证userDetails是否是有效的，重新设置登陆对象
+                    if (jwtTokenUtil.validateToken(authToken, userDetails)){
+                        // 根据userDetails拿到authenticationToken对象
+                        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        //再用这个对象设置一个  新的   userDetails，从WebAuthenticationDetailsSource里build一个
+                        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        //向Security环境中设置此权限对象。
+                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    }
                 }
+
             }
         }
         filterChain.doFilter(request, response);

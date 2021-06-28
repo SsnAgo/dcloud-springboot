@@ -97,18 +97,24 @@
         </foreach>
     </update>
 
-    <resultMap id="StudentHistoryInfo" type="com.example.dcloud.pojo.SignRecord" extends="BaseResultMap">
+    <resultMap id="StudentHistoryInfo" type="com.example.dcloud.dto.StudentCourseHistoryDto">
+        <result column="sid" property="signId"></result>
+        <result column="sstart" property="startTime"></result>
+        <result column="send" property="endTime"></result>
+        <result column="signTime" property="signTime"></result>
+        <result column="status" property="status"></result>
+        <result column="addExp" property="addExp"></result>
+        <result column="distance" property="distance"></result>
         <result column="stype" property="type"></result>
     </resultMap>
 
     <select id="getStudentHistory" resultMap="StudentHistoryInfo">
-        select sr.*,
-        s.type as stype
-        from t_sign_record sr,
-             t_sign s
-        where sr.courseId = #{cid}
-          and sr.studentId = #{sid}
-          and sr.signId = s.id
-          order by sr.studentId DESC
+        select s.id as sid, s.endTime as send, sr.*,s.type as stype,s.startTime as sstart
+        from t_sign s
+                     left join t_course_student cs on s.courseId = cs.cid
+                     left join t_sign_record sr on cs.sid = sr.studentId and sr.signId = s.id
+        where cs.cid = #{cid}
+          and cs.sid = #{sid}
+          order by s.id desc
     </select>
 </mapper>

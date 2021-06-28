@@ -1,5 +1,6 @@
 package com.example.dcloud.service;
 
+import com.example.dcloud.dto.StudentCourseHistoryDto;
 import com.example.dcloud.pojo.RespBean;
 import com.example.dcloud.pojo.Sign;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -78,7 +79,7 @@ public interface ISignService extends IService<Sign> {
      * @param sid
      * @return
      */
-    List<SignRecord> getStudentHistory(Integer cid, Integer sid);
+    List<StudentCourseHistoryDto> getStudentHistory(Integer cid, Integer sid);
 
     /**
      * 获取该签到的剩余时间

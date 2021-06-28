@@ -100,8 +100,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public RespBean manageLoginByPassword(String usernameOrPhone, String password, HttpServletRequest request) {
         //UserDetails user = userDetailsService.loadUserByUsername(username);
         User user = getUserByUsernameOrPhone(usernameOrPhone);
-        if (null == user || !passwordEncoder.matches(password, user.getPassword())) {
-            return RespBean.error("用户名/手机号或密码输入错误");
+        if (null == user) {
+            return RespBean.error("用户不存在");
+        }
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            return RespBean.error("密码输入错误");
         }
         if (user.getRoleId() != 1 && user.getRoleId() != 2) {
             return RespBean.error("没有进入管理系统的权限");
@@ -162,8 +165,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public RespBean mobileLoginByPassword(String usernameOrPhone, String password, HttpServletRequest request) {
         User user = getUserByUsernameOrPhone(usernameOrPhone);
-        if (null == user || !passwordEncoder.matches(password, user.getPassword())) {
-            return RespBean.error("用户名/手机号或密码输入错误");
+        if (null == user) {
+            return RespBean.error("用户不存在");
+        }
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            return RespBean.error("密码输入错误");
         }
         if (user.getRoleId() != 2 && user.getRoleId() != 3) {
             return RespBean.error("手机端仅允许教师/学生登录");
@@ -373,26 +379,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public RespBean oauthLogin(String clientId, String clientSecret, String code, HttpServletRequest req) throws Exception {
-//        if (StringUtils.hasText(code)) {
-//            //拿到我们的code,去请求token
-//            //发送一个请求到
-//            System.out.println("code is " + code);
-//            String token_url = GitHubConstant.TOKEN_URL.replace("CODE", code);
-//            //得到的responseStr是一个字符串需要将它解析放到map中
-//            String responseStr = HttpClientUtils.doGet(token_url);
-//            // 调用方法从map中获得返回的--》 令牌
-//            String token = HttpClientUtils.getMap(responseStr).get("access_token");
-//            System.out.println("token is :" +  token);
-//            //根据token发送请求获取登录人的信息  ，通过令牌去获得用户信息
-//            String userinfo_url = GitHubConstant.USER_INFO_URL.replace("TOKEN", token);
-//            responseStr = HttpClientUtils.doGet(userinfo_url);//json
-//            System.out.println("resp str : " + responseStr);
-//            Map<String, String> responseMap = HttpClientUtils.getMapByJson(responseStr);
-//
-//            // 成功则登陆
-//            System.out.println("成功");
-//        }
-//        return RespBean.error("失败");
         try{
             String token_url = sendPost("https://github.com/login/oauth/access_token?client_id="+clientId+"&client_secret="+clientSecret+"&code="+code,null);
             String token = token_url.split("&")[0];

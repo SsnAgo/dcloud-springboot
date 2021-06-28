@@ -51,6 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 user = userService.getUserInfo(user);
                 return user;
             }
+            if (user == null ){
+                return null;
+            }
             throw new UsernameNotFoundException("输入信息有误");
         };
     }

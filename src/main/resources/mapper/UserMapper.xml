@@ -92,7 +92,7 @@
                      LEFT JOIN t_school d ON u.departmentId = d.id
                      LEFT JOIN t_major m ON u.majorId = m.id
                      LEFT JOIN t_role r ON u.roleId = r.id
-                WHERE u.id != #{currentUserId}
+                WHERE 1=1
 
         <if test="null != search and '' != search">
             and (u.name like concat('%', #{search}, '%') or u.number like concat('%', #{search}, '%') or
