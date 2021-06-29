@@ -93,34 +93,6 @@ public class SignController {
         return RespBean.success("创建签到成功",sign);
     }
 
-//    @Secured({"ROLE_TEACHER"})
-//    @ApiOperation("创建一个手势签到")
-//    @PostMapping("/create/hand")
-//    public RespBean startHandSign(@RequestParam("id") @ApiParam("传入班课id") Integer cid, @RequestParam("sequence") @ApiParam("手势数字序列") String sequence) {
-//        if (!canCreate(cid)) {
-//            return RespBean.error("签到还在进行中，清勿重复发起");
-//        }
-//        Sign sign = new Sign();
-//        sign.setStartTime(LocalDateTime.now()).setEndTime(null).setLocal(null).setEnabled(true).setCourseId(cid).setCode(sequence).setType(SignUtils.HAND);
-//        signService.save(sign);
-//        initRecords(sign.getId(),sign.getStartTime(),cid);
-//        return RespBean.success("创建签到成功",sign);
-//    }
-
-//    @Secured({"ROLE_TEACHER"})
-//    @ApiOperation("创建一个位置签到")
-//    @PostMapping("/create/location")
-//    public RespBean startHandSign(@RequestParam("id") @ApiParam("传入班课id") Integer cid) {
-//        if (!canCreate(cid)) {
-//            return RespBean.error("签到还在进行中，清勿重复发起");
-//        }
-//        Sign sign = new Sign();
-//        sign.setStartTime(LocalDateTime.now()).setEndTime(null).setLocal(null).setEnabled(true).setCourseId(cid).setCode(null).setType(SignUtils.LOCATION);
-//        signService.save(sign);
-//        initRecords(sign.getId(),sign.getStartTime(),cid);
-//        return RespBean.success("创建签到成功",sign);
-//    }
-
 
     public Boolean canCreate(Integer cid) {
         // 查出该班课已经有的正在进行的签到
@@ -170,7 +142,6 @@ public class SignController {
         return RespBean.success("可以签到", exist);
     }
 
-
     @ApiOperation("学生进行无限制签到")
     @GetMapping("/nolimit")
     public RespBean noLimitSign(@ApiParam("当前签到id") @RequestParam("id") Integer id,@RequestParam("local")@ApiParam("传入位置参数")String local) {
@@ -186,14 +157,6 @@ public class SignController {
         return signService.timeLimitSign(id, student.getId(),local);
     }
 
-//    @ApiOperation("学生进行手势签到")
-//    @GetMapping("/hand")
-//    public RespBean handSign(@ApiParam("当前班课id 参数名为cid") @RequestParam Integer cid,
-//                             @ApiParam("手势序列，参数名为sequence")@RequestParam String sequence) {
-//        User student = UserUtils.getCurrentUser();
-//        return signService.handSign(cid,student.getId(),sequence);
-//    }
-
     @Secured({"ROLE_TEACHER"})
     @ApiOperation("教师关闭签到")
     @GetMapping("/close")
@@ -201,7 +164,6 @@ public class SignController {
                               @ApiParam("0为放弃，1为关闭") @RequestParam("type") Integer type){
         return signService.closeSign(id,type);
     }
-
 
     @TeacherAllow
     @ApiOperation("教师根据签到id查看签到结果详情")
@@ -224,7 +186,6 @@ public class SignController {
         return signService.getCourseHistory(cid);
     }
 
-
     @ApiOperation("查看学生在某班课的签到记录")
     @GetMapping("/course")
     public List<StudentCourseHistoryDto> getStudentHistory(@RequestParam("cid") @ApiParam("班课id") Integer cid,
@@ -232,14 +193,11 @@ public class SignController {
         return signService.getStudentHistory(cid,sid);
     }
 
-
     @ApiOperation("根据签到id获取限时签到的剩余时间")
     @GetMapping("/time/{id}")
     public Integer timeAvailable(@PathVariable Integer id){
         return signService.timeAvailable(id);
     }
-
-
 
     @TeacherAllow
     @ApiOperation("修改学生签到状态")

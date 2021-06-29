@@ -54,37 +54,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Resource
     private UserMapper userMapper;
-
     @Resource
     private RoleMapper roleMapper;
-
     @Resource
     private MajorMapper majorMapper;
-
-    @Resource
-    private UserDetailsService userDetailsService;
-
     @Resource
     private SchoolMapper schoolMapper;
-
-//    @Resource
-//    private DepartmentMapper departmentMapper;
-
     @Resource
     private PasswordEncoder passwordEncoder;
-
     @Resource
     private JwtTokenUtil jwtTokenUtil;
-
     @Resource
     private DictInfoMapper dictInfoMapper;
-
     @Resource
     private SmsUtils smsUtils;
-
     @Value("${jwt.tokenHead}")
     private String tokenHead;
-
     @Value("${default.password}")
     private String defaultPassword;
 
@@ -278,12 +263,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public RespPageBean getUsersByPage(Integer currentPage, Integer size, String search,String enabledSearch) {
+    public RespPageBean getUsersByPage(Integer currentPage, Integer size, String search, String enabledSearch) {
 
         Page<User> page = new Page<>(currentPage, size);
         System.out.println("search : " + search + "   enabled : " + enabledSearch);
 
-        IPage<User> usersPage = userMapper.getUsersByPage(UserUtils.getCurrentUser().getId(), page, search,enabledSearch);
+        IPage<User> usersPage = userMapper.getUsersByPage(UserUtils.getCurrentUser().getId(), page, search, enabledSearch);
         RespPageBean respPageBean = new RespPageBean(usersPage.getTotal(), usersPage.getRecords());
         return respPageBean;
     }
@@ -379,15 +364,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public RespBean oauthLogin(String clientId, String clientSecret, String code, HttpServletRequest req) throws Exception {
-        try{
-            String token_url = sendPost("https://github.com/login/oauth/access_token?client_id="+clientId+"&client_secret="+clientSecret+"&code="+code,null);
+        try {
+            String token_url = sendPost("https://github.com/login/oauth/access_token?client_id=" + clientId + "&client_secret=" + clientSecret + "&code=" + code, null);
             String token = token_url.split("&")[0];
             String token1 = token.substring(13);
             // String res = httpGet("https://api.github.com/user?" + token + "", "token  " + token);
             String res = httpGet("https://api.github.com/user", "token  " + token1);
             JSONObject user = (JSONObject) JSON.parse(res);
-            return RespBean.success("成功",user);
-        }catch (Exception e){
+            return RespBean.success("成功", user);
+        } catch (Exception e) {
             e.printStackTrace();
             return RespBean.error("失败");
         }
@@ -422,7 +407,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public RespBean changeUserPassword(Integer id, String password) {
         String encodePassword = new BCryptPasswordEncoder().encode(password);
-        if (userMapper.changeUserPassword(id,encodePassword) == 1) {
+        if (userMapper.changeUserPassword(id, encodePassword) == 1) {
             return RespBean.success("修改用户密码成功");
         }
         return RespBean.success("修改用户密码失败");
@@ -467,8 +452,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             out.flush();
             // 定义BufferedReader输入流来读取URL的响应
             InputStream instream = conn.getInputStream();
-            if(instream!=null){
-                in = new BufferedReader( new InputStreamReader(instream));
+            if (instream != null) {
+                in = new BufferedReader(new InputStreamReader(instream));
                 String line;
                 while ((line = in.readLine()) != null) {
                     result += line;
@@ -478,44 +463,44 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             e.printStackTrace();
         }
         //使用finally块来关闭输出流、输入流
-        finally{
-            try{
-                if(out!=null){
+        finally {
+            try {
+                if (out != null) {
                     out.close();
                 }
-                if(in!=null){
+                if (in != null) {
                     in.close();
                 }
-            }
-            catch(IOException ex){
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
         return result;
     }
-    public static String httpGet(String url, String token){
+
+    public static String httpGet(String url, String token) {
         System.out.println(token);
         // 获取连接客户端工具
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        CloseableHttpResponse httpResponse=null;
+        CloseableHttpResponse httpResponse = null;
         String finalString = null;
         HttpGet httpGet = new HttpGet(url);
         /**公共参数添加至httpGet*/
 
         /*header中通用属性*/
-        httpGet.setHeader("Accept","*/*");
-        httpGet.setHeader("Accept-Encoding","gzip, deflate");
-        httpGet.setHeader("Cache-Control","no-cache");
+        httpGet.setHeader("Accept", "*/*");
+        httpGet.setHeader("Accept-Encoding", "gzip, deflate");
+        httpGet.setHeader("Cache-Control", "no-cache");
         httpGet.setHeader("Connection", "keep-alive");
         httpGet.setHeader("Content-Type", "application/json;charset=UTF-8");
         /*业务参数*/
-        httpGet.setHeader("Content-Type","application/json");
-        httpGet.setHeader("Authorization",token);
+        httpGet.setHeader("Content-Type", "application/json");
+        httpGet.setHeader("Authorization", token);
 
         try {
             httpResponse = httpClient.execute(httpGet);
             HttpEntity entity = httpResponse.getEntity();
-            finalString= EntityUtils.toString(entity, "UTF-8");
+            finalString = EntityUtils.toString(entity, "UTF-8");
             try {
                 httpResponse.close();
                 httpClient.close();

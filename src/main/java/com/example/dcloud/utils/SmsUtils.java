@@ -93,7 +93,6 @@ public class SmsUtils {
         return resp;
     }
 
-
     private static String generatorCode() {
         String code = "";
         Random random = new Random();
@@ -102,7 +101,6 @@ public class SmsUtils {
         }
         return code;
     }
-
 
     public Integer validateCode(String phone, String code){
         phone = "+86" + phone;
@@ -119,5 +117,4 @@ public class SmsUtils {
             return CODE_ERROR;
         }
     }
-
 }

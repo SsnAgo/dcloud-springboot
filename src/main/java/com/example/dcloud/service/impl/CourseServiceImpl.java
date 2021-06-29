@@ -195,5 +195,4 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         return RespBean.error("删除班课失败");
     }
 
-
 }

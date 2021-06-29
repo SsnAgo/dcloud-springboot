@@ -34,20 +34,4 @@
             (#{dict.tag}, #{item.content}, #{item.sequence}, #{item.isDefault},#{item.value})
         </foreach>
     </insert>
-<!--    <update id="updateDictAndDictInfo">-->
-<!--        &lt;!&ndash;    更新字典dict表&ndash;&gt;-->
-<!--        update t_dict-->
-<!--        set tagZh=#{dict.tagZh}-->
-<!--        where tag = #{dict.tag};-->
-<!--        &lt;!&ndash;        删除原来tag对应的dictInfo&ndash;&gt;-->
-<!--        delete-->
-<!--        from t_dict_info-->
-<!--        where tag = #{dict.tag};-->
-<!--        &lt;!&ndash;        开始在dictInfo里面插入新的记录&ndash;&gt;-->
-<!--        insert into t_dict_info(tag, content, sequence, isDefault)-->
-<!--                VALUES-->
-<!--        <foreach collection="dictInfoList" item="item" separator=",">-->
-<!--            (#{dict.tag}, #{item.content}, #{item.sequence}, #{item.isDefault})-->
-<!--        </foreach>-->
-<!--    </update>-->
 </mapper>

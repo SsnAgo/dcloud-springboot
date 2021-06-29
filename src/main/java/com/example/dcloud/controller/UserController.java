@@ -117,15 +117,4 @@ public class UserController {
         }
         return userService.changeUserPassword(id,password);
     }
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -96,9 +96,6 @@ public class SignRecordServiceImpl extends ServiceImpl<SignRecordMapper, SignRec
         if (settingSign != null) {
             signedExp = Integer.valueOf(settingSign.getValue());
         }
-//        Integer dayOffExp = settingSign.getDayOffExp();
-//        Integer lateExp = settingSign.getLateExp();
-//        Integer leaveEarlyExp = settingSign.getLeaveEarlyExp();
         // 创建类型和经验值的map
         Map<Integer, Integer> signExpMap = new HashMap();
         signExpMap.put(SignUtils.SIGNED, signedExp);
@@ -107,21 +104,6 @@ public class SignRecordServiceImpl extends ServiceImpl<SignRecordMapper, SignRec
         signExpMap.put(SignUtils.LATE_IN, 0);
         signExpMap.put(SignUtils.EARLY_LEAVE, 0);
         return signExpMap;
-//        temp.setStatus(status).setAddExp(signExpMap.get(status));
-//        if (status == SignUtils.SIGNED){
-//            temp.setStatus(SignUtils.SIGNED).setAddExp(signedExp);
-//        }else if (status == SignUtils.NO_SIGNED){
-//            temp.setStatus(SignUtils.NO_SIGNED).setAddExp(0);
-//        }else if (status == SignUtils.DAY_OFF){
-//            temp.setStatus(SignUtils.DAY_OFF).setAddExp(dayOffExp);
-//        }
-//        else if (status == SignUtils.LATE_IN){
-//            temp.setStatus(SignUtils.LATE_IN).setAddExp(lateExp);
-//        }
-//        else if (status == SignUtils.EARLY_LEAVE){
-//            temp.setStatus(SignUtils.EARLY_LEAVE).setAddExp(leaveEarlyExp);
-//        }
-//        return temp;
     }
 
     /**
@@ -138,8 +120,5 @@ public class SignRecordServiceImpl extends ServiceImpl<SignRecordMapper, SignRec
         user.setExp(user.getExp() + addExp);
         userMapper.updateById(user);
     }
-
-
-
 
 }

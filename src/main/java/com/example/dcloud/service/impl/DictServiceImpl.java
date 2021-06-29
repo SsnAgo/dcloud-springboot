@@ -54,15 +54,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         if (null == exits) {
             return RespBean.error("要修改的字典不存在");
         }
-//        // tag和tagZh 除了不变 否则不能和其他的重复
-//        exits = dictMapper.selectOne(new QueryWrapper<Dict>().eq("tag", dict.getTag()).ne("id", dict.getId()));
-//        if (exits != null) {
-//            return RespBean.error("该英文标识已存在");
-//        }
-//        exits = dictMapper.selectOne(new QueryWrapper<Dict>().eq("tagZh",dict.getTagZh()).ne("id",dict.getId()));
-//        if (exits != null){
-//            return RespBean.error("该中文标识已存在");
-//        }
+
         // 要修改的该tag存在，就判断中文标识是否存在 先查当前要改的字典在数据库中对应的中文标识
         String currentTagZh = exits.getTagZh();
         String currentTag = exits.getTag();
@@ -237,30 +229,4 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         return RespBean.success("删除字典成功");
     }
 
-
-
-
-/**
- * {
- * 	"dict": {
- * 		"description": "测试删除字典",
- * 		"tag": "ttt",
- * 		"tagZh": "测试删除"
- *        },
- * 	"dictInfoList": [
- *        {
- * 			"content": "测试删除1",
- * 			"isDefault": true,
- * 			"sequence": 0,
- * 			"tag": "ttt"
- *        },
- * {
- * 			"content": "测试删除2",
- * 			"isDefault": false,
- * 			"sequence": 2,
- * 			"tag": "ttt"
- *        }
- * 	]
- * }
- */
 }

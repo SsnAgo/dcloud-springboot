@@ -34,5 +34,4 @@ public class CourseUtils {
         Random random = new Random();
         return images[random.nextInt(10)];
     }
-
 }

@@ -56,12 +56,6 @@ public class SchoolController {
         return schoolService.updateSchool(school);
     }
 
-//    @ApiOperation("获取所有学校信息")
-//    @GetMapping("/")
-//    public List<School> getSchools(){
-//        return schoolService.list();
-//    }
-
     @ApiOperation("新增学院，需要传上parentId")
     @PostMapping("/manage/dept")
     public RespBean addDept(@RequestBody School school){
@@ -89,11 +83,4 @@ public class SchoolController {
         }
         return RespBean.error("删除学院失败");
     }
-
-
-
-
-
-
-    
 }

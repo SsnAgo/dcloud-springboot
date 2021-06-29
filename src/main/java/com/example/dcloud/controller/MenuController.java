@@ -45,10 +45,6 @@ public class MenuController {
     @ApiOperation("管理员修改菜单")
     @PutMapping("/manage/")
     public RespBean updateMenu(@RequestBody Menu menu){
-//        if (menuService.updateById(menu)){
-//            return RespBean.success("修改菜单成功");
-//        }
-//        return RespBean.error("修改菜单失败");
         return menuService.updateMenu(menu);
     }
 
@@ -67,16 +63,9 @@ public class MenuController {
         return menuService.delMenu(id);
     }
 
-
     @ApiOperation("调换菜单顺序，并返回最新的顺序(返回所有菜单和当前用户菜单)")
     @PutMapping("/manage/seq")
     public Map<String,Object> changeMenuSeq(@RequestBody List<MenuSeqDto> menuSeqList){
         return menuService.changeMenuSeq(menuSeqList);
     }
-
-
-
-
-
-
 }

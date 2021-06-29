@@ -128,25 +128,6 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
         return RespBean.error("发生错误，该签到类型不是限时签到");
     }
 
-//    @Override
-//    @Transactional
-//    public RespBean handSign(Integer cid, Integer sid, String sequence,,String local) {
-//        Sign exist = signMapper.selectOne(new QueryWrapper<Sign>().eq("courseId", cid).eq("enabled", true));
-//        if (exist == null) {
-//            return RespBean.error("签到已结束，请联系教师");
-//        }
-//        // 检验手势是否正确
-//        if (exist.getType() == SignUtils.HAND && exist.getCode() != null ){
-//            if (!exist.getCode().equals(sequence)){
-//                return RespBean.error("手势错误，请重试");
-//            }else{
-//                signSuccess(cid,sid, exist.getId(),local);
-//                return RespBean.success("签到成功");
-//            }
-//        }
-//        return RespBean.error("发生错误，该签到类型不是手势签到");
-//    }
-
     @Override
     @Transactional
     public RespBean closeSign(Integer id, Integer type) {
@@ -264,12 +245,6 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
     @Transactional
     public void signSuccess(Integer signId,Integer sid,Double distance){
 //        // 执行签到成功的各个更新操作  更新到signrecoreds里面 同时获取系统经验值，根据系统经验值增加经验， 更新学生在该班课的经验值 更新学生的总经验值
-//        SignRecord record = signRecordMapper.selectOne(new QueryWrapper<SignRecord>().eq("signId",signId).eq("studentId",sid));
-//        // 获取系统设置的签到经验值
-//        Integer exp = settingSignMapper.selectById(1).getSignExp();
-//        // 更新状态为签到
-//        record.setSignTime(LocalDateTime.now()).setAddExp(exp).setDistance(distance).setStatus(SignUtils.SIGNED);
-//        signRecordMapper.updateById(record);
         SignRecord record = new SignRecord();
         // 获取系统设置的签到经验值
         Setting settingSign = settingMapper.selectOne(new QueryWrapper<Setting>().eq("keyword","experience"));
@@ -330,7 +305,5 @@ public class SignServiceImpl extends ServiceImpl<SignMapper, Sign> implements IS
             return true;
         }
     }
-
-
 
 }

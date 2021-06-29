@@ -110,7 +110,6 @@ public class LoginController {
         return userService.oauthLogin(clientId,clientSecret,code,req);
     }
 
-
     @ApiOperation("快速注册")
     @PostMapping("/mobile/quickRegister")
     public RespBean quickRegister(@RequestBody RegisterDto registerDto){
@@ -126,10 +125,4 @@ public class LoginController {
         }
         return userService.quickRegister(registerDto);
     }
-
-
-
-
-
-
 }

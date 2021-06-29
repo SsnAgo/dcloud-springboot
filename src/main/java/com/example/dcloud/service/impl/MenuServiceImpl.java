@@ -128,34 +128,4 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         return res;
     }
 
-    /**
-     *
-     * @param mid 传入的menuId
-     * @param seq 要调整到的位置 如果是删除就是-1
-     * @return 返回更改后的位置  如果是删除或者修改失败就会返回0
-     */
-//    private Integer updateMenusSequence(Integer mid, Integer seq) {
-//
-//        // 获取mids列表 将此mid插入到对应seq的下标位置
-//        List<Menu> menus = getMenus(null);
-//        List<Integer> ids = menus.stream().map(Menu::getId).collect(Collectors.toList());
-//        // 移除这个id先
-//        ids.remove(mid);
-//        // 插入到对应位置
-//        if (seq != -1) {
-//            ids.add(seq - 1,mid);
-//        }
-//        // 返回的当前顺序
-//        Integer res = 0;
-//        // 根据索引生成顺序
-//        for (Integer id: ids) {
-//            Integer pos = ids.indexOf(id) + 1;
-//            menuMapper.updateMenuSequence(id,pos);
-//            if (id == mid) {
-//                res = pos;
-//            }
-//        }
-//        // 去批量更改
-//        return res;
-//    }
 }

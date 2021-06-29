@@ -28,19 +28,16 @@ import javax.annotation.Resource;
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true,prePostEnabled = true,jsr250Enabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
     @Resource
     private IUserService userService;
     @Resource
     private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
     @Resource
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
-
     @Resource
     private CustomUrlDecisionManager customUrlDecisionManager;
     @Resource
     private CustomFilter customFilter;
-
 
     @Override
     @Bean
@@ -140,7 +137,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthorizationTokenFilter();
     }
 
-
     private CorsConfigurationSource CorsConfigurationSource() {
         CorsConfigurationSource source =   new UrlBasedCorsConfigurationSource();
         CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -150,7 +146,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ((UrlBasedCorsConfigurationSource) source).registerCorsConfiguration("/**",corsConfiguration); //配置允许跨域访问的url
         return source;
     }
-
-
-
 }

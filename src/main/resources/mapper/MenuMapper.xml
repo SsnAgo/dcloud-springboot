@@ -128,13 +128,6 @@
         </where>
         order by m.sequence
     </select>
-    <!--    <update id="updateMenusSequence" parameterType="java.util.Map">-->
-    <!--        <foreach collection="mid2seq" index="key" item="value" open="" separator=";" close="">-->
-    <!--            update t_menu-->
-    <!--            set sequence=#{value}-->
-    <!--            where id = #{key}-->
-    <!--        </foreach>-->
-    <!--    </update>-->
     <update id="updateMenuSequence">
         UPDATE t_menu SET sequence = #{seq} where id = #{mid}
     </update>

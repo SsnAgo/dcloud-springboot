@@ -11,7 +11,6 @@ public class UserUtils {
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user;
     }
-
     public static String generateUsername(){
         Date date = new Date();
         return String.valueOf(date.getTime());

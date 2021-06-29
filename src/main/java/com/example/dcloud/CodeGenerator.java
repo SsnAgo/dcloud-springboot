@@ -54,7 +54,7 @@ public class CodeGenerator {
         mpg.setGlobalConfig(gc);
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://118.178.70.125:3306/dcloud?useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT&allowPublicKeyRetrieval=true");
+        dsc.setUrl("jdbc:mysql://xxx.xxx.xx.xxx:3306/dcloud?useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT&allowPublicKeyRetrieval=true");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("test_rds");
         dsc.setPassword("rds_980427");

@@ -25,7 +25,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Override
     public List<Role> getRoles(String search) {
-
         return roleMapper.getRoles(search);
     }
 }
