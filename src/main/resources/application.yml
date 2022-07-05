@@ -7,9 +7,9 @@ spring:
   # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://118.178.70.125:3306/dcloud?useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT&allowPublicKeyRetrieval=true&allowMultiQueries=true
-    username: test_rds
-    password: rds_980427
+    url: jdbc:mysql://xxx.xxx.xxx.xxx:3306/dcloud?useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT&allowPublicKeyRetrieval=true&allowMultiQueries=true
+    username: xxx
+    password: xxx
     hikari:
       # 连接池名
       pool-name: DateHikariCP
@@ -78,7 +78,7 @@ jwt:
   # JWT存储的请求头
   tokenHeader: Authorization
   # JWT 加解密使用的密钥
-  secret: dcloud-secret
+  secret: xxx
   # JWT的超期限时间（60*60*24）
   expiration: 604800
   # JWT 负载中拿到开头
@@ -92,10 +92,10 @@ default:
   signDistance: 0
 
 sms:
-  secretId: AKIDiV3Oozkln21qaGcJf0g6HD6kDR0aP757
-  secretKey: yhOCrHWWp7C5jcNtUI3XnoBOK1ptiPK8
-  endPoint: sms.tencentcloudapi.com
-  templateId: 925855
+  secretId: xxx
+  secretKey: xxx
+  endPoint: xxx
+  templateId: xxx
   sign: 今晚月色真美
-  smsSdkAppid: 1400509565
+  smsSdkAppid: xxx
   timeLimit: 5
